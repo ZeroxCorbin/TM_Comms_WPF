@@ -5,51 +5,76 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF.Net"
         mc:Ignorable="d"
-        Title="TM Communication" Height="474.537" Width="829.63" Closing="Window_Closing" MinWidth="800" MinHeight="475">
+        Title="TM Communication" Height="456" Width="1079.63" Closing="Window_Closing" MinWidth="800" MinHeight="475">
     <Grid Margin="0,0,0,0.5">
-        <Grid Margin="10,10,10.5,247">
-            <Button x:Name="btnConnectListenNode" Content="Start" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Margin="154,22,0,0" Height="22" Click="btnConnectListenNode_Click"/>
-            <TextBox x:Name="txtListenNodeConnectionString" HorizontalAlignment="Left" Height="22" Margin="7,22,0,0" TextWrapping="Wrap" Text="192.168.20.1:5890" VerticalAlignment="Top" Width="142"/>
-            <TextBox x:Name="txtScriptID" HorizontalAlignment="Left" Height="22" Margin="422,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" IsReadOnly="True"/>
-            <TextBox x:Name="txtScriptData" Height="20" Margin="7,66,0,0" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="txtScriptData_TextChanged" Text="ChangeBase(&quot;RobotBase&quot;)"/>
-            <TextBox x:Name="txtDataString" Margin="7,108,0,0" TextWrapping="Wrap" Height="22" VerticalAlignment="Top" IsReadOnly="True"/>
-            <ComboBox x:Name="cmbDataType" HorizontalAlignment="Left" Margin="298,22,0,0" VerticalAlignment="Top" Width="120" IsReadOnly="True" SelectionChanged="cmbDataType_SelectionChanged" SelectedIndex="0">
-                <ComboBoxItem Content="TMSCT (Script)" Tag="0"/>
-                <ComboBoxItem Content="TMSTA (Status)" Tag="1"/>
-            </ComboBox>
-            <Button x:Name="btnSendListenNode" Content="Send" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Margin="472,22,0,0" Height="22" Click="btnSendListenNode_Click"/>
-            <TextBox x:Name="txtDataResponse" Margin="7,152,0,0" TextWrapping="Wrap" Height="22" VerticalAlignment="Top" IsReadOnly="True"/>
-            <Label Content="Listen Node Connection String ( ip:port )" HorizontalAlignment="Left" Margin="7,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="233" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
-            <Label Content="Header" HorizontalAlignment="Left" Margin="297.5,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="120" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-            <Label Content="sID" HorizontalAlignment="Left" Margin="422.5,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="44" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-            <Label Content="Script (Any Function from Expression Editor)" HorizontalAlignment="Left" Margin="7,43.741,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="755" Padding="1,3,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
-            <Label Content="Command (Start Byte=$ Header, Data Length, Script ID, Script, *Checksum \r\n)" HorizontalAlignment="Left" Margin="7,85.741,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="755" Padding="1,3,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
-            <Label Content="Response" HorizontalAlignment="Left" Margin="7,129.741,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="755" Padding="1,3,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
-            <Rectangle x:Name="rectCommandResponse" Fill="Yellow" HorizontalAlignment="Left" Height="22" Margin="0,152,0,0" Stroke="Black" VerticalAlignment="Top" Width="7"/>
-            <Label Content="Listen Node Connection String ( ip:port )" HorizontalAlignment="Left" Margin="7,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="233" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
-        </Grid>
-        <Grid Margin="10,205,10.5,10">
-            <TextBox x:Name="txtMonitorResults" Margin="10,49,421,10" TextWrapping="Wrap"/>
-            <TextBox x:Name="txtMonitorDataType" HorizontalAlignment="Left" Height="22" Margin="248,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="64" IsReadOnly="True" RenderTransformOrigin="0.375,2.318"/>
-            <Button x:Name="btnConnectMonitor" Content="Start" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Margin="157,22,0,0" Click="btnConnectMonitor_Click" Height="22"/>
-            <TextBox x:Name="txtConnectionString" HorizontalAlignment="Left" Height="22" Margin="10,22,0,0" TextWrapping="Wrap" Text="192.168.20.1:8080" VerticalAlignment="Top" Width="142"/>
-            <TextBox x:Name="txtMonitorPoolID" HorizontalAlignment="Left" Height="22" Margin="317,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="66" IsReadOnly="True"/>
-            <TextBox x:Name="txtMonitorRobot_X" HorizontalAlignment="Left" Height="22" Margin="412,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" IsReadOnly="True"/>
-            <TextBox x:Name="txtMonitorRobot_Y" HorizontalAlignment="Left" Height="22" Margin="412,92,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" IsReadOnly="True"/>
-            <TextBox x:Name="txtMonitorRobot_Z" HorizontalAlignment="Left" Height="22" Margin="412,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" IsReadOnly="True"/>
-            <TextBox x:Name="txtMonitorRobot_RX" HorizontalAlignment="Left" Height="22" Margin="412,146,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" IsReadOnly="True"/>
-            <TextBox x:Name="txtMonitorRobot_RY" HorizontalAlignment="Left" Height="22" Margin="412,173,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" IsReadOnly="True"/>
-            <TextBox x:Name="txtMonitorRobot_RZ" HorizontalAlignment="Left" Height="22" Margin="412,200,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" IsReadOnly="True"/>
-            <TextBox x:Name="txtMonitorRobot_Base" HorizontalAlignment="Left" Height="22" Margin="412,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" IsReadOnly="True"/>
-            <TextBox x:Name="txtMonitorRobot_Xa" HorizontalAlignment="Left" Height="22" Margin="519,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" IsReadOnly="True"/>
-            <TextBox x:Name="txtMonitorRobot_Ya" HorizontalAlignment="Left" Height="22" Margin="519,92,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" IsReadOnly="True"/>
-            <TextBox x:Name="txtMonitorRobot_Za" HorizontalAlignment="Left" Height="22" Margin="519,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" IsReadOnly="True"/>
-            <TextBox x:Name="txtMonitorRobot_RXa" HorizontalAlignment="Left" Height="22" Margin="519,146,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" IsReadOnly="True"/>
-            <TextBox x:Name="txtMonitorRobot_RYa" HorizontalAlignment="Left" Height="22" Margin="519,173,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" IsReadOnly="True"/>
-            <TextBox x:Name="txtMonitorRobot_RZa" HorizontalAlignment="Left" Height="22" Margin="519,200,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" IsReadOnly="True"/>
-            <Label Content="Monitor Connection String ( ip:port )" HorizontalAlignment="Left" Margin="10,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="233" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
-            <Button x:Name="btnConnectModbus" Content="Start" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Margin="678,76,0,0" Height="22" Click="btnConnectModbus_Click"/>
-        </Grid>
+        <Border Margin="10,197,0,10" BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Left" Width="548">
+            <Grid>
+                <TextBox x:Name="txtMonitorResults" Margin="10,49,0,10" TextWrapping="Wrap" HorizontalAlignment="Left" Width="373"/>
+                <TextBox x:Name="txtMonitorDataType" HorizontalAlignment="Left" Height="22" Margin="248,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="64" IsReadOnly="True" RenderTransformOrigin="0.375,2.318"/>
+                <Button x:Name="btnConnectMonitor" Content="Start" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Margin="157,22,0,0" Click="btnConnectMonitor_Click" Height="22"/>
+                <TextBox x:Name="txtMonitorConnectionString" HorizontalAlignment="Left" Height="22" Margin="10,22,0,0" TextWrapping="Wrap" Text="192.168.20.1:8080" VerticalAlignment="Top" Width="142"/>
+                <TextBox x:Name="txtMonitorPoolID" HorizontalAlignment="Left" Height="22" Margin="317,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="66" IsReadOnly="True"/>
+                <TextBox x:Name="txtMonitorRobot_X" HorizontalAlignment="Left" Height="22" Margin="407,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                <TextBox x:Name="txtMonitorRobot_Y" HorizontalAlignment="Left" Height="22" Margin="407,92,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                <TextBox x:Name="txtMonitorRobot_Z" HorizontalAlignment="Left" Height="22" Margin="407,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                <TextBox x:Name="txtMonitorRobot_RX" HorizontalAlignment="Left" Height="22" Margin="407,146,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                <TextBox x:Name="txtMonitorRobot_RY" HorizontalAlignment="Left" Height="22" Margin="407,173,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                <TextBox x:Name="txtMonitorRobot_RZ" HorizontalAlignment="Left" Height="22" Margin="407,200,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                <TextBox x:Name="txtMonitorRobot_Base" HorizontalAlignment="Left" Height="22" Margin="407,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="125" IsReadOnly="True"/>
+                <TextBox x:Name="txtMonitorRobot_Xa" HorizontalAlignment="Left" Height="22" Margin="472,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                <TextBox x:Name="txtMonitorRobot_Ya" HorizontalAlignment="Left" Height="22" Margin="472,92,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                <TextBox x:Name="txtMonitorRobot_Za" HorizontalAlignment="Left" Height="22" Margin="472,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                <TextBox x:Name="txtMonitorRobot_RXa" HorizontalAlignment="Left" Height="22" Margin="472,146,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                <TextBox x:Name="txtMonitorRobot_RYa" HorizontalAlignment="Left" Height="22" Margin="472,173,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                <TextBox x:Name="txtMonitorRobot_RZa" HorizontalAlignment="Left" Height="22" Margin="472,200,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                <Label Content="Monitor Connection String ( IP:8080 )" HorizontalAlignment="Left" Margin="10,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="233" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
+                <Label Content="Current Base" HorizontalAlignment="Left" Margin="407,16,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="125" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom"/>
+                <Label Content="X" HorizontalAlignment="Left" Margin="388,65,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+                <Label Content="Y" HorizontalAlignment="Left" Margin="388,92,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+                <Label Content="Z" HorizontalAlignment="Left" Margin="388,119,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+                <Label Content="RX" HorizontalAlignment="Left" Margin="388,146,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+                <Label Content="RY" HorizontalAlignment="Left" Margin="388,173,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+                <Label Content="RZ" HorizontalAlignment="Left" Margin="388,200,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+                <Label Content="Data Type" HorizontalAlignment="Left" Margin="248,1.05,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="64" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+                <Label Content="Pool ID" HorizontalAlignment="Left" Margin="317,1.05,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="64" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+            </Grid>
+        </Border>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="182" Margin="10,10,0,0" VerticalAlignment="Top" Width="548">
+            <Grid Margin="-1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="16*"/>
+                    <ColumnDefinition Width="811*"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="btnConnectListenNode" Content="Start" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Margin="143.5,22,0,0" Height="22" Click="btnConnectListenNode_Click" Grid.Column="1"/>
+                <TextBox x:Name="txtListenNodeConnectionString" HorizontalAlignment="Left" Height="22" Margin="7,22,0,0" TextWrapping="Wrap" Text="192.168.20.1:5890" VerticalAlignment="Top" Width="142" Grid.ColumnSpan="2"/>
+                <TextBox x:Name="txtScriptID" HorizontalAlignment="Left" Height="22" Margin="387,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" IsReadOnly="True" Grid.Column="1"/>
+                <TextBox x:Name="txtScriptData" Height="20" Margin="7,66,0,0" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="txtScriptData_TextChanged" Text="ChangeBase(&quot;RobotBase&quot;)" HorizontalAlignment="Left" Width="531" Grid.ColumnSpan="2"/>
+                <TextBox x:Name="txtDataString" Margin="7,108,0,0" TextWrapping="Wrap" Height="22" VerticalAlignment="Top" IsReadOnly="True" HorizontalAlignment="Left" Width="531" Grid.ColumnSpan="2"/>
+                <ComboBox x:Name="cmbDataType" HorizontalAlignment="Left" Margin="262,22,0,0" VerticalAlignment="Top" Width="120" IsReadOnly="True" SelectionChanged="cmbDataType_SelectionChanged" SelectedIndex="0" Grid.Column="1">
+                    <ComboBoxItem Content="TMSCT (Script)" Tag="0"/>
+                    <ComboBoxItem Content="TMSTA (Status)" Tag="1"/>
+                </ComboBox>
+                <Button x:Name="btnSendListenNode" Content="Send" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Margin="436,22,0,0" Height="22" Click="btnSendListenNode_Click" Grid.Column="1"/>
+                <TextBox x:Name="txtDataResponse" Margin="7,152,0,0" TextWrapping="Wrap" Height="22" VerticalAlignment="Top" IsReadOnly="True" HorizontalAlignment="Left" Width="531" Grid.ColumnSpan="2"/>
+                <Label Content="Listen Node Connection String ( IP:5890 )" HorizontalAlignment="Left" Margin="7,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="233" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <Label Content="Header" HorizontalAlignment="Left" Margin="262,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="120" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center" Grid.Column="1"/>
+                <Label Content="sID" HorizontalAlignment="Left" Margin="387,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="44" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center" Grid.Column="1"/>
+                <Label Content="Script (Any Function from Expression Editor)" HorizontalAlignment="Left" Margin="7,43.741,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="531" Padding="1,3,1,1" UseLayoutRounding="False" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <Label Content="Command (Start Byte=$ Header, Data Length, Script ID, Script, *Checksum \r\n)" HorizontalAlignment="Left" Margin="7,85.741,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="531" Padding="1,3,1,1" UseLayoutRounding="False" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <Label Content="Response" HorizontalAlignment="Left" Margin="7,129.741,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="531" Padding="1,3,1,1" UseLayoutRounding="False" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <Rectangle x:Name="rectCommandResponse" Fill="Yellow" HorizontalAlignment="Left" Height="22" Margin="0,152,0,0" Stroke="Black" VerticalAlignment="Top" Width="7"/>
+            </Grid>
+        </Border>
+        <Border BorderBrush="Black" BorderThickness="1" Margin="563,10,10.5,10">
+            <Grid>
+                <TextBox x:Name="txtModbusIP" HorizontalAlignment="Left" Height="22" Margin="10,22,0,0" TextWrapping="Wrap" Text="192.168.20.1" VerticalAlignment="Top" Width="142" RenderTransformOrigin="0.542,0.159"/>
+                <Label Content="Modbus IP ( IP )" HorizontalAlignment="Left" Margin="10,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="233" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
+                <Button x:Name="btnConnectModbus" Content="Start" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Height="22" Click="btnConnectModbus_Click" Margin="157,22,0,0"/>
+                <ComboBox x:Name="cmbModbusRegisters" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top" Width="233"/>
+                <Button x:Name="btnModbusRead" Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Height="22" Click="btnModbusRead_Click" Margin="248,64,0,0"/>
+                <TextBox x:Name="txtModbusReadResult" HorizontalAlignment="Left" Height="22" Margin="339,64,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
+            </Grid>
+        </Border>
 
     </Grid>
 </Window>

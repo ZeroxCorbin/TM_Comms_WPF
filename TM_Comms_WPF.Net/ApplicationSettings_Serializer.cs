@@ -39,33 +39,9 @@ namespace ApplicationSettingsNS
         [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
         public partial class ApplicationSettings
         {
-            private string _ListenNodeConnectionString = "192.168.1.1:5890";
-
-            private string _MonitorConnectionString = "192.168.1.1:8080";
-
-            public string ListenNodeConnectionString
-            {
-                get
-                {
-                    return this._ListenNodeConnectionString;
-                }
-                set
-                {
-                    this._ListenNodeConnectionString = value;
-                }
-            }
-
-            public string MonitorConnectionString
-            {
-                get
-                {
-                    return this._MonitorConnectionString;
-                }
-                set
-                {
-                    this._MonitorConnectionString = value;
-                }
-            }
+            public string ListenNodeConnectionString { get; set; } = "192.168.1.1:5890";
+            public string MonitorConnectionString { get; set; } = "192.168.1.1:8080";
+            public string ModbusIP { get; set; } = "192.168.1.1";
         }
     }
 }

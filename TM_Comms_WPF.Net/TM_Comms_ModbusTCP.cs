@@ -24,11 +24,24 @@ namespace TM_Comms_WPF.Net
 
         public bool Connect(string ip)
         {
-            tcpModbus.Connect(ip);
+            try
+            {
+                tcpModbus.Connect(ip);
+            }
+            catch
+            {
+
+            }
+            
             if (tcpModbus.Connected)
                 return true;
             else
                 return false;
+        }
+
+        public void Disconnect()
+        {
+            tcpModbus.Disconnect();
         }
 
         public bool GetBool(int addr)

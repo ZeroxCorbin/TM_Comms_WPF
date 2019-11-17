@@ -26,6 +26,8 @@ namespace TM_Comms_WPF.Net
     {
         clsSocket monitorSoc;
         clsSocket listenNodeSoc;
+        TM_Comms_ModbusTCP modbusSoc;
+        TM_Comms_ModbusDict modbusDictionary;
 
         TM_Comms_ListenNode listenNode;
 
@@ -44,11 +46,14 @@ namespace TM_Comms_WPF.Net
 
             InitializeComponent();
 
+            modbusDictionary = new TM_Comms_ModbusDict();
+            cmbModbusRegisters.ItemsSource = modbusDictionary.MobusData.Keys;
+
             listenNode = GetNode();
 
             txtListenNodeConnectionString.Text = appSettings.ListenNodeConnectionString;
-            txtConnectionString.Text = appSettings.MonitorConnectionString;
-
+            txtMonitorConnectionString.Text = appSettings.MonitorConnectionString;
+            txtModbusIP.Text = appSettings.ModbusIP;
         }
 
         private TM_Comms_ListenNode GetNode()
@@ -145,7 +150,7 @@ namespace TM_Comms_WPF.Net
         }
         private void ListenNodeSoc_DataReceived(object sender, clsSocket.clsSocketEventArgs data)
         {
-            
+
             var disp = this.Dispatcher;/* Get the UI dispatcher, each WPF object has a dispatcher which you can query*/
             disp.BeginInvoke(DispatcherPriority.Normal,
                     (Action)(() =>
@@ -156,17 +161,17 @@ namespace TM_Comms_WPF.Net
         }
         private void btnSendListenNode_Click(object sender, RoutedEventArgs e)
         {
-            rectCommandResponse.Fill = new SolidColorBrush(Color.FromRgb(255,255,0));
+            rectCommandResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
             listenNodeSoc?.Write(listenNode.Message);
         }
 
         private void btnConnectMonitor_Click(object sender, RoutedEventArgs e)
         {
+            MonitorSoc_Close();
+
             if (btnConnectMonitor.Tag == null)
             {
-                MonitorSoc_Close();
-
-                monitorSoc = new clsSocket(txtConnectionString.Text);
+                monitorSoc = new clsSocket(txtMonitorConnectionString.Text);
 
                 if (monitorSoc.Connect(true))
                 {
@@ -178,13 +183,11 @@ namespace TM_Comms_WPF.Net
                     btnConnectMonitor.Content = "Stop";
                     btnConnectMonitor.Tag = 1;
 
-                    appSettings.ListenNodeConnectionString = txtConnectionString.Text;
+                    appSettings.ListenNodeConnectionString = txtMonitorConnectionString.Text;
                 }
             }
             else
             {
-                MonitorSoc_Close();
-
                 btnConnectMonitor.Content = "Start";
                 btnConnectMonitor.Tag = null;
             }
@@ -254,7 +257,7 @@ namespace TM_Comms_WPF.Net
 
         private void txtScriptData_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(listenNode != null)
+            if (listenNode != null)
             {
                 listenNode.Data = txtScriptData.Text;
                 txtDataString.Text = listenNode.Message;
@@ -272,22 +275,78 @@ namespace TM_Comms_WPF.Net
 
             monitorSoc?.StopRecieveAsync();
             monitorSoc?.Disconnect();
+
             listenNodeSoc?.StopRecieveAsync();
             listenNodeSoc?.Disconnect();
+
+            modbusSoc?.Disconnect();
         }
 
+
+        //float test = modbusSoc.GetFloat(0x1B71);
+        //bool test1 = modbusSoc.GetBool(0x1C22);
+        //bool test2 = modbusSoc.GetBool(0x1C28);
+        //int speed = modbusSoc.GetInt16(0x1C85);
+        //int error = modbusSoc.GetInt32(0x1C98);
         private void btnConnectModbus_Click(object sender, RoutedEventArgs e)
         {
-            TM_Comms_ModbusTCP tcp = new TM_Comms_ModbusTCP();
-            if (tcp.Connect("192.168.20.1"))
+            ModbusClose();
+
+            if (btnConnectModbus.Tag == null)
             {
-                float test = tcp.GetFloat(0x1B71);
-                bool test1 = tcp.GetBool(0x1C22);
-                bool test2 = tcp.GetBool(0x1C28);
-                int speed = tcp.GetInt16(0x1C85);
-                int error = tcp.GetInt32(0x1C98);
+                modbusSoc = new TM_Comms_ModbusTCP();
+
+                if (modbusSoc.Connect(txtModbusIP.Text))
+                {
+
+                    btnConnectModbus.Content = "Stop";
+                    btnConnectModbus.Tag = 1;
+
+                    appSettings.ModbusIP = txtModbusIP.Text;
+                }
             }
-            
+            else
+            {
+                btnConnectModbus.Content = "Start";
+                btnConnectModbus.Tag = null;
+            }
+
+        }
+
+        private void ModbusClose()
+        {
+            if (modbusSoc != null)
+            {
+                modbusSoc.Disconnect();
+            }
+        }
+
+        private void btnModbusRead_Click(object sender, RoutedEventArgs e)
+        {
+            if (modbusSoc != null)
+            {
+                switch (modbusDictionary.MobusData[(string)cmbModbusRegisters.SelectedItem].Type)
+                {
+                    case TM_Comms_ModbusDict.MobusValue.DataTypes.Bool:
+                        txtModbusReadResult.Text = modbusSoc.GetBool(modbusDictionary.MobusData[(string)cmbModbusRegisters.SelectedItem].Addr).ToString();
+
+                    break;
+                    case TM_Comms_ModbusDict.MobusValue.DataTypes.Float:
+                        txtModbusReadResult.Text = modbusSoc.GetFloat(modbusDictionary.MobusData[(string)cmbModbusRegisters.SelectedItem].Addr).ToString();
+                        break;
+                    case TM_Comms_ModbusDict.MobusValue.DataTypes.Int16:
+                        txtModbusReadResult.Text = modbusSoc.GetInt16(modbusDictionary.MobusData[(string)cmbModbusRegisters.SelectedItem].Addr).ToString();
+                        break;
+                    case TM_Comms_ModbusDict.MobusValue.DataTypes.Int32:
+                        txtModbusReadResult.Text = modbusSoc.GetInt32(modbusDictionary.MobusData[(string)cmbModbusRegisters.SelectedItem].Addr).ToString();
+                        break;
+                    //case TM_Comms_ModbusDict.MobusValue.DataTypes.String:
+                    //    txtModbusReadResult.Text = modbusSoc.ge(modbusDictionary.MobusData[(string)cmbModbusRegisters.SelectedItem].Addr).ToString();
+                    //    break;
+                }
+
+
+            }
         }
     }
 }
