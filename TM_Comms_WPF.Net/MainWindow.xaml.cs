@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using clsSocketNS;
+using ApplicationSettingsNS;
 
 namespace TM_Comms_WPF.Net
 {
@@ -28,6 +29,8 @@ namespace TM_Comms_WPF.Net
 
         TM_Comms_ListenNode listenNode;
 
+        ApplicationSettings_Serializer.ApplicationSettings appSettings;
+
         private TM_Monitor.Rootobject _data;
         public TM_Monitor.Rootobject data
         {
@@ -37,10 +40,14 @@ namespace TM_Comms_WPF.Net
 
         public MainWindow()
         {
+            appSettings = ApplicationSettings_Serializer.Load("appsettings.xml");
+
             InitializeComponent();
 
             listenNode = GetNode();
 
+            txtListenNodeConnectionString.Text = appSettings.ListenNodeConnectionString;
+            txtConnectionString.Text = appSettings.MonitorConnectionString;
 
         }
 
@@ -97,6 +104,8 @@ namespace TM_Comms_WPF.Net
 
                     btnConnectListenNode.Content = "Stop";
                     btnConnectListenNode.Tag = 1;
+
+                    appSettings.ListenNodeConnectionString = txtListenNodeConnectionString.Text;
                 }
             }
             else
@@ -168,6 +177,8 @@ namespace TM_Comms_WPF.Net
 
                     btnConnectMonitor.Content = "Stop";
                     btnConnectMonitor.Tag = 1;
+
+                    appSettings.ListenNodeConnectionString = txtConnectionString.Text;
                 }
             }
             else
@@ -257,10 +268,26 @@ namespace TM_Comms_WPF.Net
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            ApplicationSettings_Serializer.Save("appsettings.xml", appSettings);
+
             monitorSoc?.StopRecieveAsync();
             monitorSoc?.Disconnect();
             listenNodeSoc?.StopRecieveAsync();
             listenNodeSoc?.Disconnect();
+        }
+
+        private void btnConnectModbus_Click(object sender, RoutedEventArgs e)
+        {
+            TM_Comms_ModbusTCP tcp = new TM_Comms_ModbusTCP();
+            if (tcp.Connect("192.168.20.1"))
+            {
+                float test = tcp.GetFloat(0x1B71);
+                bool test1 = tcp.GetBool(0x1C22);
+                bool test2 = tcp.GetBool(0x1C28);
+                int speed = tcp.GetInt16(0x1C85);
+                int error = tcp.GetInt32(0x1C98);
+            }
+            
         }
     }
 }

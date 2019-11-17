@@ -1,0 +1,186 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TM_Comms_WPF.Net
+{
+    public class TM_Comms_ModbusDict
+    {
+        public class MobusValue
+        {
+            public enum DataTypes
+            {
+                Bool,
+                Int16,
+                Int32,
+                Float,
+                String
+            }
+            public enum AccessTypes
+            {
+                R,
+                W,
+                RW
+            }
+
+            public int Addr;
+            public DataTypes Type;
+            public AccessTypes Access;
+        }
+
+        public Dictionary<string, MobusValue> MobusData = new Dictionary<string, MobusValue>()
+        {
+            { "Error", new MobusValue { Addr=0x1C21, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.R } },
+            { "ProjectRunning", new MobusValue { Addr=0x1C22, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.R } },
+            { "ProjectEditing", new MobusValue { Addr=0x1C23, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.R } },
+            { "ProjectPause", new MobusValue { Addr=0x1C24, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.R } },
+            { "GetControl", new MobusValue { Addr=0x1C25, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.R } },
+            { "Light", new MobusValue { Addr=0x1C26, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.RW } },
+            { "SafeguardPortA", new MobusValue { Addr=0x1C27, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.R } },
+            { "EStop", new MobusValue { Addr=0x1C28, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.R } },
+            { "ProjectRunningSpeed", new MobusValue { Addr=0x1BBD, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "MAMode", new MobusValue { Addr=0x1BBE, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "PlayPause", new MobusValue { Addr=0x1BC0, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.W } },
+            { "Stop", new MobusValue { Addr=0x1BC1, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.W } },
+            { "Stick+", new MobusValue { Addr=0x1BC2, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.W } },
+            { "Stick-", new MobusValue { Addr=0x1BC3, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.W } },
+            { "TCPForceX", new MobusValue { Addr=0x1E79, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "TCPForceY", new MobusValue { Addr=0x1E7B, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "TCPForceZ", new MobusValue { Addr=0x1E7D, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "TCPForce3D", new MobusValue { Addr=0x1E7F, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "TorqueJoint1", new MobusValue { Addr=0x1EDD, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "TorqueJoint2", new MobusValue { Addr=0x1EDF, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "TorqueJoint3", new MobusValue { Addr=0x1EE1, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "TorqueJoint4", new MobusValue { Addr=0x1EE3, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "TorqueJoint5", new MobusValue { Addr=0x1EE5, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "TorqueJoint6", new MobusValue { Addr=0x1EE7, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosCurrentBaseNoToolX", new MobusValue { Addr=0x1B59, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosCurrentBaseNoToolY", new MobusValue { Addr=0x1B5B, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosCurrentBaseNoToolZ", new MobusValue { Addr=0x1B5D, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosCurrentBaseNoToolRx", new MobusValue { Addr=0x1B5F, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosCurrentBaseNoToolRy", new MobusValue { Addr=0x1B61, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosCurrentBaseNoToolRz", new MobusValue { Addr=0x1B63, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "Joint1", new MobusValue { Addr=0x1B65, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "Joint2", new MobusValue { Addr=0x1B67, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "Joint3", new MobusValue { Addr=0x1B69, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "Joint4", new MobusValue { Addr=0x1B6B, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "Joint5", new MobusValue { Addr=0x1B6D, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "Joint6", new MobusValue { Addr=0x1B6F, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosCurrentBaseToolX", new MobusValue { Addr=0x1B71, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosCurrentBaseToolY", new MobusValue { Addr=0x1B73, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosCurrentBaseToolZ", new MobusValue { Addr=0x1B75, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosCurrentBaseToolRx", new MobusValue { Addr=0x1B77, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosCurrentBaseToolRy", new MobusValue { Addr=0x1B79, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosCurrentBaseToolRz", new MobusValue { Addr=0x1B7B, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosRobotBaseNoToolX", new MobusValue { Addr=0x1B7D, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosRobotBaseNoToolY", new MobusValue { Addr=0x1B7F, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosRobotBaseNoToolZ", new MobusValue { Addr=0x1B81, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosRobotBaseNoToolRx", new MobusValue { Addr=0x1B83, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosRobotBaseNoToolRy", new MobusValue { Addr=0x1B85, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosRobotBaseNoToolRz", new MobusValue { Addr=0x1B87, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosRobotBaseToolX", new MobusValue { Addr=0x1B89, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosRobotBaseToolY", new MobusValue { Addr=0x1B8B, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosRobotBaseToolZ", new MobusValue { Addr=0x1B8D, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosRobotBaseToolRx", new MobusValue { Addr=0x1B8F, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosRobotBaseToolRy", new MobusValue { Addr=0x1B91, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "PosRobotBaseToolRz", new MobusValue { Addr=0x1B93, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "TCPX", new MobusValue { Addr=0x1CBA, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "TCPY", new MobusValue { Addr=0x1CBC, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "TCPZ", new MobusValue { Addr=0x1CBE, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "TCPRX", new MobusValue { Addr=0x1CC0, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "TCPRY", new MobusValue { Addr=0x1CC2, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "TCPRZ", new MobusValue { Addr=0x1CC4, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "TCPMass", new MobusValue { Addr=0x1CC6, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "Ixx", new MobusValue { Addr=0x1CC8, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "Iyy", new MobusValue { Addr=0x1CCA, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "Izz", new MobusValue { Addr=0x1CCC, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "MassCenterX", new MobusValue { Addr=0x1CCE, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "MassCenterY", new MobusValue { Addr=0x1CD0, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "MassCenterZ", new MobusValue { Addr=0x1CD2, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "MassCenterRX", new MobusValue { Addr=0x1CD4, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "MassCenterRY", new MobusValue { Addr=0x1CD6, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "MassCenterRZ", new MobusValue { Addr=0x1CD8, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeTCPSpeed", new MobusValue { Addr=0x1F41, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeTCPSpeedunderHandGuideMode", new MobusValue { Addr=0x1F43, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeTCPForce", new MobusValue { Addr=0x1F45, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeJoint1Speed", new MobusValue { Addr=0x1F47, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeJoint2Speed", new MobusValue { Addr=0x1F49, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeJoint3Speed", new MobusValue { Addr=0x1F4B, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeJoint4Speed", new MobusValue { Addr=0x1F4D, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeJoint5Speed", new MobusValue { Addr=0x1F4F, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeJoint6Speed", new MobusValue { Addr=0x1F51, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeJoint1Torque", new MobusValue { Addr=0x1F53, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeJoint2Torque", new MobusValue { Addr=0x1F55, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeJoint3Torque", new MobusValue { Addr=0x1F57, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeJoint4Torque", new MobusValue { Addr=0x1F59, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeJoint5Torque", new MobusValue { Addr=0x1F5B, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeJoint6Torque", new MobusValue { Addr=0x1F5D, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeMinJoint1Position", new MobusValue { Addr=0x1F5F, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeMaxJoint1Position", new MobusValue { Addr=0x1F61, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeMinJoint2Position", new MobusValue { Addr=0x1F63, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeMaxJoint2Position", new MobusValue { Addr=0x1F65, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeMinJoint3Position", new MobusValue { Addr=0x1F67, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeMaxJoint3Position", new MobusValue { Addr=0x1F69, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeMinJoint4Position", new MobusValue { Addr=0x1F6B, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeMaxJoint4Position", new MobusValue { Addr=0x1F6D, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeMinJoint5Position", new MobusValue { Addr=0x1F6F, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeMaxJoint5Position", new MobusValue { Addr=0x1F71, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeMinJoint6Position", new MobusValue { Addr=0x1F73, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "SafeMaxJoint6Position", new MobusValue { Addr=0x1F75, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabTCPSpeed", new MobusValue { Addr=0x1FA5, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabTCPSpeedunderHandGuideMode", new MobusValue { Addr=0x1FA7, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabTCPForce", new MobusValue { Addr=0x1FA9, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabJoint1Speed", new MobusValue { Addr=0x1FAB, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabJoint2Speed", new MobusValue { Addr=0x1FAD, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabJoint3Speed", new MobusValue { Addr=0x1FAF, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabJoint4Speed", new MobusValue { Addr=0x1FB1, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabJoint5Speed", new MobusValue { Addr=0x1FB3, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabJoint6Speed", new MobusValue { Addr=0x1FB5, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabJoint1Torque", new MobusValue { Addr=0x1FB7, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabJoint2Torque", new MobusValue { Addr=0x1FB9, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabJoint3Torque", new MobusValue { Addr=0x1FBB, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabJoint4Torque", new MobusValue { Addr=0x1FBD, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabJoint5Torque", new MobusValue { Addr=0x1FBF, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabJoint6Torque", new MobusValue { Addr=0x1FC1, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabMotionSpeed", new MobusValue { Addr=0x1FDB, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabPTPSpeed", new MobusValue { Addr=0x1FDD, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabMinimumpossiblecontactarea", new MobusValue { Addr=0x1FDF, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "CollabGSensor", new MobusValue { Addr=0x1FE1, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.R } },
+            { "CurrentTimeYear", new MobusValue { Addr=0x1C85, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "CurrentTimeMonth", new MobusValue { Addr=0x1C86, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "CurrentTimeDate", new MobusValue { Addr=0x1C87, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "CurrentTimeHour", new MobusValue { Addr=0x1C88, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "CurrentTimeMinute", new MobusValue { Addr=0x1C89, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "CurrentTimeSecond", new MobusValue { Addr=0x1C8A, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "IPCConnectNumber", new MobusValue { Addr=0x1C8B, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "HMIVersion", new MobusValue { Addr=0x1C8C, Type=MobusValue.DataTypes.String, Access=MobusValue.AccessTypes.R } },
+            { "EtherCATpackage", new MobusValue { Addr=0x1C91, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "CameraLinkingUSB", new MobusValue { Addr=0x1C92, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "CompensationOfFlywheelSignal", new MobusValue { Addr=0x1C93, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "HarmonicDriverRemainingLife", new MobusValue { Addr=0x1C94, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "UserConnectLimit", new MobusValue { Addr=0x1CA2, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "ModbusProxyPort", new MobusValue { Addr=0x1C97, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "LastErrorCode", new MobusValue { Addr=0x1C98, Type=MobusValue.DataTypes.Int32, Access=MobusValue.AccessTypes.R } },
+            { "LastErrorTimeYear", new MobusValue { Addr=0x1C9A, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "LastErrorTimeMonth", new MobusValue { Addr=0x1C9B, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "LastErrorTimeDate", new MobusValue { Addr=0x1C9C, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "LastErrorTimeHour", new MobusValue { Addr=0x1C9D, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "LastErrorTimeMinute", new MobusValue { Addr=0x1C9E, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "LastErrorTimeSecond", new MobusValue { Addr=0x1C9F, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+            { "ControllerTemperature", new MobusValue { Addr=0x1CAC, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "ManipulatorVoltage", new MobusValue { Addr=0x1CAE, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "ManipulatorPowerConsumption", new MobusValue { Addr=0x1CB0, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "ManipulatorCurrent", new MobusValue { Addr=0x1CB2, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "ControlBoxIOCurrent", new MobusValue { Addr=0x1CB4, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "EndModuleIOCurrent", new MobusValue { Addr=0x1CB6, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
+            { "RobotLight", new MobusValue { Addr=0x1CA4, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } },
+
+        };
+
+
+
+
+    }
+}
