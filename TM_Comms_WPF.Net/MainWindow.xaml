@@ -5,7 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF.Net"
         mc:Ignorable="d"
-        Title="TM Communication" Height="456" Width="1079.63" Closing="Window_Closing" MinWidth="800" MinHeight="475">
+        Title="TM Communication" Height="500" Width="1084" Closing="Window_Closing" MinHeight="500" MinWidth="1084">
+    <Window.Resources>
+        <Style x:Key="dgStyleModbus" TargetType="{x:Type DataGrid}">
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderBrush" Value="#FF688CAF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="RowDetailsVisibilityMode" Value="VisibleWhenSelected"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsGrouping" Value="true"/>
+                        <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid Margin="0,0,0,0.5">
         <Border Margin="10,197,0,10" BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Left" Width="548">
             <Grid>
@@ -65,14 +86,62 @@
                 <Rectangle x:Name="rectCommandResponse" Fill="Yellow" HorizontalAlignment="Left" Height="22" Margin="0,152,0,0" Stroke="Black" VerticalAlignment="Top" Width="7"/>
             </Grid>
         </Border>
-        <Border BorderBrush="Black" BorderThickness="1" Margin="563,10,10.5,10">
+        <Border BorderBrush="Black" BorderThickness="1" Margin="563,10,0,10" HorizontalAlignment="Left" Width="497">
             <Grid>
                 <TextBox x:Name="txtModbusIP" HorizontalAlignment="Left" Height="22" Margin="10,22,0,0" TextWrapping="Wrap" Text="192.168.20.1" VerticalAlignment="Top" Width="142" RenderTransformOrigin="0.542,0.159"/>
                 <Label Content="Modbus IP ( IP )" HorizontalAlignment="Left" Margin="10,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="233" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
                 <Button x:Name="btnConnectModbus" Content="Start" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Height="22" Click="btnConnectModbus_Click" Margin="157,22,0,0"/>
-                <ComboBox x:Name="cmbModbusRegisters" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top" Width="233"/>
-                <Button x:Name="btnModbusRead" Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Height="22" Click="btnModbusRead_Click" Margin="248,64,0,0"/>
-                <TextBox x:Name="txtModbusReadResult" HorizontalAlignment="Left" Height="22" Margin="339,64,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
+                <Button x:Name="btnModbusReadAll" Content="Read All" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="70" Height="22" Click="btnModbusReadAll_Click" Margin="248,49,0,0"/>
+                <StackPanel x:Name="stackModbusComboBox" HorizontalAlignment="Left" Height="223" Margin="10,76,0,0" VerticalAlignment="Top" Width="233">
+                    <ComboBox/>
+                    <ComboBox/>
+                    <ComboBox/>
+                    <ComboBox/>
+                    <ComboBox/>
+                    <ComboBox/>
+                    <ComboBox/>
+                    <ComboBox/>
+                    <ComboBox/>
+                    <ComboBox/>
+                </StackPanel>
+                <StackPanel x:Name="stackModbusReadButton" HorizontalAlignment="Left" Height="223" Margin="248,76,0,0" VerticalAlignment="Top" Width="70">
+                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                </StackPanel>
+                <StackPanel x:Name="stackModbusText" HorizontalAlignment="Left" Height="223" Margin="323,76,0,0" VerticalAlignment="Top" Width="87">
+                    <TextBox x:Name="txtModbusReadResult_Copy" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
+                    <TextBox x:Name="txtModbusReadResult_Copy1" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
+                    <TextBox x:Name="txtModbusReadResult_Copy2" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
+                    <TextBox x:Name="txtModbusReadResult_Copy3" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
+                    <TextBox x:Name="txtModbusReadResult_Copy4" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
+                    <TextBox x:Name="txtModbusReadResult_Copy5" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
+                    <TextBox x:Name="txtModbusReadResult_Copy6" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
+                    <TextBox x:Name="txtModbusReadResult_Copy7" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
+                    <TextBox x:Name="txtModbusReadResult_Copy8" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
+                    <TextBox x:Name="txtModbusReadResult_Copy9" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
+                </StackPanel>
+                <StackPanel x:Name="stackModbusWriteButton" HorizontalAlignment="Left" Height="223" Margin="415,76,0,0" VerticalAlignment="Top" Width="70">
+                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
+                </StackPanel>
+                <Label Content="Modbus Register Name" HorizontalAlignment="Left" Margin="10,54,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="233" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
+                <Label Content="Value" HorizontalAlignment="Left" Margin="323,54,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="87" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
             </Grid>
         </Border>
 
