@@ -40,22 +40,34 @@ namespace ApplicationSettingsNS
         [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
         public partial class ApplicationSettings
         {
-            private string[] _ModbusComboBoxIndices = {
-                "Current Base With Tool X",
-                "Current Base With Tool Y",
-                "Current Base With Tool Z",
-                "Current Base With Tool Rx",
-            "Current Base With Tool Ry",
-            "Current Base With Tool Rz",
-            "TCP Force X",
-            "TCP Force Y",
-            "TCP Force Z",
-            "TCP Force 3D"};
             public string ListenNodeConnectionString { get; set; } = "192.168.1.1:5890";
             public string MonitorConnectionString { get; set; } = "192.168.1.1:8080";
             public string ModbusIP { get; set; } = "192.168.1.1";
 
-            public string[] ModbusComboBoxIndices { get { return _ModbusComboBoxIndices; } set { _ModbusComboBoxIndices = value; } } 
+            public string[] ModbusComboBoxIndices { get; set; } = {
+                "Current Base With Tool X",
+                "Current Base With Tool Y",
+                "Current Base With Tool Z",
+                "Current Base With Tool Rx",
+                "Current Base With Tool Ry",
+                "Current Base With Tool Rz",
+                "TCP Force X",
+                "TCP Force Y",
+                "TCP Force Z",
+                "TCP Force 3D"};
+
+            public string[] ModbusUserComboBoxIndices { get; set; } = {
+                "Int16",
+                "Int16",
+                "Int16",
+                "Int16",
+                "Int16",
+                "Int16",
+                "Int16",
+                "Int16",
+                "Int16",
+                "Int16"};
+
         }
     }
 }

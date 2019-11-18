@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Wisdom.Utils.Driver;
 using Wisdom.Utils.Driver.Modbus;
 
 namespace TM_Comms_WPF.Net
@@ -44,6 +45,8 @@ namespace TM_Comms_WPF.Net
             tcpModbus.Disconnect();
         }
 
+        
+
         public bool GetBool(int addr)
         {
             return tcpModbus.GetOneDiscreteBit(addr);
@@ -53,24 +56,43 @@ namespace TM_Comms_WPF.Net
         public int GetInt16(int addr)
         {
             byte[] byteArray = tcpModbus.GetMultipleBytes(addr, 1);
-            byteArray = byteArray.Reverse().ToArray();
+            Array.Reverse(byteArray);
             return System.BitConverter.ToInt16(byteArray, 0);
         }
 
         public int GetInt32(int addr)
         {
             byte[] byteArray = tcpModbus.GetMultipleBytes(addr, 2);
-            byteArray = byteArray.Reverse().ToArray();
+            Array.Reverse(byteArray);
             return System.BitConverter.ToInt32(byteArray, 0);
         }
 
         public float GetFloat(int addr)
         {
             byte[] byteArray = tcpModbus.GetMultipleBytes(addr, 2);
-            byteArray = byteArray.Reverse().ToArray();
+            Array.Reverse(byteArray);
             return System.BitConverter.ToSingle(byteArray, 0);
         }
 
+        public string GetString(int addr)
+        {
+            
+            byte[] byteArray = tcpModbus.GetMultipleBytes(addr, 5);
+            Array.Reverse(byteArray);
+            return Encoding.UTF8.GetString(byteArray);
+        }
+
+        public void SetBool(int addr, bool val)
+        {
+            tcpModbus.SendOneBit(addr, val);
+        }
+
+        public void SetInt16(int addr, int val)
+        {
+            byte[] byteArray = BitConverter.GetBytes(val);
+            Array.Reverse(byteArray);
+            tcpModbus.SendMultipleWords(addr, byteArray);
+        }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
