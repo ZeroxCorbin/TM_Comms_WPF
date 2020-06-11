@@ -17,7 +17,7 @@ namespace TM_Comms_WPF.Net
                 root = JsonConvert.DeserializeObject<Rootobject>(json);
                 root._Data = JsonConvert.DeserializeObject<Data>(root.Data);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
 
             }

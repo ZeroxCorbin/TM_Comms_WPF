@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ApplicationSettingsNS;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,6 +14,16 @@ namespace TM_Comms_WPF.Net
     /// </summary>
     public partial class App : Application
     {
-        
+        public static ApplicationSettings_Serializer.ApplicationSettings Settings;
+
+        public App()
+        {
+            Settings = ApplicationSettings_Serializer.Load("appsettings.xml");
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+        }        
     }
 }

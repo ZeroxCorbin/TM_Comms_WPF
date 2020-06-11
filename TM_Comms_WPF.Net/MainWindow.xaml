@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF.Net"
         mc:Ignorable="d"
-        Title="TM Communication" Height="610" Width="1100" Closing="Window_Closing" MinHeight="610" MinWidth="1100">
+        Title="TM Communication" Height="120" Width="589.322" Closing="Window_Closing">
     <Window.Resources>
         <Style x:Key="dgStyleModbus" TargetType="{x:Type DataGrid}">
             <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
@@ -28,187 +28,16 @@
         </Style>
     </Window.Resources>
     <Grid Margin="0,0,0,0.5">
-        <Border Margin="10,197,0,9.5" BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Left" Width="565">
-            <Grid Margin="0,0,-1,0">
-                <TextBox x:Name="txtMonitorResults" Margin="10,49,0,10" TextWrapping="Wrap" HorizontalAlignment="Left" Width="373"/>
-                <TextBox x:Name="txtMonitorDataType" HorizontalAlignment="Left" Height="22" Margin="248,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="64" IsReadOnly="True" RenderTransformOrigin="0.375,2.318"/>
-                <Button x:Name="btnConnectMonitor" Content="Start" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Margin="157,22,0,0" Click="btnConnectMonitor_Click" Height="22"/>
-                <TextBox x:Name="txtMonitorConnectionString" HorizontalAlignment="Left" Height="22" Margin="10,22,0,0" TextWrapping="Wrap" Text="192.168.20.1:8080" VerticalAlignment="Top" Width="142"/>
-                <TextBox x:Name="txtMonitorPoolID" HorizontalAlignment="Left" Height="22" Margin="317,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="66" IsReadOnly="True"/>
-                <Border Margin="388,10,10,132" BorderThickness="1" BorderBrush="Black">
-                    <Grid>
-                        <TextBox x:Name="txtMonitorRobot_X" HorizontalAlignment="Left" Height="22" Margin="19,49,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                        <TextBox x:Name="txtMonitorRobot_Y" HorizontalAlignment="Left" Height="22" Margin="19,76,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                        <TextBox x:Name="txtMonitorRobot_Z" HorizontalAlignment="Left" Height="22" Margin="19,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                        <TextBox x:Name="txtMonitorRobot_RX" HorizontalAlignment="Left" Height="22" Margin="19,130,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                        <TextBox x:Name="txtMonitorRobot_RY" HorizontalAlignment="Left" Height="22" Margin="19,157,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                        <TextBox x:Name="txtMonitorRobot_RZ" HorizontalAlignment="Left" Height="22" Margin="19,184,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                        <TextBox x:Name="txtMonitorRobot_Base" HorizontalAlignment="Left" Height="22" Margin="19,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="125" IsReadOnly="True"/>
-                        <TextBox x:Name="txtMonitorRobot_Xa" HorizontalAlignment="Left" Height="22" Margin="84,49,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                        <TextBox x:Name="txtMonitorRobot_Ya" HorizontalAlignment="Left" Height="22" Margin="84,76,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                        <TextBox x:Name="txtMonitorRobot_Za" HorizontalAlignment="Left" Height="22" Margin="84,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                        <TextBox x:Name="txtMonitorRobot_RXa" HorizontalAlignment="Left" Height="22" Margin="84,130,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                        <TextBox x:Name="txtMonitorRobot_RYa" HorizontalAlignment="Left" Height="22" Margin="84,157,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                        <TextBox x:Name="txtMonitorRobot_RZa" HorizontalAlignment="Left" Height="22" Margin="84,184,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                        <Label Content="Current Base" HorizontalAlignment="Left" Margin="19,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="125" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom"/>
-                        <Label Content="X" HorizontalAlignment="Left" Margin="0,49,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                        <Label Content="Y" HorizontalAlignment="Left" Margin="0,76,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                        <Label Content="Z" HorizontalAlignment="Left" Margin="0,103,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                        <Label Content="RX" HorizontalAlignment="Left" Margin="0,130,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                        <Label Content="RY" HorizontalAlignment="Left" Margin="0,157,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                        <Label Content="RZ" HorizontalAlignment="Left" Margin="0,184,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                    </Grid>
-                </Border>
-                <Label Content="Monitor Connection String ( IP:8080 )" HorizontalAlignment="Left" Margin="10,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="233" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
-                <Label Content="Data Type" HorizontalAlignment="Left" Margin="248,1.05,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="64" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                <Label Content="Pool ID" HorizontalAlignment="Left" Margin="317,1.05,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="64" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-            </Grid>
-        </Border>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="182" Margin="10,10,0,0" VerticalAlignment="Top" Width="565">
-            <Grid Margin="-1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="16*"/>
-                    <ColumnDefinition Width="811*"/>
-                </Grid.ColumnDefinitions>
-                <Button x:Name="btnConnectListenNode" Content="Start" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Margin="143.5,22,0,0" Height="22" Click="btnConnectListenNode_Click" Grid.Column="1"/>
-                <TextBox x:Name="txtListenNodeConnectionString" HorizontalAlignment="Left" Height="22" Margin="7,22,0,0" TextWrapping="Wrap" Text="192.168.20.1:5890" VerticalAlignment="Top" Width="142" Grid.ColumnSpan="2"/>
-                <TextBox x:Name="txtScriptID" HorizontalAlignment="Left" Height="22" Margin="387,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" IsReadOnly="True" Grid.Column="1"/>
-                <TextBox x:Name="txtScriptData" Height="20" Margin="7,66,10,0" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="txtScriptData_TextChanged" Text="ChangeBase(&quot;RobotBase&quot;)" Grid.ColumnSpan="2"/>
-                <TextBox x:Name="txtDataString" Margin="7,108,10,0" TextWrapping="Wrap" Height="22" VerticalAlignment="Top" IsReadOnly="True" Grid.ColumnSpan="2"/>
-                <ComboBox x:Name="cmbDataType" HorizontalAlignment="Left" Margin="262,22,0,0" VerticalAlignment="Top" Width="120" IsReadOnly="True" SelectionChanged="cmbDataType_SelectionChanged" SelectedIndex="0" Grid.Column="1">
-                    <ComboBoxItem Content="TMSCT (Script)" Tag="0"/>
-                    <ComboBoxItem Content="TMSTA (Status)" Tag="1"/>
-                </ComboBox>
-                <Button x:Name="btnSendListenNode" Content="Send" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Margin="436,22,0,0" Height="22" Click="btnSendListenNode_Click" Grid.Column="1"/>
-                <TextBox x:Name="txtDataResponse" Margin="7,152,10,0" TextWrapping="Wrap" Height="22" VerticalAlignment="Top" IsReadOnly="True" Grid.ColumnSpan="2"/>
-                <Label Content="Listen Node Connection String ( IP:5890 )" HorizontalAlignment="Left" Margin="7,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="233" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                <Label Content="Header" HorizontalAlignment="Left" Margin="262,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="120" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center" Grid.Column="1"/>
-                <Label Content="sID" HorizontalAlignment="Left" Margin="387,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="44" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center" Grid.Column="1"/>
-                <Label Content="Script (Any Function from Expression Editor)" Margin="7,43.741,10,0" RenderTransformOrigin="-14.85,0.857" Height="22" Padding="1,3,1,1" UseLayoutRounding="False" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                <Label Content="Command (Start Byte=$ Header, Data Length, Script ID, Script, *Checksum \r\n)" Margin="7,85.741,10,0" RenderTransformOrigin="-14.85,0.857" Height="22" Padding="1,3,1,1" UseLayoutRounding="False" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                <Label Content="Response" Margin="7,129.741,10,0" RenderTransformOrigin="-14.85,0.857" Height="22" Padding="1,3,1,1" UseLayoutRounding="False" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                <Rectangle x:Name="rectCommandResponse" Fill="Yellow" HorizontalAlignment="Left" Height="22" Margin="0,152,0,0" Stroke="Black" VerticalAlignment="Top" Width="7"/>
-            </Grid>
-        </Border>
-        <Border BorderBrush="Black" BorderThickness="1" Margin="580,10,0,9.5" HorizontalAlignment="Left" Width="497">
+        <Border Height="72" Margin="10,10,10.5,0" VerticalAlignment="Top" BorderThickness="1" BorderBrush="Black">
             <Grid>
-                <TextBox x:Name="txtModbusIP" HorizontalAlignment="Left" Height="22" Margin="10,22,0,0" TextWrapping="Wrap" Text="192.168.20.1" VerticalAlignment="Top" Width="142" RenderTransformOrigin="0.542,0.159"/>
-                <Label Content="Modbus IP ( IP )" HorizontalAlignment="Left" Margin="10,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="233" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
-                <Button x:Name="btnConnectModbus" Content="Start" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Height="22" Click="btnConnectModbus_Click" Margin="157,22,0,0"/>
-                <Button x:Name="btnModbusReadAll" Content="Read All" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="70" Height="22" Click="btnModbusReadAll_Click" Margin="248,49,0,0"/>
-                <StackPanel x:Name="stackModbusComboBox" HorizontalAlignment="Left" Height="223" Margin="10,76,0,0" VerticalAlignment="Top" Width="233">
-                    <ComboBox/>
-                    <ComboBox/>
-                    <ComboBox/>
-                    <ComboBox/>
-                    <ComboBox/>
-                    <ComboBox/>
-                    <ComboBox/>
-                    <ComboBox/>
-                    <ComboBox/>
-                    <ComboBox/>
-                </StackPanel>
-                <StackPanel x:Name="stackModbusReadButton" HorizontalAlignment="Left" Height="223" Margin="248,76,0,0" VerticalAlignment="Top" Width="70">
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                </StackPanel>
-                <StackPanel x:Name="stackModbusText" HorizontalAlignment="Left" Height="223" Margin="323,76,0,0" VerticalAlignment="Top" Width="87">
-                    <TextBox x:Name="txtModbusReadResult_Copy" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy1" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy2" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy3" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy4" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy5" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy6" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy7" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy8" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy9" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                </StackPanel>
-                <StackPanel x:Name="stackModbusWriteButton" HorizontalAlignment="Left" Height="223" Margin="415,76,0,0" VerticalAlignment="Top" Width="70">
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                </StackPanel>
-                <Label Content="Modbus Register Name" HorizontalAlignment="Left" Margin="10,54,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="233" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
-                <Label Content="Value" HorizontalAlignment="Left" Margin="323,54,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="87" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                <StackPanel x:Name="stackModbusUserComboBox" HorizontalAlignment="Left" Height="224" Margin="112,322,0,0" VerticalAlignment="Top" Width="79">
-                    <ComboBox/>
-                    <ComboBox/>
-                    <ComboBox/>
-                    <ComboBox/>
-                    <ComboBox/>
-                    <ComboBox/>
-                    <ComboBox/>
-                    <ComboBox/>
-                    <ComboBox/>
-                    <ComboBox/>
-                </StackPanel>
-                <StackPanel x:Name="stackModbusUserReadButton" HorizontalAlignment="Left" Height="224" Margin="196,322,0,0" VerticalAlignment="Top" Width="70">
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Read" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                </StackPanel>
-                <StackPanel x:Name="stackModbusUserText" HorizontalAlignment="Left" Height="224" Margin="271,322,0,0" VerticalAlignment="Top" Width="87">
-                    <TextBox x:Name="txtModbusReadResult_Copy10" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy11" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy12" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy13" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy14" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy15" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy16" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy17" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy18" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                    <TextBox x:Name="txtModbusReadResult_Copy19" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.542,0.159"/>
-                </StackPanel>
-                <StackPanel x:Name="stackModbusUserWriteButton" HorizontalAlignment="Left" Height="224" Margin="363,322,0,0" VerticalAlignment="Top" Width="70">
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                    <Button Content="Write" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" Height="22"/>
-                </StackPanel>
-                <Label Content="Modbus User Register" HorizontalAlignment="Left" Margin="10,299,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="233" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
-                <Label Content="Value" HorizontalAlignment="Left" Margin="323,299,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="87" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                <StackPanel x:Name="stackModbusUserLabels" HorizontalAlignment="Left" Height="225" Margin="10,321,0,0" VerticalAlignment="Top" Width="97">
-                    <Label Content="9000" Padding="3,3,6,3" HorizontalContentAlignment="Right"/>
-                    <Label Content="9000" Padding="3,3,6,3" HorizontalContentAlignment="Right"/>
-                    <Label Content="9000" Padding="3,3,6,3" HorizontalContentAlignment="Right"/>
-                    <Label Content="9000" Padding="3,3,6,3" HorizontalContentAlignment="Right"/>
-                    <Label Content="9000" Padding="3,3,6,3" HorizontalContentAlignment="Right"/>
-                    <Label Content="9000" Padding="3,3,6,3" HorizontalContentAlignment="Right"/>
-                    <Label Content="9000" Padding="3,3,6,3" HorizontalContentAlignment="Right"/>
-                    <Label Content="9000" Padding="3,3,6,3" HorizontalContentAlignment="Right"/>
-                    <Label Content="9000" Padding="3,3,6,3" HorizontalContentAlignment="Right"/>
-                    <Label Content="9000" Padding="3,3,6,3" HorizontalContentAlignment="Right"/>
-                </StackPanel>
+                <Button x:Name="btnListenNodeWindow" Content="Listen Node" HorizontalAlignment="Left" Margin="125,37,0,0" VerticalAlignment="Top" Width="110" Height="21" Click="btnListenNodeWindow_Click" />
+                <Button x:Name="btnEthernetSlaveWindow" Content="Ethernet Slave" HorizontalAlignment="Left" Margin="240,37,0,0" VerticalAlignment="Top" Width="110" Height="21" Click="btnEthernetSlaveWindow_Click"/>
+                <Button x:Name="btnPort8080Window" Content="Port 8080" HorizontalAlignment="Left" Margin="355,37,0,0" VerticalAlignment="Top" Width="110" Height="21" Click="btnPort8080Window_Click"/>
+                <Label Content="Robot IP Address:" HorizontalAlignment="Left" Margin="10,10,0,0" Height="22" Width="110" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
+                <TextBox x:Name="txtRobotIP" HorizontalAlignment="Left" Height="22" Margin="125,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="142" TextChanged="txtRobotIP_TextChanged"/>
+                <Button x:Name="btnModbusWindow" Content="Modbus" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Width="110" Height="21" Click="btnModbusWindow_Click"/>
             </Grid>
+
         </Border>
 
     </Grid>

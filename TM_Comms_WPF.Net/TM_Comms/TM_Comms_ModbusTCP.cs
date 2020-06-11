@@ -42,7 +42,7 @@ namespace TM_Comms_WPF.Net
 
         public void Disconnect()
         {
-            tcpModbus.Disconnect();
+            tcpModbus?.Disconnect();
         }
 
         

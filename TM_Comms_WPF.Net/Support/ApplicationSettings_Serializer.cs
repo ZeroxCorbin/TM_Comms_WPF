@@ -40,9 +40,7 @@ namespace ApplicationSettingsNS
         [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
         public partial class ApplicationSettings
         {
-            public string ListenNodeConnectionString { get; set; } = "192.168.1.1:5890";
-            public string MonitorConnectionString { get; set; } = "192.168.1.1:8080";
-            public string ModbusIP { get; set; } = "192.168.1.1";
+            public string RobotIP { get; set; } = "192.168.1.1";
 
             public string[] ModbusComboBoxIndices { get; set; } = {
                 "Current Base With Tool X",

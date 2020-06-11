@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TM_Comms_WPF.Net
 {
-    public class TM_Comms_ListenNode
+    public class TM_Comms_EthernetSlave
     {
         public const string StartByte = "$";
         public const string Separator = ",";
@@ -14,8 +14,7 @@ namespace TM_Comms_WPF.Net
         public const string EndBytes = "\r\n";
         public enum HEADERS
         { 
-            TMSCT, //External Script
-            TMSTA, //Aquire status or properties
+            TMSVR, //External Script
             CPERR  //Communication data error
         }
 
@@ -35,7 +34,7 @@ namespace TM_Comms_WPF.Net
         {
             get
             {
-                if(_header == HEADERS.TMSCT)
+                if(_header == HEADERS.TMSVR)
                     return  _scriptID.ToString().Length + Separator.Length + _data.Length;
                 else
                     return "00".Length;
@@ -68,7 +67,7 @@ namespace TM_Comms_WPF.Net
         {
             get
             {
-                if(_header == HEADERS.TMSCT)
+                if(_header == HEADERS.TMSVR)
                 {
                     return StartByte + _headerString + Separator + Length.ToString() + Separator + _scriptID.ToString() + Separator + _data + Separator + ChecksumSign + _checksumString + EndBytes;
                 }
@@ -81,13 +80,13 @@ namespace TM_Comms_WPF.Net
 
         }
 
-        public TM_Comms_ListenNode()
+        public TM_Comms_EthernetSlave()
         {
-            this._header = HEADERS.TMSCT;
+            this._header = HEADERS.TMSVR;
             this._data = "";
         }
 
-        public TM_Comms_ListenNode(HEADERS header = HEADERS.TMSCT, string data = "")
+        public TM_Comms_EthernetSlave(HEADERS header = HEADERS.TMSVR, string data = "")
         {
             this._header = header;
             this._data = data;
@@ -99,12 +98,11 @@ namespace TM_Comms_WPF.Net
             Byte _CheckSumByte = 0x00;
 
             Byte[] bData;
-            if (_header == HEADERS.TMSCT)
+            if (_header == HEADERS.TMSVR)
                 bData = Encoding.ASCII.GetBytes(_headerString + Separator + Length.ToString() + Separator + _scriptID.ToString() + Separator + _data + Separator);
             else
-            {
                 bData = Encoding.ASCII.GetBytes(_headerString + Separator + Length.ToString() + Separator + "00" + Separator);
-            }
+            
             for (int i = 0; i < bData.Length; i++)
                 _CheckSumByte ^= bData[i];
             return _CheckSumByte;

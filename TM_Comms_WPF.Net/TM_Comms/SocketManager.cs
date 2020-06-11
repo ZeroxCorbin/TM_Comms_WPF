@@ -8,27 +8,42 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-namespace clsSocketNS
+namespace SocketManagerNS
 {
 
-    public class clsSocket : IDisposable
+    public class SocketManager : IDisposable
     {
-
-        public class clsSocketEventArgs : EventArgs
+        //Public
+        public class SocketEventArgs : EventArgs
         {
             public string Message { get; }
-            public clsSocketEventArgs(string msg)
-            {
-                Message = msg;
-            }
+            public SocketEventArgs(string msg) => Message = msg;
+        }
+        public class ListenClientConnectedEventArgs : EventArgs
+        {
+            public TcpClient Client { get; }
+            public ListenClientConnectedEventArgs(TcpClient client) => Client = client;
         }
 
-        public delegate void DataReceivedEventHandler(object sender, clsSocketEventArgs data);
+        public delegate void ConnectedEventHandler(object sender, SocketEventArgs data);
+        public event ConnectedEventHandler Connected;
+
+        public delegate void DisconnectedEventHandler(object sender, SocketEventArgs data);
+        public event DisconnectedEventHandler Disconnected;
+
+        public delegate void ListeningEventHandler(object sender, SocketEventArgs data);
+        public event ListeningEventHandler Listening;
+
+        public delegate void ListenClientConnectedEventHandler(object sender, ListenClientConnectedEventArgs data);
+        public event ListenClientConnectedEventHandler ListenClientConnected;
+
+        public delegate void ErrorEventHandler(object sender, Exception data);
+        public event ErrorEventHandler Error;
+
+        public delegate void DataReceivedEventHandler(object sender, SocketEventArgs data);
         public event DataReceivedEventHandler DataReceived;
 
-        public delegate void ClosedEventHandler(object sender, clsSocketEventArgs data);
-        public event ClosedEventHandler Closed;
-
+        //Public
         public string ConnectionString { get; private set; }
         public string IPAddress
         {
@@ -46,72 +61,71 @@ namespace clsSocketNS
                 return int.Parse(ConnectionString.Split(':')[1]);
             }
         }
-        public string Password
-        {
-            get
-            {
-                if (ConnectionString.Count(c => c == ':') != 2) return string.Empty;
-                return ConnectionString.Split(':')[2];
-            }
-        }
 
-        private TcpClient Client;
-        private NetworkStream ClientStream;
+        //Public Read-only
         public int BufferSize { get; private set; } = 1024;
         public int SendTimeout { get; private set; } = 500;
         public int RecieveTimeout { get; private set; } = 500;
+        public bool IsConnected { get { return (Client != null) && Client.Connected; } }
+        public bool IsListening { get; private set; }
+        public bool IsAsyncReceiveRunning { get; private set; } = true;
 
-        public bool IsConnected { get { return (Client != null) ? Client.Connected : false; } }
-        public bool IsRunning { get; private set; } = true;
-        public int UpdateRate { get; private set; } = 50;
-        private object LockObject = new object();
-        public string GenerateConnectionString(string ip, int port, string pass) => ip + ":" + port.ToString() + pass;
+        //Private
+        private TcpClient Client { get; set; }
+        private NetworkStream ClientStream { get; set; }
+        private TcpListener Server { get; set; }
+        private object LockObject { get; set; } = new object();
+
+        //Public Static
+        public static string GenerateConnectionString(string ip, int port) => ip + ":" + port.ToString();
         public static bool ValidateConnectionString(string connectionString)
         {
-            if (connectionString.Count(c => c == ':') != 2) return false;
+            if (connectionString.Count(c => c == ':') != 1) return false;
             string[] spl = connectionString.Split(':');
 
             if (!System.Net.IPAddress.TryParse(spl[0], out IPAddress ip)) return false;
 
             if (!int.TryParse(spl[1], out int port)) return false;
 
-            if (spl[2].Length <= 0) return false;
-
             return true;
         }
 
-
-
-        public clsSocket(string connectionString)
-        {
-            ConnectionString = connectionString;
-        }
+        //Public
+        public SocketManager() { }
+        public SocketManager(string connectionString) => ConnectionString = connectionString;
 
         public bool Connect(bool withTimeout)
         {
             try
             {
-                Client = new TcpClient
-                {
-                    SendTimeout = SendTimeout,
-                    ReceiveTimeout = RecieveTimeout
-                };
-
                 if (withTimeout)
                 {
-                    if (!ConnectWithTimeout(3))
-                        return false;
+                    Client = new TcpClient
+                    {
+                        SendTimeout = SendTimeout,
+                        ReceiveTimeout = RecieveTimeout
+                    };
+                    //if (!ConnectWithTimeout(3))
+                    //    return false;
+                }
+                else
+                {
+                    Client = new TcpClient
+                    {
+                        SendTimeout = 0,
+                        ReceiveTimeout = 0
+                    };
                 }
 
-                else
-                    Client.Connect(IPAddress, Port);
-                
+                Client.Connect(IPAddress, Port);
                 ClientStream = Client.GetStream();
-                
+
+                Connected?.Invoke(this, new SocketEventArgs("Connected"));
                 return true;
             }
             catch (Exception ex)
             {
+                Error?.Invoke(this, ex);
                 return false;
             }
         }
@@ -120,42 +134,76 @@ namespace clsSocketNS
             StopRecieveAsync();
             try
             {
-                if (ClientStream != null)
-                {
-                    ClientStream.Close();
-                    Client.Close();
-                }
+                ClientStream?.Close();
+                Client?.Close();
             }
             catch (Exception ex)
             {
+                Error?.Invoke(this, ex);
+                return false;
+            }
+
+            Disconnected?.Invoke(this, new SocketEventArgs("Disconnected"));
+            return true;
+        }
+        public bool Listen()
+        {
+            try
+            {
+                IPAddress localAddr = System.Net.IPAddress.Parse(IPAddress);
+                Server = new TcpListener(localAddr, Port);
+                Server.Start();
+
+                IsListening = true;
+                Listening?.Invoke(this, new SocketEventArgs("Listening"));
+
+                ThreadPool.QueueUserWorkItem(new WaitCallback(AsyncListenerThread_DoWork));
+
+            }
+            catch (Exception ex)
+            {
+                Error?.Invoke(this, ex);
                 return false;
             }
             return true;
         }
-        private bool ConnectWithTimeout(int timeout)
+        public bool StopListen()
         {
-            bool connected = false;
-            IAsyncResult ar = Client.BeginConnect(IPAddress, Port, null, null);
-            System.Threading.WaitHandle wh = ar.AsyncWaitHandle;
+            IsListening = false;
+            Thread.Sleep(100);
+
             try
             {
-                if (!ar.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(timeout), false))
-                {
-                    Client.Close();
-                    connected = false;
-                }
-                else
-                {
-                    connected = true;
-                }
-                if (Client.Client != null)
-                    Client.EndConnect(ar);
-            }
-            finally
+                Server.Stop();
+            }catch(Exception ex)
             {
-                wh.Close();
+                Error?.Invoke(this, ex);
+                return false;
             }
-            return connected;
+
+            Disconnected?.Invoke(this, new SocketEventArgs("Listen Stopped"));
+            return true;
+        }
+
+        public void StartRecieveAsync()
+        {
+            IsAsyncReceiveRunning = true;
+
+            ThreadPool.QueueUserWorkItem(new WaitCallback(AsyncReceiveThread_DoWork));
+        }
+        public void StartRecieveAsync(TcpClient client)
+        {
+            Client = client;
+            ClientStream = Client.GetStream();
+
+            IsAsyncReceiveRunning = true;
+
+            ThreadPool.QueueUserWorkItem(new WaitCallback(AsyncReceiveThread_DoWork));
+        }
+        public void StopRecieveAsync()
+        {
+            IsAsyncReceiveRunning = false;
+            Thread.Sleep(100);
         }
 
         public string Read()
@@ -174,7 +222,7 @@ namespace clsSocketNS
                         byte[] readBuffer = new byte[BufferSize];
                         int numberOfBytesRead = 0;
 
-                        // Fill byte array with data from clsSocket1 stream
+                        // Fill byte array with data from SocketManager1 stream
                         numberOfBytesRead = ClientStream.Read(readBuffer, 0, readBuffer.Length);
 
                         // Convert the number of bytes received to a string and
@@ -283,50 +331,26 @@ namespace clsSocketNS
 
             return completeMessage.ToString();
         }
-
-        private void ReadComplete(IAsyncResult iar)
-
+        public string[] MessageParse(string message)
         {
+            string[] messages = message.Split('\n', '\r');
 
-            if (!IsRunning) return;
+            List<string> _messages = new List<string>();
 
-            byte[] buffer = (byte[])iar.AsyncState;
-            int BytesAvailable = ClientStream.EndRead(iar);
-
-            DataReceived?.Invoke(new object(), new clsSocketEventArgs(BytesToString(buffer)));
-
-            if (DetectConnection())
+            foreach (string item in messages)
             {
-                ClientStream.BeginRead(buffer, 0, buffer.Length, ReadComplete, buffer);
-            }
-            else
-            {
-                Closed.Invoke(new object(), new clsSocketEventArgs("Read Detected Closed Connection"));
-            }
-        }
-
-        private bool DetectConnection()
-        {
-            // Detect if client disconnected
-            if (Client.Client.Poll(0, SelectMode.SelectRead))
-            {
-                byte[] buff = new byte[1];
-                if (Client.Client.Receive(buff, SocketFlags.Peek) == 0)
+                if (!String.IsNullOrEmpty(item))
                 {
-                    // Client disconnected
-                    return false;
-                }
-                else
-                {
-                    return true;
+                    _messages.Add(item);
                 }
             }
-            return true;
+            messages = _messages.ToArray();
+            return messages;
         }
+
         public bool Write(string msg)
         {
             byte[] buffer_ot = new byte[BufferSize];
-            msg += '\r';
             try
             {
                 lock (LockObject)
@@ -354,40 +378,81 @@ namespace clsSocketNS
                 return false; ;
         }
 
-        public void StartRecieveAsync(int rate = 20)
+        //Private
+        private bool ConnectWithTimeout(int timeout)
         {
-            IsRunning = true;
-
-            byte[] buffer = new byte[10000];
-
-            ClientStream.BeginRead(buffer, 0, buffer.Length, ReadComplete, buffer);
-        }
-        public void StopRecieveAsync()
-        {
-            IsRunning = false;
-            Thread.Sleep(UpdateRate + 100);
-        }
-
-
-
-        public string[] MessageParse(string message)
-        {
-            string[] messages = message.Split('\n', '\r');
-
-            List<string> _messages = new List<string>();
-
-            foreach (string item in messages)
+            bool connected = false;
+            IAsyncResult ar = Client.BeginConnect(IPAddress, Port, null, null);
+            System.Threading.WaitHandle wh = ar.AsyncWaitHandle;
+            try
             {
-                if (!String.IsNullOrEmpty(item))
+                if (!ar.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(timeout), false))
                 {
-                    _messages.Add(item);
+                    Client.Close();
+                    connected = false;
+                }
+                else
+                {
+                    connected = true;
+                }
+                if (Client.Client != null)
+                    Client.EndConnect(ar);
+            }
+            finally
+            {
+                wh.Close();
+            }
+            return connected;
+        }
+        private bool DetectConnection()
+        {
+            // Detect if client disconnected
+            if (Client.Client.Poll(0, SelectMode.SelectRead))
+            {
+                byte[] buff = new byte[1];
+                if (Client.Client.Receive(buff, SocketFlags.Peek) == 0)
+                {
+                    // Client disconnected
+                    return false;
+                }
+                else
+                {
+                    return true;
                 }
             }
-            messages = _messages.ToArray();
-            return messages;
+            return true;
         }
+        private void AsyncReceiveThread_DoWork(object sender)
+        {
+            try
+            {
+                string msg;
+                while (IsAsyncReceiveRunning)
+                {
+                    msg = ReadMessage();
+                    if (msg.Length > 0)
+                        DataReceived?.Invoke(this, new SocketEventArgs(msg));
 
-
+                    if (!DetectConnection())
+                    {
+                        Disconnected?.Invoke(new object(), new SocketEventArgs("Read Detected Closed Connection"));
+                        IsAsyncReceiveRunning = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        private void AsyncListenerThread_DoWork(object sender)
+        {
+            while (IsListening)
+            {
+                if (Server.Pending())
+                    ListenClientConnected?.Invoke(Server, new ListenClientConnectedEventArgs(Server.AcceptTcpClient()));
+            }
+        }
 
         private void bzero(byte[] buff)
         {
@@ -402,13 +467,12 @@ namespace clsSocketNS
             buffer = System.Text.ASCIIEncoding.ASCII.GetBytes(msg);
             return buffer;
         }
-        public void StringToBytes(string msg, ref byte[] buffer)
+        private void StringToBytes(string msg, ref byte[] buffer)
         {
             bzero(buffer);
             buffer = System.Text.ASCIIEncoding.ASCII.GetBytes(msg);
         }
-
-        public string BytesToString(byte[] buffer)
+        private string BytesToString(byte[] buffer)
         {
             string msg = System.Text.ASCIIEncoding.ASCII.GetString(buffer, 0, buffer.Length);
             return msg;
@@ -437,7 +501,7 @@ namespace clsSocketNS
         }
 
         // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~clsSocket() {
+        // ~SocketManager() {
         //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
         //   Dispose(false);
         // }
