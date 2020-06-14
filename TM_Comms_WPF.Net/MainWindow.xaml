@@ -30,12 +30,12 @@
     <Grid Margin="0,0,0,0.5">
         <Border Height="72" Margin="10,10,10.5,0" VerticalAlignment="Top" BorderThickness="1" BorderBrush="Black">
             <Grid>
-                <Button x:Name="btnListenNodeWindow" Content="Listen Node" HorizontalAlignment="Left" Margin="125,37,0,0" VerticalAlignment="Top" Width="110" Height="21" Click="btnListenNodeWindow_Click" />
-                <Button x:Name="btnEthernetSlaveWindow" Content="Ethernet Slave" HorizontalAlignment="Left" Margin="240,37,0,0" VerticalAlignment="Top" Width="110" Height="21" Click="btnEthernetSlaveWindow_Click"/>
-                <Button x:Name="btnPort8080Window" Content="Port 8080" HorizontalAlignment="Left" Margin="355,37,0,0" VerticalAlignment="Top" Width="110" Height="21" Click="btnPort8080Window_Click"/>
+                <Button x:Name="btnListenNodeWindow" Content="Listen Node" HorizontalAlignment="Left" Margin="125,37,0,0" VerticalAlignment="Top" Width="110" Height="21" Click="BtnListenNodeWindow_Click" />
+                <Button x:Name="btnEthernetSlaveWindow" Content="Ethernet Slave" HorizontalAlignment="Left" Margin="240,37,0,0" VerticalAlignment="Top" Width="110" Height="21" Click="BtnEthernetSlaveWindow_Click"/>
+                <Button x:Name="btnPort8080Window" Content="Port 8080" HorizontalAlignment="Left" Margin="355,37,0,0" VerticalAlignment="Top" Width="110" Height="21" Click="BtnPort8080Window_Click"/>
                 <Label Content="Robot IP Address:" HorizontalAlignment="Left" Margin="10,10,0,0" Height="22" Width="110" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
-                <TextBox x:Name="txtRobotIP" HorizontalAlignment="Left" Height="22" Margin="125,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="142" TextChanged="txtRobotIP_TextChanged"/>
-                <Button x:Name="btnModbusWindow" Content="Modbus" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Width="110" Height="21" Click="btnModbusWindow_Click"/>
+                <TextBox x:Name="txtRobotIP" HorizontalAlignment="Left" Height="22" Margin="125,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="142" TextChanged="TxtRobotIP_TextChanged"/>
+                <Button x:Name="btnModbusWindow" Content="Modbus" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Width="110" Height="21" Click="BtnModbusWindow_Click"/>
             </Grid>
 
         </Border>

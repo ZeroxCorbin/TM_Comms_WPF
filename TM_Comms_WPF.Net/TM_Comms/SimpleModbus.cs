@@ -40,6 +40,7 @@ namespace TM_Comms_WPF.Net
         }
         public class MBAP
         {
+            //Public Read Only
             public int TransactionIdentifier => (Data[0] << 8) | Data[1];
             public int ProtocolIdentifier => (Data[2] << 8) | Data[3];
             public int Length => (Data[4] << 8) | Data[5];
@@ -67,6 +68,8 @@ namespace TM_Comms_WPF.Net
                     return b.ToArray();
                 }
             }
+
+            //Public
             public MBAP(PDU pdu, byte unitIdentifier = 1, int transactionIdentifier = 1, int protocolIdentifier = 0)
             {
                 PDU = pdu;
@@ -82,7 +85,6 @@ namespace TM_Comms_WPF.Net
 
                 Data.Add(unitIdentifier);
             }
-
             public MBAP(PDU pdu, byte[] data)
             {
                 PDU = pdu;
@@ -109,6 +111,7 @@ namespace TM_Comms_WPF.Net
             //Protected
             protected List<byte> Data { get; set; } = new List<byte>();
 
+            //Private
             private byte LowByte(int i) => (byte)(i & 0b_0000_0000_1111_1111);
             private byte HighByte(int i) => (byte)((i & 0b_1111_1111_0000_0000) >> 8);
         }
@@ -125,12 +128,11 @@ namespace TM_Comms_WPF.Net
             public PDUType Type { get; private set; }
             public PublicFunctionCodes FunctionCode => (PublicFunctionCodes)Data[0];
             public bool IsExceptionFunctionCode => (Data[0] >> 7) == 1;
-            //public bool IsUserFunctionCode => (Data[0] >= 65 & Data[0] <= 72) | (Data[0] >= 100 & Data[0] <= 110);
 
-            //Protected
             public List<byte> Data { get; private set; } = new List<byte>();
             public string HEXString => BitConverter.ToString(Data.ToArray()).Replace("-", " ");
 
+            //Protected
             protected void Create(PDUType type, PublicFunctionCodes functionCode, int startAddress, int quantity, int[] values)
             {
                 Type = type;
@@ -178,26 +180,28 @@ namespace TM_Comms_WPF.Net
                 Data.Add(HighByte(value));
                 Data.Add(LowByte(value));
             }
-
             protected void Create(PDUType type) => Type = type;
 
-            private int SwapBytes(int i) => (i >> 8) | (i << 8);
+            //Private
             private byte LowByte(int i) => (byte)(i & 0b_0000_0000_1111_1111);
             private byte HighByte(int i) => (byte)((i & 0b_1111_1111_0000_0000) >> 8);
-            private byte LowNibble(byte b) => (byte)(b & 0b_0000_1111);
-            private byte HighNibble(byte b) => (byte)((b & 0b_1111_0000) >> 4);
-
+            
+            //private int SwapBytes(int i) => (i >> 8) | (i << 8);
+            //private byte LowNibble(byte b) => (byte)(b & 0b_0000_1111);
+            //private byte HighNibble(byte b) => (byte)((b & 0b_1111_0000) >> 4);
+            //public bool IsUserFunctionCode => (Data[0] >= 65 & Data[0] <= 72) | (Data[0] >= 100 & Data[0] <= 110);
         }
 
-        public class ADU_MultiRequest : PDU
+        public class ADU_FunctionRequest : PDU
         {
             public int Address => (Data[1] << 8) | Data[2];
             public int Quantity => (Data[3] << 8) | Data[4];
-            public ADU_MultiRequest(PublicFunctionCodes functionCode, int address, int quantity, int[] values) => Create(PDU.PDUType.Request, functionCode, address, quantity, values);
-            public ADU_MultiRequest(PublicFunctionCodes functionCode, int address, int value) => Create(PDU.PDUType.Request, functionCode, address, value);
+            public ADU_FunctionRequest(PublicFunctionCodes functionCode, int address, int quantity, int[] values) => Create(PDU.PDUType.Request, functionCode, address, quantity, values);
+            public ADU_FunctionRequest(PublicFunctionCodes functionCode, int address, int value) => Create(PDU.PDUType.Request, functionCode, address, value);
+            public ADU_FunctionRequest(PublicFunctionCodes functionCode, int address, bool value) => Create(PDU.PDUType.Request, functionCode, address, value);
         }
 
-        public class ADU_MultiResponse : PDU
+        public class ADU_FunctionResponse : PDU
         {
             public int Address => (Data[1] << 8) | Data[2];
             public int Value => (Data[3] << 8) | Data[4];
@@ -243,21 +247,7 @@ namespace TM_Comms_WPF.Net
                     return ret;
                 }
             }
-            public ADU_MultiResponse() => Create(PDU.PDUType.Response);
-        }
-
-
-        public class ADU_CoilRequest : PDU
-        {
-            public int Address => (Data[1] << 8) | Data[2];
-            public ADU_CoilRequest(PublicFunctionCodes functionCode, int address, bool value) => Create(PDU.PDUType.Request, functionCode, address, value);
-        }
-
-        public class ADU_CoilResponse : PDU
-        {
-            public byte ByteCount => Data[1];
-            public int Status => (Data[3] << 8) | Data[4];
-            public ADU_CoilResponse() => Create(PDU.PDUType.Response);
+            public ADU_FunctionResponse() => Create(PDU.PDUType.Response);
         }
     }
 }

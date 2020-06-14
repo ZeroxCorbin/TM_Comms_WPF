@@ -67,7 +67,7 @@ namespace TM_Comms_WPF.Net
             ApplicationSettings_Serializer.Save("appsettings.xml", App.Settings);
         }
 
-        private void btnListenNodeWindow_Click(object sender, RoutedEventArgs e)
+        private void BtnListenNodeWindow_Click(object sender, RoutedEventArgs e)
         {
             if (listenNodeWindow == null)
             {
@@ -83,7 +83,7 @@ namespace TM_Comms_WPF.Net
             listenNodeWindow = null;
         }
 
-        private void btnEthernetSlaveWindow_Click(object sender, RoutedEventArgs e)
+        private void BtnEthernetSlaveWindow_Click(object sender, RoutedEventArgs e)
         {
             if (ethernetSlaveWindow == null)
             {
@@ -99,7 +99,7 @@ namespace TM_Comms_WPF.Net
             ethernetSlaveWindow = null;
         }
 
-        private void btnPort8080Window_Click(object sender, RoutedEventArgs e)
+        private void BtnPort8080Window_Click(object sender, RoutedEventArgs e)
         {
             if (port8080Window == null)
             {
@@ -115,7 +115,7 @@ namespace TM_Comms_WPF.Net
             port8080Window = null; ;
         }
 
-        private void btnModbusWindow_Click(object sender, RoutedEventArgs e)
+        private void BtnModbusWindow_Click(object sender, RoutedEventArgs e)
         {
             if (modbusWindow == null)
             {
@@ -132,7 +132,7 @@ namespace TM_Comms_WPF.Net
             modbusWindow = null;
         }      
         
-        private void txtRobotIP_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtRobotIP_TextChanged(object sender, TextChangedEventArgs e)
         {
 
             if (!IPAddress.TryParse(txtRobotIP.Text, out IPAddress ip))

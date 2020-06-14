@@ -88,7 +88,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SimpleModbus.cs" />
+    <Compile Include="TM_Comms\SimpleModbus.cs" />
     <Compile Include="Support\ApplicationSettings_Serializer.cs" />
     <Compile Include="Support\ConvertEuler.cs" />
     <Compile Include="EthernetSlaveWindow.xaml.cs">

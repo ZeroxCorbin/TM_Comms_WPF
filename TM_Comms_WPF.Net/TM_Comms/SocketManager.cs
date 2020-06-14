@@ -69,6 +69,8 @@ namespace SocketManagerNS
         public bool IsConnected { get { return (Client != null) && Client.Connected; } }
         public bool IsListening { get; private set; }
         public bool IsAsyncReceiveRunning { get; private set; } = true;
+        public bool IsError { get; private set; } = false;
+        public Exception ErrorException { get; private set; }
 
         //Private
         private TcpClient Client { get; set; }
@@ -397,7 +399,7 @@ namespace SocketManagerNS
                 {
                     StringToBytes(msg, ref buffer_ot);
                     ClientStream.Write(buffer_ot, 0, buffer_ot.Length);
-                    bzero(buffer_ot);
+                    Bzero(buffer_ot);
                 }
             }
             catch (Exception ex)
@@ -553,22 +555,17 @@ namespace SocketManagerNS
             }
         }
 
-        private void bzero(byte[] buff)
+        private void Bzero(byte[] buff)
         {
             for (int i = 0; i < buff.Length; i++)
             {
                 buff[i] = 0;
             }
         }
-        public byte[] StringToBytes(string msg)
-        {
-            byte[] buffer = new byte[msg.Length];
-            buffer = System.Text.ASCIIEncoding.ASCII.GetBytes(msg);
-            return buffer;
-        }
+        public byte[] StringToBytes(string msg) => System.Text.ASCIIEncoding.ASCII.GetBytes(msg);
         private void StringToBytes(string msg, ref byte[] buffer)
         {
-            bzero(buffer);
+            Bzero(buffer);
             buffer = System.Text.ASCIIEncoding.ASCII.GetBytes(msg);
         }
         private string BytesToString(byte[] buffer)

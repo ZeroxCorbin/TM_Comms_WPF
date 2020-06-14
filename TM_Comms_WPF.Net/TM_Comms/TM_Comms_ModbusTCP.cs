@@ -9,25 +9,23 @@ namespace TM_Comms_WPF.Net
 {
     public class TM_Comms_ModbusTCP : IDisposable
     {
-        public bool IsError { get; private set; } = false;
+        public delegate void ErrorEventHandler(object sender, Exception data);
+        public event ErrorEventHandler Error;
 
-        public bool Connected => Socket.IsConnected;
-
-        public SocketManagerNS.SocketManager Socket;
+        public SocketManagerNS.SocketManager Socket { get; private set; }
+        public bool IsConnected => Socket.IsConnected;
 
         public bool Connect(string ip, int port = 502)
         {
             Socket = new SocketManagerNS.SocketManager($"{ip}:{port}");
-
-
             try
             {
-                //TcpModbus.Connect(ip, port);
                 Socket.Connect(false);
             }
-            catch
+            catch(Exception ex)
             {
-                IsError = true;
+                Error?.Invoke(this, ex);
+                return false;
             }
 
             if (Socket.IsConnected)
@@ -35,70 +33,62 @@ namespace TM_Comms_WPF.Net
             else
                 return false;
         }
-
         public void Disconnect() => Socket?.Disconnect();
 
         public bool GetBool(int addr)
         {
             try
             {
-                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_MultiRequest(SimpleModbus.PublicFunctionCodes.ReadDiscreteInput, addr, 1)).Message);
-                return ((SimpleModbus.ADU_MultiResponse)new SimpleModbus.MBAP(new SimpleModbus.ADU_MultiResponse(), b).PDU).Bool;
+                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionRequest(SimpleModbus.PublicFunctionCodes.ReadDiscreteInput, addr, 1)).Message);
+                return ((SimpleModbus.ADU_FunctionResponse)new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionResponse(), b).PDU).Bool;
             }
 
-            catch (Exception)
+            catch (Exception ex)
             {
-                IsError = true;
+                Error?.Invoke(this, ex);
                 return false;
             }
         }
-
         public int GetInt16(int addr)
         {
 
             try
             {
-                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_MultiRequest(SimpleModbus.PublicFunctionCodes.ReadInputRegister, addr, 1)).Message);
-                return ((SimpleModbus.ADU_MultiResponse)new SimpleModbus.MBAP(new SimpleModbus.ADU_MultiResponse(), b).PDU).Int16;
+                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionRequest(SimpleModbus.PublicFunctionCodes.ReadInputRegister, addr, 1)).Message);
+                return ((SimpleModbus.ADU_FunctionResponse)new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionResponse(), b).PDU).Int16;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                IsError = true;
+                Error?.Invoke(this, ex);
                 return 0;
             }
-
         }
-
         public int GetInt32(int addr)
         {
             try
             {
-                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_MultiRequest(SimpleModbus.PublicFunctionCodes.ReadInputRegister, addr, 2)).Message);
-                return ((SimpleModbus.ADU_MultiResponse)new SimpleModbus.MBAP(new SimpleModbus.ADU_MultiResponse(), b).PDU).Int32;
+                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionRequest(SimpleModbus.PublicFunctionCodes.ReadInputRegister, addr, 2)).Message);
+                return ((SimpleModbus.ADU_FunctionResponse)new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionResponse(), b).PDU).Int32;
             }
-            catch (Exception)
+            catch(Exception ex)
             {
-                IsError = true;
+                Error?.Invoke(this, ex);
                 return 0;
             }
-
         }
-
         public float GetFloat(int addr)
         {
             try
             {
-                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_MultiRequest(SimpleModbus.PublicFunctionCodes.ReadInputRegister, addr, 2)).Message);
-                return ((SimpleModbus.ADU_MultiResponse)new SimpleModbus.MBAP(new SimpleModbus.ADU_MultiResponse(), b).PDU).Float;
+                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionRequest(SimpleModbus.PublicFunctionCodes.ReadInputRegister, addr, 2)).Message);
+                return ((SimpleModbus.ADU_FunctionResponse)new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionResponse(), b).PDU).Float;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                IsError = true;
+                Error?.Invoke(this, ex);
                 return 0.0f;
             }
-
         }
-
         public string GetString(int addr)
         {
             return null;
@@ -108,31 +98,30 @@ namespace TM_Comms_WPF.Net
         {
             try
             {
-                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_CoilRequest(SimpleModbus.PublicFunctionCodes.WriteSingleCoil, addr, val)).Message);
-                return ((SimpleModbus.ADU_CoilResponse)new SimpleModbus.MBAP(new SimpleModbus.ADU_CoilResponse(), b).PDU).IsExceptionFunctionCode;
+                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionRequest(SimpleModbus.PublicFunctionCodes.WriteSingleCoil, addr, val)).Message);
+                return ((SimpleModbus.ADU_FunctionRequest)new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionResponse(), b).PDU).IsExceptionFunctionCode;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                IsError = true;
+                Error?.Invoke(this, ex);
                 return false;
             }
         }
-
         public bool SetInt16(int addr, int value)
         {
             try
             {
-                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_MultiRequest(SimpleModbus.PublicFunctionCodes.WriteSingleRegister, addr, value)).Message);
-                SimpleModbus.ADU_MultiResponse res = ((SimpleModbus.ADU_MultiResponse)new SimpleModbus.MBAP(new SimpleModbus.ADU_MultiResponse(), b).PDU);
+                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionRequest(SimpleModbus.PublicFunctionCodes.WriteSingleRegister, addr, value)).Message);
+                SimpleModbus.ADU_FunctionResponse res = ((SimpleModbus.ADU_FunctionResponse)new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionResponse(), b).PDU);
                 return res.IsExceptionFunctionCode;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                IsError = true;
+                Error?.Invoke(this, ex);
                 return false;
             }
-
         }
+
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
