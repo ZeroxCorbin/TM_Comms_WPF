@@ -25,7 +25,7 @@ namespace TM_Comms_WPF.Net
         private TM_Comms_ModbusDict ModbusRegisters { get; } = new TM_Comms_ModbusDict();
 
         bool isLoading = true;
-
+        bool isRunning = false;
         private int NumModbusRegisters { get; set; } = 15;
         private int NumModbusUserRegisters { get; set; } = 15;
 
@@ -64,10 +64,9 @@ namespace TM_Comms_WPF.Net
         //Control Pad
         private void AsyncRecieveThread_DoWork(object sender)
         {
-            while (ModbusSoc != null)
+            isRunning = true;
+            while (isRunning)
             {
-                Thread.Sleep(200);
-
                 Dispatcher.BeginInvoke(DispatcherPriority.Normal,
                         (Action)(() =>
                         {
@@ -115,8 +114,8 @@ namespace TM_Comms_WPF.Net
                                                 $"{ModbusSoc.GetInt16(ModbusRegisters.MobusData["Last Error Time Hour"].Addr)}:" +
                                                 $"{ModbusSoc.GetInt16(ModbusRegisters.MobusData["Last Error Time Minute"].Addr)}:" +
                                                 $"{ModbusSoc.GetInt16(ModbusRegisters.MobusData["Last Error Time Second"].Addr)} ";
-                                DateTime date = DateTime.Parse(dat);
-                                txtxErrorDate.Text = date.ToString();
+                                if( DateTime.TryParse(dat, out DateTime date))
+                                    txtxErrorDate.Text = date.ToString();
                             }
                             else
                                 txtxErrorDate.Text = "";
@@ -129,7 +128,11 @@ namespace TM_Comms_WPF.Net
                                 txtErrorDescription.Text = "CAN NOT FIND ERROR IN TABLE.";
 
                         }));
+
+                Thread.Sleep(500);
             }
+
+            isRunning = true;
 
             Dispatcher.BeginInvoke(DispatcherPriority.Normal,
                     (Action)(() =>
@@ -263,7 +266,7 @@ namespace TM_Comms_WPF.Net
 
                         break;
                     case TM_Comms_ModbusDict.MobusValue.DataTypes.Int16:
-                        int data = ((TextBox)stackModbusText.Children[i]).Text.ToInt();
+                        short data = (short)((TextBox)stackModbusText.Children[i]).Text.ToInt();
                         ModbusSoc.SetInt16(addr, data);
                         break;
                     case TM_Comms_ModbusDict.MobusValue.DataTypes.Int32:
@@ -436,7 +439,7 @@ namespace TM_Comms_WPF.Net
 
                     break;
                 case TM_Comms_ModbusDict.MobusValue.DataTypes.Int16:
-                    int data = ((TextBox)stackModbusUserText.Children[i]).Text.ToInt();
+                    short data = (short)((TextBox)stackModbusUserText.Children[i]).Text.ToInt();
                     ModbusSoc.SetInt16(addr, data);
                     break;
                 case TM_Comms_ModbusDict.MobusValue.DataTypes.Int32:
@@ -492,11 +495,15 @@ namespace TM_Comms_WPF.Net
         //Window
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            int i = 0;
-            foreach (ComboBox cmb in stackModbusComboBox.Children)
-                App.Settings.ModbusComboBoxIndices[i++] = (string)cmb.SelectedValue;
+            //int i = 0;
+            //foreach (ComboBox cmb in stackModbusComboBox.Children)
+            //    App.Settings.ModbusComboBoxIndices[i++] = (string)cmb.SelectedValue;
+
+            isRunning = false;
+            while (isRunning == false) { }
 
             ModbusSoc?.Disconnect();
         }
-    }
+
+   }
 }

@@ -18,7 +18,7 @@
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -47,9 +47,6 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.7.2\lib\net45\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -69,12 +66,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Wisdom.Utils, Version=2.2.0.0, Culture=neutral, PublicKeyToken=7735f452a0972076, processorArchitecture=MSIL">
-      <HintPath>..\packages\Wisdom.Utils.2.2.4\lib\net40\Wisdom.Utils.dll</HintPath>
-    </Reference>
-    <Reference Include="Wisdom.Utils.Driver, Version=3.1.0.0, Culture=neutral, PublicKeyToken=7735f452a0972076, processorArchitecture=MSIL">
-      <HintPath>..\packages\Wisdom.Utils.Driver.3.1.5\lib\net45\Wisdom.Utils.Driver.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -97,6 +88,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SimpleModbus.cs" />
     <Compile Include="Support\ApplicationSettings_Serializer.cs" />
     <Compile Include="Support\ConvertEuler.cs" />
     <Compile Include="EthernetSlaveWindow.xaml.cs">
@@ -168,13 +160,4 @@
     <Resource Include="Support\favicon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Wisdom.Utils.2.2.4\build\Wisdom.Utils.targets" Condition="Exists('..\packages\Wisdom.Utils.2.2.4\build\Wisdom.Utils.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Wisdom.Utils.2.2.4\build\Wisdom.Utils.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Wisdom.Utils.2.2.4\build\Wisdom.Utils.targets'))" />
-    <Error Condition="!Exists('..\packages\Wisdom.Utils.Driver.3.1.5\build\Wisdom.Utils.Driver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Wisdom.Utils.Driver.3.1.5\build\Wisdom.Utils.Driver.targets'))" />
-  </Target>
-  <Import Project="..\packages\Wisdom.Utils.Driver.3.1.5\build\Wisdom.Utils.Driver.targets" Condition="Exists('..\packages\Wisdom.Utils.Driver.3.1.5\build\Wisdom.Utils.Driver.targets')" />
 </Project>

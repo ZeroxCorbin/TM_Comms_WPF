@@ -217,7 +217,7 @@ namespace SocketManagerNS
                 sw.Start();
                 lock (LockObject)
                 {
-                    if (ClientStream.CanRead && ClientStream.DataAvailable)
+                    while (ClientStream.CanRead && ClientStream.DataAvailable)
                     {
                         byte[] readBuffer = new byte[BufferSize];
                         int numberOfBytesRead = 0;
@@ -331,6 +331,46 @@ namespace SocketManagerNS
 
             return completeMessage.ToString();
         }
+        public byte[] ReadBytes(bool waitAvailable = false)
+        {
+            int timeout = 3000; //ms
+            Stopwatch sw = new Stopwatch();
+            List<byte> ret = new List<byte>();
+
+
+            try
+            {
+                sw.Start();
+                lock (LockObject)
+                {
+                    long st = sw.ElapsedTicks;
+                    while (waitAvailable & ClientStream.CanRead & !ClientStream.DataAvailable) { 
+                    
+                    }
+                    long end = sw.ElapsedTicks - st;
+                    while (ClientStream.CanRead & ClientStream.DataAvailable)
+                    {
+                        byte[] readBuffer = new byte[BufferSize];
+                        int numberOfBytesRead = 0;
+                        // Fill byte array with data from SocketManager1 stream
+                        numberOfBytesRead += ClientStream.Read(readBuffer, 0, readBuffer.Length);
+
+                        for(int i =0; i < numberOfBytesRead; i++)
+                            ret.Add(readBuffer[i]);
+
+                        sw.Stop();
+                        if (sw.ElapsedMilliseconds >= timeout)
+                            throw new TimeoutException();
+                    }
+                }
+            }
+            catch (TimeoutException ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
+            return ret.ToArray();
+        }
         public string[] MessageParse(string message)
         {
             string[] messages = message.Split('\n', '\r');
@@ -376,6 +416,65 @@ namespace SocketManagerNS
             }
             else
                 return false; ;
+        }
+        public bool Write(byte[] msg)
+        {
+            try
+            {
+                lock (LockObject)
+                {
+                    ClientStream.Write(msg, 0, msg.Length);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+            return true;
+        }
+
+        public byte[] WriteRead(byte[] msg)
+        {
+            int timeout = 3000; //ms
+            Stopwatch sw = new Stopwatch();
+            List<byte> ret = new List<byte>();
+
+            try
+            {
+                sw.Start();
+                lock (LockObject)
+                {
+                    ClientStream.Write(msg, 0, msg.Length);
+
+                    while (ClientStream.CanRead & !ClientStream.DataAvailable)
+                    {
+                        if (sw.ElapsedMilliseconds >= timeout)
+                            throw new TimeoutException();
+                    }
+
+                    while (ClientStream.CanRead & ClientStream.DataAvailable)
+                    {
+                        byte[] readBuffer = new byte[BufferSize];
+                        int numberOfBytesRead = 0;
+                        // Fill byte array with data from SocketManager1 stream
+                        numberOfBytesRead += ClientStream.Read(readBuffer, 0, readBuffer.Length);
+
+                        for (int i = 0; i < numberOfBytesRead; i++)
+                            ret.Add(readBuffer[i]);
+
+                        sw.Stop();
+                        if (sw.ElapsedMilliseconds >= timeout)
+                            throw new TimeoutException();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new byte[1];
+            }
+            return ret.ToArray();
         }
 
         //Private

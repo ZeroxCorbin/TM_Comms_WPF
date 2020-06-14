@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -33,12 +34,14 @@ namespace TM_Comms_WPF.Net
 
         public static int ToInt(this string value)
         {
+            if (string.IsNullOrEmpty(value)) return 0;
             return Convert.ToInt32(value);
         }
     }
 
     public partial class MainWindow : Window
     {
+
         private ListenNodeWindow listenNodeWindow = null;
         private Port8080Window port8080Window = null;
         private EthernetSlaveWindow ethernetSlaveWindow = null;
@@ -46,6 +49,7 @@ namespace TM_Comms_WPF.Net
 
         public MainWindow()
         {
+
             InitializeComponent();
             
             txtRobotIP.Text = App.Settings.RobotIP;

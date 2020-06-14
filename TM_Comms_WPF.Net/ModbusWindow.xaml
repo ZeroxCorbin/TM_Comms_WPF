@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF.Net"
         mc:Ignorable="d"
-        Title="Modbus" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
+        Title="Modbus" ResizeMode="NoResize" SizeToContent="WidthAndHeight" Closing="Window_Closing">
     <Grid>
         <StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
