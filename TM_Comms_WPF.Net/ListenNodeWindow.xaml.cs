@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -50,6 +51,7 @@ namespace TM_Comms_WPF.Net
 
             btnLNSend.IsEnabled = true;
             btnLNSendMoves.IsEnabled = true;
+            btnLNNewReadPosition.IsEnabled = true;
         }
         private void ConnectionInActive()
         {
@@ -58,6 +60,7 @@ namespace TM_Comms_WPF.Net
 
             btnLNSend.IsEnabled = false;
             btnLNSendMoves.IsEnabled = false;
+            btnLNNewReadPosition.IsEnabled = false;
         }
         private TM_Comms_ListenNode GetLNNode()
         {
@@ -147,8 +150,6 @@ namespace TM_Comms_WPF.Net
                 Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
                     {
                         rectCommandResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
-                        txtLNDataResponse.Text = "";
-
                         ConnectionInActive();
                     }));
             }
@@ -204,6 +205,8 @@ namespace TM_Comms_WPF.Net
 
                 Socket = new SocketManager($"{App.Settings.RobotIP}:5890", null, Socket_ConnectState, Socket_DataReceived);
                 Socket.Connect(true);
+
+                Socket.StartRecieveAsync();
             }
             else
             {
@@ -219,13 +222,54 @@ namespace TM_Comms_WPF.Net
 
         private void BtnLNNewReadPosition_Click(object sender, RoutedEventArgs e)
         {
-            TM_Comms_ListenNode ln = new TM_Comms_ListenNode(TM_Comms_ListenNode.HEADERS.TMSCT, "ListenSend(90, GetString(Robot[1].CoordRobot, 10, 3))");
-            PositionRequest = ln.ScriptID.ToString();
-            Socket?.Write(ln.Message);
+            if(((string)((ComboBoxItem)CmdPositionType.SelectedItem).Tag) == "0")
+            {
+                TM_Comms_ListenNode ln = new TM_Comms_ListenNode(TM_Comms_ListenNode.HEADERS.TMSCT, "ListenSend(90, GetString(Robot[1].CoordRobot, 10, 3))");
+                PositionRequest = ln.ScriptID.ToString();
+                Socket?.Write(ln.Message);
+            }
+            else
+            {
+                TM_Comms_ListenNode ln = new TM_Comms_ListenNode(TM_Comms_ListenNode.HEADERS.TMSCT, "ListenSend(90, GetString(Robot[1].Joint, 10, 3))");
+                PositionRequest = ln.ScriptID.ToString();
+                Socket?.Write(ln.Message);
+            }
+
         }
         private void BtnLNInsertMove_Click(object sender, RoutedEventArgs e)
         {
+            string delim = ",";
 
+            StringBuilder sb = new StringBuilder();
+
+            if (((string)((ComboBoxItem)CmdMoveType.SelectedItem).Tag) == "0")
+                sb.Append("Linear");
+            else
+                sb.Append("Joint");
+            sb.Append(delim);
+
+            if (((string)((ComboBoxItem)CmdPositionType.SelectedItem).Tag) == "0")
+                sb.Append("Pose");
+            else
+                sb.Append("Joint");
+            sb.Append(delim);
+
+            sb.Append(txtLNNewPosition.Text);
+            sb.Append(delim);
+
+            sb.Append((string)((ComboBoxItem)CmbLNMoveVelocity.SelectedItem).Tag);
+            sb.Append(delim);
+
+            sb.Append("0");
+            sb.Append(delim);
+
+            sb.Append((string)((ComboBoxItem)CmbLNMoveBlend.SelectedItem).Tag);
+
+            int start = txtLNMoves.SelectionStart;
+
+            txtLNMoves.Text = txtLNMoves.Text.Insert(txtLNMoves.SelectionStart, sb.ToString());
+            txtLNMoves.Focus();
+            txtLNMoves.SelectionStart = start + sb.ToString().Length;
 
         }
 
@@ -315,6 +359,14 @@ namespace TM_Comms_WPF.Net
             txtLNMoves.MaxWidth = double.PositiveInfinity;
             txtLNMovesCode.MaxWidth = double.PositiveInfinity;
             txtLNDataResponse.MaxWidth = double.PositiveInfinity;
+        }
+
+        private void TxtLNMoves_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            if (txtLNMoves.IsSelectionActive)
+                btnLNInsertMove.IsEnabled = true;
+            else
+                btnLNInsertMove.IsEnabled = false;
         }
     }
 }

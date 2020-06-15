@@ -41,8 +41,6 @@
                     </StackPanel>
                 </Grid>
             </Border>
-
-
             <Border BorderThickness="1" BorderBrush="Black" CornerRadius="3" Padding="3" Margin="5">
                 <StackPanel>
                     <Label Content="Response" HorizontalContentAlignment="Center" Margin="2" Height="26"/>
@@ -50,7 +48,6 @@
 
                     <Rectangle x:Name="rectCommandResponse" Fill="Yellow" HorizontalAlignment="Left"/>
                 </StackPanel>
-
             </Border>
         </StackPanel>
         <StackPanel Grid.Column="1">
@@ -70,14 +67,12 @@
                             <ComboBoxItem Content="Linear" Tag="0"/>
                             <ComboBoxItem Content="Joint" Tag="1"/>
                         </ComboBox>
-
                         <Label Content="Position Type" Grid.Column="1" Grid.Row="0" Margin="2" Height="26"/>
                         <ComboBox x:Name="CmdPositionType" IsReadOnly="True" SelectedIndex="0" Grid.Column="1" Grid.Row="1" Margin="2" Height="26">
                             <ComboBoxItem Content="Pose (Euler)" Tag="0"/>
                             <ComboBoxItem Content="Joint" Tag="1"/>
                         </ComboBox>
                     </Grid>
-
                     <Grid HorizontalAlignment="Left">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -87,12 +82,10 @@
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-
                         <Label Content="Position Values: X, Y, Z, Yaw, Pitch, Roll" Grid.Column="0" Grid.Row="0" Margin="2" Height="26"/>
-                        <TextBox x:Name="txtLNNewPosition" Text="430, 0, 320,-180.0, 0, 90.0" Grid.Column="0" Grid.Row="1" Margin="2" Height="26"/>
+                        <TextBox x:Name="txtLNNewPosition" Text="430,0,320,-180.0,0,90.0" Grid.Column="0" Grid.Row="1" Margin="2" Height="26"/>
                         <Button x:Name="btnLNNewReadPosition" Content="Read" Width="90" Grid.Column="1" Grid.Row="1" Click="BtnLNNewReadPosition_Click" Margin="2" Height="26"/>
                     </Grid>
-
                     <Grid MaxWidth="220" HorizontalAlignment="Left">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -102,51 +95,46 @@
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-
                         <Label Content="Velocity %" Grid.Column="0" Grid.Row="0" Margin="2" Height="26"/>
-                        <ComboBox IsEditable="True" SelectedIndex="0" Grid.Column="0" Grid.Row="1" Margin="2" Height="26">
-                            <ComboBoxItem Content="100" Tag="10"/>
-                            <ComboBoxItem Content="90" Tag="9"/>
-                            <ComboBoxItem Content="80" Tag="8"/>
-                            <ComboBoxItem Content="70" Tag="7"/>
-                            <ComboBoxItem Content="60" Tag="6"/>
-                            <ComboBoxItem Content="50" Tag="5"/>
-                            <ComboBoxItem Content="40" Tag="4"/>
-                            <ComboBoxItem Content="30" Tag="3"/>
-                            <ComboBoxItem Content="20" Tag="2"/>
-                            <ComboBoxItem Content="10" Tag="1"/>
+                        <ComboBox x:Name="CmbLNMoveVelocity" IsEditable="True" SelectedIndex="0" Grid.Column="0" Grid.Row="1" Margin="2" Height="26">
+                            <ComboBoxItem Content="100" Tag="100"/>
+                            <ComboBoxItem Content="90" Tag="90"/>
+                            <ComboBoxItem Content="80" Tag="80"/>
+                            <ComboBoxItem Content="70" Tag="70"/>
+                            <ComboBoxItem Content="60" Tag="60"/>
+                            <ComboBoxItem Content="50" Tag="50"/>
+                            <ComboBoxItem Content="40" Tag="40"/>
+                            <ComboBoxItem Content="30" Tag="30"/>
+                            <ComboBoxItem Content="20" Tag="20"/>
+                            <ComboBoxItem Content="10" Tag="10"/>
                         </ComboBox>
                         <Label Content="Blend %" Grid.Column="1" Grid.Row="0" Margin="2" Height="26"/>
-                        <ComboBox IsEditable="True" SelectedIndex="0" Grid.Column="1" Grid.Row="1" Margin="2" Height="26">
+                        <ComboBox x:Name="CmbLNMoveBlend" IsEditable="True" SelectedIndex="0" Grid.Column="1" Grid.Row="1" Margin="2" Height="26">
                             <ComboBoxItem Content="0" Tag="0"/>
-                            <ComboBoxItem Content="10" Tag="1"/>
-                            <ComboBoxItem Content="20" Tag="2"/>
-                            <ComboBoxItem Content="30" Tag="3"/>
-                            <ComboBoxItem Content="40" Tag="4"/>
-                            <ComboBoxItem Content="50" Tag="5"/>
-                            <ComboBoxItem Content="60" Tag="6"/>
-                            <ComboBoxItem Content="70" Tag="7"/>
-                            <ComboBoxItem Content="80" Tag="8"/>
-                            <ComboBoxItem Content="90" Tag="9"/>
-                            <ComboBoxItem Content="100" Tag="10"/>
-
+                            <ComboBoxItem Content="10" Tag="10"/>
+                            <ComboBoxItem Content="20" Tag="20"/>
+                            <ComboBoxItem Content="30" Tag="30"/>
+                            <ComboBoxItem Content="40" Tag="40"/>
+                            <ComboBoxItem Content="50" Tag="50"/>
+                            <ComboBoxItem Content="60" Tag="60"/>
+                            <ComboBoxItem Content="70" Tag="70"/>
+                            <ComboBoxItem Content="80" Tag="80"/>
+                            <ComboBoxItem Content="90" Tag="90"/>
+                            <ComboBoxItem Content="100" Tag="100"/>
                         </ComboBox>
                     </Grid>
-
                 </StackPanel>
             </Border>
             <StackPanel>
                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5" >
                     <StackPanel>
                         <Button x:Name="btnLNInsertMove" Content="Insert" Click="BtnLNInsertMove_Click" Width="90" Margin="2" Height="26"/>
-                        <TextBox x:Name="txtLNMoves" AcceptsReturn="True" Text="Linear, Pose, 430, 0, 320,-180.0, 0, 90.0, 100, 0, 0&#xA;linear, pose, 330, 0, 320,-180.0, 0, 90.0, 100, 0, 0&#xA;" MinWidth="300" MinHeight="150" MaxWidth="600" MaxHeight="300" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="2"/>
+                        <TextBox x:Name="txtLNMoves" AcceptsReturn="True" Text="Linear,Pose,430,0,320,-180.0,0,90.0,100,0,0" MinWidth="300" MinHeight="150" MaxWidth="600" MaxHeight="300" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="2" SelectionChanged="TxtLNMoves_SelectionChanged"/>
                     </StackPanel>
-
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5" >
                     <StackPanel>
                         <Button x:Name="btnLNValidateMoves" Content="Validate / Generate" Click="BtnLNValidateMoves_Click" Width="120" Margin="2" Height="26"/>
-
                         <TextBox x:Name="txtLNMovesCode" AcceptsReturn="True" MinWidth="300" MinHeight="150" MaxWidth="600" MaxHeight="300" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="2"/>
                         <Button x:Name="btnLNSendMoves" Content="Send" Click="BtnLNSendMoves_Click" Width="90" Margin="2" Height="26"/>
                     </StackPanel>
