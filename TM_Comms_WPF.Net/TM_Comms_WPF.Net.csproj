@@ -51,9 +51,12 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -84,11 +87,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="..\..\SocketManager\SocketManager.cs">
+      <Link>TM_Comms\SocketManager.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TM_Comms\SimpleModbus.cs" />
+    <Compile Include="TM_Comms\PingCommand.cs" />
+    <Compile Include="TM_Comms\SimpleModbusCore.cs" />
     <Compile Include="Support\ApplicationSettings_Serializer.cs" />
     <Compile Include="Support\ConvertEuler.cs" />
     <Compile Include="EthernetSlaveWindow.xaml.cs">
@@ -103,12 +110,11 @@
     <Compile Include="Port8080Window.xaml.cs">
       <DependentUpon>Port8080Window.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TM_Comms\SocketManager.cs" />
     <Compile Include="TM_Comms\TM_Comms_ErrorCodes.cs" />
     <Compile Include="TM_Comms\TM_Comms_EthernetSlave.cs" />
     <Compile Include="TM_Comms\TM_Comms_ListenNode.cs" />
     <Compile Include="TM_Comms\TM_Comms_ModbusDict.cs" />
-    <Compile Include="TM_Comms\TM_Comms_ModbusTCP.cs" />
+    <Compile Include="TM_Comms\SimpleModbusTCP.cs" />
     <Compile Include="TM_Comms\TM_Comms_MotionScriptBuilder.cs" />
     <Compile Include="TM_Comms\TM_Comms_Port8080.cs" />
     <Compile Include="MainWindow.xaml.cs">

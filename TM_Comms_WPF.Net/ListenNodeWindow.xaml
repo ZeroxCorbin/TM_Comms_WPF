@@ -5,50 +5,106 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF.Net"
         mc:Ignorable="d"
-        Title="ListenNodeWindow" Height="601.404" Width="1042.815" Closing="Window_Closing" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight">
+        Title="ListenNodeWindow" Closing="Window_Closing" WindowStartupLocation="Manual" SizeToContent="WidthAndHeight" LocationChanged="Window_LocationChanged" StateChanged="Window_StateChanged">
     <Grid>
-        <Border BorderBrush="Black" BorderThickness="1" Margin="10,284,0,0" HorizontalAlignment="Left" Width="445" Height="167" VerticalAlignment="Top">
-            <Grid Margin="-1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="16*"/>
-                    <ColumnDefinition Width="811*"/>
-                </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" >
+            <Button x:Name="btnLNConnect" Content="Connect" Click="BtnLNConnect_Click" Width="90" Height="26" Margin="2"/>
+            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
+                <Grid>
+                    <StackPanel>
+                        <Grid HorizontalAlignment="Left">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Label Content="Header" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" Margin="2" Height="26"/>
+                            <ComboBox x:Name="cmbLNDataType" IsReadOnly="True" SelectionChanged="CmbLNDataType_SelectionChanged" SelectedIndex="0" Grid.Column="0" Grid.Row="1" Margin="2" Height="26">
+                                <ComboBoxItem Content="TMSCT (Script)" Tag="0"/>
+                                <ComboBoxItem Content="TMSTA (Status)" Tag="1"/>
+                            </ComboBox>
+                            <Label Content="sID" Grid.Column="1" Grid.Row="0" Width="50" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="2" Height="26"/>
+                            <TextBox x:Name="txtLNScriptID" IsReadOnly="True" Grid.Column="1" Grid.Row="1" Width="50" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="2" Height="26"/>
+                        </Grid>
+                        <Label Content="Script (Any Function from Expression Editor)" Margin="2" Height="26"/>
+                        <TextBox x:Name="txtLNScriptData" TextWrapping="Wrap" TextChanged="TxtLNScriptData_TextChanged" Text="ChangeBase(&quot;RobotBase&quot;)" MinHeight="36" VerticalScrollBarVisibility="Auto" MaxHeight="36" MaxWidth="600" Margin="2"/>
+                        <Label Content="Command (Start Byte=$ Header, Data Length, Script ID, Script, *Checksum \r\n)" Margin="2" Height="26"/>
+                        <TextBox x:Name="txtLNDataString" TextWrapping="Wrap" IsReadOnly="True" MinHeight="36" MaxHeight="36" VerticalScrollBarVisibility="Auto" MaxWidth="600" Margin="2"/>
+                        <Button x:Name="btnLNSend" Content="Send" Click="BtnLNSend_Click" Width="90" Margin="2" Height="26"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
 
-                <TextBox x:Name="txtLNScriptID" HorizontalAlignment="Left" Height="22" Margin="126.5,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="41" IsReadOnly="True" Grid.Column="1"/>
-                <TextBox x:Name="txtLNScriptData" Height="20" Margin="1.5,66,10,0" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="txtLNScriptData_TextChanged" Text="ChangeBase(&quot;RobotBase&quot;)" Grid.Column="1"/>
-                <TextBox x:Name="txtLNDataString" Margin="1.5,108,10,0" TextWrapping="Wrap" Height="22" VerticalAlignment="Top" IsReadOnly="True" Grid.Column="1"/>
-                <ComboBox x:Name="cmbLNDataType" HorizontalAlignment="Left" Margin="1.5,22,0,0" VerticalAlignment="Top" Width="120" IsReadOnly="True" SelectionChanged="cmbLNDataType_SelectionChanged" SelectedIndex="0" Grid.Column="1">
-                    <ComboBoxItem Content="TMSCT (Script)" Tag="0"/>
-                    <ComboBoxItem Content="TMSTA (Status)" Tag="1"/>
-                </ComboBox>
-                <Button x:Name="btnLNSend" Content="Send" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Margin="1.5,135,0,0" Height="22" Click="btnLNSend_Click" Grid.Column="1"/>
-                <Label Content="Header" HorizontalAlignment="Left" Margin="7,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="120" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center" Grid.ColumnSpan="2"/>
-                <Label Content="sID" HorizontalAlignment="Left" Margin="124,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="44" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center" Grid.Column="1"/>
-                <Label Content="Script (Any Function from Expression Editor)" Margin="1.5,43.741,10,0" RenderTransformOrigin="-14.85,0.857" Height="22" Padding="1,3,1,1" UseLayoutRounding="False" VerticalAlignment="Top" Grid.Column="1"/>
-                <Label Content="Command (Start Byte=$ Header, Data Length, Script ID, Script, *Checksum \r\n)" Margin="1.5,85.741,10,0" RenderTransformOrigin="-14.85,0.857" Height="22" Padding="1,3,1,1" UseLayoutRounding="False" VerticalAlignment="Top" Grid.Column="1"/>
-            </Grid>
-        </Border>
-        <Border Margin="460,10,10,0" BorderBrush="Black" BorderThickness="1" Height="556" VerticalAlignment="Top">
-            <Grid>
-                <Border Margin="10,121,10,0" VerticalAlignment="Top" Height="147" BorderBrush="Black" BorderThickness="1" >
-                    <TextBox x:Name="txtLNMoves" TextWrapping="Wrap" Text="Linear, Pose, 430, 0, 320,-180.0, 0, 90.0, 100, 0, 0&#xA;linear, pose, 330, 0, 320,-180.0, 0, 90.0, 100, 0, 0&#xA;" Margin="9" AcceptsReturn="True"/>
-                </Border>
-                <Border Height="106" Margin="10,10,10,0" VerticalAlignment="Top" BorderBrush="Black" BorderThickness="1">
-                    <Grid>
-                        <ComboBox HorizontalAlignment="Left" Margin="10,26,0,0" VerticalAlignment="Top" Width="71" IsReadOnly="True" SelectedIndex="0">
+
+            <Border BorderThickness="1" BorderBrush="Black" CornerRadius="3" Padding="3" Margin="5">
+                <StackPanel>
+                    <Label Content="Response" HorizontalContentAlignment="Center" Margin="2" Height="26"/>
+                    <TextBox x:Name="txtLNDataResponse" IsReadOnly="True" VerticalScrollBarVisibility="Auto" MaxHeight="400" MinHeight="150" HorizontalScrollBarVisibility="Auto" MaxWidth="600" Margin="2"/>
+
+                    <Rectangle x:Name="rectCommandResponse" Fill="Yellow" HorizontalAlignment="Left"/>
+                </StackPanel>
+
+            </Border>
+        </StackPanel>
+        <StackPanel Grid.Column="1">
+            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
+                <StackPanel>
+                    <Grid HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Move Type" Grid.Column="0" Grid.Row="0" Margin="2" Height="26"/>
+                        <ComboBox x:Name="CmdMoveType" IsReadOnly="True" SelectedIndex="0" Grid.Column="0" Grid.Row="1" Margin="2" Height="26">
                             <ComboBoxItem Content="Linear" Tag="0"/>
                             <ComboBoxItem Content="Joint" Tag="1"/>
                         </ComboBox>
-                        <Label Content="Move Type" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="71"/>
-                        <TextBox x:Name="txtLNNewPosition" Height="23" Margin="172,25,57,0" TextWrapping="Wrap" Text="430, 0, 320,-180.0, 0, 90.0" VerticalAlignment="Top"/>
-                        <ComboBox HorizontalAlignment="Left" Margin="86,26,0,0" VerticalAlignment="Top" Width="81" IsReadOnly="True" SelectedIndex="0">
+
+                        <Label Content="Position Type" Grid.Column="1" Grid.Row="0" Margin="2" Height="26"/>
+                        <ComboBox x:Name="CmdPositionType" IsReadOnly="True" SelectedIndex="0" Grid.Column="1" Grid.Row="1" Margin="2" Height="26">
                             <ComboBoxItem Content="Pose (Euler)" Tag="0"/>
                             <ComboBoxItem Content="Joint" Tag="1"/>
                         </ComboBox>
-                        <Label Content="Position Type" HorizontalAlignment="Left" Margin="86,0,0,0" VerticalAlignment="Top" Width="81"/>
-                        <Label Content="Position Values: X, Y, Z, Yaw, Pitch, Roll" HorizontalAlignment="Left" Margin="172,-1,0,0" VerticalAlignment="Top" Width="225"/>
-                        <Label Content="Velocity %" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" Width="67"/>
-                        <ComboBox HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top" Width="67" IsEditable="True" SelectedIndex="0">
+                    </Grid>
+
+                    <Grid HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Label Content="Position Values: X, Y, Z, Yaw, Pitch, Roll" Grid.Column="0" Grid.Row="0" Margin="2" Height="26"/>
+                        <TextBox x:Name="txtLNNewPosition" Text="430, 0, 320,-180.0, 0, 90.0" Grid.Column="0" Grid.Row="1" Margin="2" Height="26"/>
+                        <Button x:Name="btnLNNewReadPosition" Content="Read" Width="90" Grid.Column="1" Grid.Row="1" Click="BtnLNNewReadPosition_Click" Margin="2" Height="26"/>
+                    </Grid>
+
+                    <Grid MaxWidth="220" HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Label Content="Velocity %" Grid.Column="0" Grid.Row="0" Margin="2" Height="26"/>
+                        <ComboBox IsEditable="True" SelectedIndex="0" Grid.Column="0" Grid.Row="1" Margin="2" Height="26">
                             <ComboBoxItem Content="100" Tag="10"/>
                             <ComboBoxItem Content="90" Tag="9"/>
                             <ComboBoxItem Content="80" Tag="8"/>
@@ -60,8 +116,8 @@
                             <ComboBoxItem Content="20" Tag="2"/>
                             <ComboBoxItem Content="10" Tag="1"/>
                         </ComboBox>
-                        <Label Content="Blend %" Margin="82,48,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="58"/>
-                        <ComboBox HorizontalAlignment="Left" Margin="82,74,0,0" VerticalAlignment="Top" Width="58" IsEditable="True" SelectedIndex="0" RenderTransformOrigin="0.37,0.576">
+                        <Label Content="Blend %" Grid.Column="1" Grid.Row="0" Margin="2" Height="26"/>
+                        <ComboBox IsEditable="True" SelectedIndex="0" Grid.Column="1" Grid.Row="1" Margin="2" Height="26">
                             <ComboBoxItem Content="0" Tag="0"/>
                             <ComboBoxItem Content="10" Tag="1"/>
                             <ComboBoxItem Content="20" Tag="2"/>
@@ -75,31 +131,27 @@
                             <ComboBoxItem Content="100" Tag="10"/>
 
                         </ComboBox>
-                        <Button x:Name="btnLNInsertMove" Content="Insert" HorizontalAlignment="Left" Margin="145,74,0,0" VerticalAlignment="Top" Width="75" Click="btnLNInsertMove_Click"/>
-                        <Button x:Name="btnLNNewReadPosition" Content="Read" Margin="0,25,10,0" VerticalAlignment="Top" Click="btnLNInsertMove_Click" RenderTransformOrigin="2.811,-0.241" Height="23" HorizontalAlignment="Right" Width="42"/>
                     </Grid>
+
+                </StackPanel>
+            </Border>
+            <StackPanel>
+                <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5" >
+                    <StackPanel>
+                        <Button x:Name="btnLNInsertMove" Content="Insert" Click="BtnLNInsertMove_Click" Width="90" Margin="2" Height="26"/>
+                        <TextBox x:Name="txtLNMoves" AcceptsReturn="True" Text="Linear, Pose, 430, 0, 320,-180.0, 0, 90.0, 100, 0, 0&#xA;linear, pose, 330, 0, 320,-180.0, 0, 90.0, 100, 0, 0&#xA;" MinWidth="300" MinHeight="150" MaxWidth="600" MaxHeight="300" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="2"/>
+                    </StackPanel>
+
                 </Border>
-                <Button x:Name="btnLNValidateMoves" Content="Validate / Generate" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="128" Margin="10,273,0,0" Height="22" Click="btnLNValidateMoves_Click"/>
-                <Border Margin="10,300,10,0" VerticalAlignment="Top" Height="244" BorderBrush="Black" BorderThickness="1" >
-                    <Grid>
-                        <TextBox x:Name="txtLNMovesCode" TextWrapping="Wrap" Margin="10,10,10,37" Height="195"/>
-                        <Button x:Name="btnLNSendMoves" Content="Send" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Margin="10,210,0,0" Height="22" Click="btnLNSendMoves_Click"/>
-                    </Grid>
+                <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5" >
+                    <StackPanel>
+                        <Button x:Name="btnLNValidateMoves" Content="Validate / Generate" Click="BtnLNValidateMoves_Click" Width="120" Margin="2" Height="26"/>
+
+                        <TextBox x:Name="txtLNMovesCode" AcceptsReturn="True" MinWidth="300" MinHeight="150" MaxWidth="600" MaxHeight="300" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="2"/>
+                        <Button x:Name="btnLNSendMoves" Content="Send" Click="BtnLNSendMoves_Click" Width="90" Margin="2" Height="26"/>
+                    </StackPanel>
                 </Border>
-            </Grid>
-
-        </Border>
-        <Border Height="269" Margin="10,10,0,0" VerticalAlignment="Top" BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Left" Width="445">
-            <Grid>
-                <Label Content="Listen Node Connection String ( IP:5890 )" HorizontalAlignment="Left" Margin="10,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="233" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
-                <TextBox x:Name="txtLNConnectionString" HorizontalAlignment="Left" Height="22" Margin="10,22,0,0" TextWrapping="Wrap" Text="192.168.20.1:5890" VerticalAlignment="Top" Width="142" IsReadOnly="True"/>
-                <Button x:Name="btnLNConnect" Content="Start" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Margin="157,22,0,0" Height="22" Click="btnLNConnect_Click"/>
-                <TextBox x:Name="txtLNDataResponse" Margin="10,49,10,0" Height="208" VerticalAlignment="Top" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
-                <Label Content="Response" Margin="317.536,22,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Padding="1,3,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalAlignment="Left" Width="67.033"/>
-                <Rectangle x:Name="rectCommandResponse" Fill="Yellow" HorizontalAlignment="Left" Height="49" Margin="3,49,0,0" Stroke="Black" VerticalAlignment="Top" Width="7"/>
-            </Grid>
-
-        </Border>
-
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>

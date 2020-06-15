@@ -22,7 +22,7 @@
                     <ComboBoxItem Content="TMSVR (Script)" Tag="0"/>
                     <ComboBoxItem Content="CPERR (Error)" Tag="1"/>
                 </ComboBox>
-                <Button x:Name="btnESSend" Content="Send" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Margin="436,22,0,0" Height="22" Click="btnESSend_Click" Grid.Column="1"/>
+                <Button x:Name="btnESSend" Content="Send" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Margin="436,22,0,0" Height="22" Click="BtnESSend_Click" Grid.Column="1"/>
                 <TextBox x:Name="txtESDataResponse" Margin="7,152,10,0" TextWrapping="Wrap" Height="22" VerticalAlignment="Top" IsReadOnly="True" Grid.ColumnSpan="2"/>
                 <Label Content="Ethernet Slave Connection String ( IP:5890 )" HorizontalAlignment="Left" Margin="7,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="233" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                 <Label Content="Header" HorizontalAlignment="Left" Margin="262,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="120" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center" Grid.Column="1"/>

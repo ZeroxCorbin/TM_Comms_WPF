@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF.Net"
         mc:Ignorable="d"
-        Title="Modbus" ResizeMode="NoResize" SizeToContent="WidthAndHeight" Closing="Window_Closing">
+        Title="Modbus" ResizeMode="NoResize" SizeToContent="WidthAndHeight" Closing="Window_Closing" LocationChanged="Window_LocationChanged">
     <Grid>
         <StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -21,6 +21,7 @@
                     <Button x:Name="btnPlayPause" HorizontalAlignment="Left" Height="36" Margin="176,57,0,0"  VerticalAlignment="Top" Width="37" Click="BtnPlayPause_Click" Background="{x:Null}" Foreground="{x:Null}" BorderBrush="{x:Null}"/>
                     <Button x:Name="btnMinus" HorizontalAlignment="Left" Height="36" Margin="228,57,0,0"  VerticalAlignment="Top" Width="36" Click="BtnMinus_Click" Background="#00000000" BorderBrush="{x:Null}" Foreground="{x:Null}"/>
                     <Button x:Name="btnPlus" HorizontalAlignment="Left" Height="36" Margin="228,11,0,0"  VerticalAlignment="Top" Width="36" Click="BtnPlus_Click" Background="#00000000" BorderBrush="{x:Null}" Foreground="{x:Null}"/>
+                    <Button x:Name="btnConnect" HorizontalAlignment="Left" Height="36" Margin="124,10,0,0"  VerticalAlignment="Top" Width="36" Background="#00000000" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="BtnConnect_Click"/>
                 </Grid>
                 <Border Height="105" Width="439" BorderBrush="Black" BorderThickness="1" CornerRadius="30"  Margin="5">
                     <Grid>
@@ -40,7 +41,7 @@
                 </Border>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="5">
+                <Border BorderBrush="Black" BorderThickness="1"  CornerRadius="3" Padding="3" HorizontalAlignment="Left" Margin="5">
                     <Grid>
                         <StackPanel Orientation="Horizontal" >
                             <StackPanel x:Name="stackModbusComboBox" HorizontalAlignment="Left"/>
@@ -51,7 +52,7 @@
 
                     </Grid>
                 </Border>
-                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="5">
+                <Border BorderBrush="Black" BorderThickness="1"  CornerRadius="3" Padding="3" HorizontalAlignment="Left" Margin="5">
                     <Grid>
                         <StackPanel Orientation="Horizontal" >
                             <StackPanel x:Name="stackModbusUserComboBox" HorizontalAlignment="Left"/>

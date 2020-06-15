@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Windows;
 using System.Xml.Serialization;
 
 namespace ApplicationSettingsNS
@@ -66,6 +67,18 @@ namespace ApplicationSettingsNS
                 "Int16",
                 "Int16"};
 
+            public WindowSettings MainWindow { get; set; } = new WindowSettings();
+            public WindowSettings ModbusWindow { get; set; } = new WindowSettings();
+            public WindowSettings ListenNodeWindow { get; set; } = new WindowSettings();
+            public WindowSettings EthernetSlaveWindow { get; set; } = new WindowSettings();
+            public WindowSettings Port8080Window { get; set; } = new WindowSettings();
+
+            public class WindowSettings
+            {
+                public double Left { get; set; } = 0;
+                public double Top { get; set; } = 0;
+                public WindowState WindowState { get; set; } = WindowState.Normal;
+            }
         }
     }
 }

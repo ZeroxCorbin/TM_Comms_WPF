@@ -16,13 +16,11 @@ using System.Windows.Threading;
 
 namespace TM_Comms_WPF.Net
 {
-    /// <summary>
-    /// Interaction logic for EthernetSlaveWindow.xaml
-    /// </summary>
     public partial class EthernetSlaveWindow : Window
     {
-        SocketManager ethernetSlaveSoc;
-        TM_Comms_EthernetSlave ethernetSlave;
+        private bool IsLoading { get; set; } 
+        private SocketManager Socket { get; set; }
+        private TM_Comms_EthernetSlave EthernetSlave { get; set; }
 
         public EthernetSlaveWindow()
         {
@@ -30,74 +28,7 @@ namespace TM_Comms_WPF.Net
 
             txtESConnectionString.Text = $"{App.Settings.RobotIP}:5890";
 
-            ethernetSlave = GetESNode();
-        }
-
-        private void btnESConnect_Click(object sender, RoutedEventArgs e)
-        {
-            if (btnESConnect.Tag == null)
-            {
-                EthernetSlaveSoc_Close();
-
-                ethernetSlaveSoc = new SocketManager($"{App.Settings.RobotIP}:5890");
-                if (ethernetSlaveSoc.Connect(true))
-                {
-                    ethernetSlaveSoc.DataReceived += EthernetSlaveSoc_DataReceived;
-                    ethernetSlaveSoc.Disconnected += EthernetSlaveSoc_Disconnected;
-
-                    ethernetSlaveSoc.StartRecieveAsync();
-
-                    btnESConnect.Content = "Stop";
-                    btnESConnect.Tag = 1;
-                }
-            }
-            else
-            {
-                EthernetSlaveSoc_Close();
-
-                btnESConnect.Content = "Start";
-                btnESConnect.Tag = null;
-            }
-        }
-        private void EthernetSlaveSoc_Disconnected(object sender, SocketManager.SocketEventArgs data)
-        {
-            EthernetSlaveSoc_Close();
-
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                    (Action)(() =>
-                    {
-                        rectESCommandResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
-                        txtESDataResponse.Text = "";
-
-                        btnESConnect.Content = "Start";
-                        btnESConnect.Tag = null;
-                    }));
-        }
-        private void EthernetSlaveSoc_Close()
-        {
-            if (ethernetSlaveSoc != null)
-            {
-                ethernetSlaveSoc.DataReceived -= EthernetSlaveSoc_DataReceived;
-                ethernetSlaveSoc.Disconnected -= EthernetSlaveSoc_Disconnected;
-
-                ethernetSlaveSoc.StopRecieveAsync();
-                ethernetSlaveSoc.Disconnect();
-            }
-
-        }
-        private void EthernetSlaveSoc_DataReceived(object sender, SocketManager.SocketEventArgs data)
-        {
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                    (Action)(() =>
-                    {
-                        rectESCommandResponse.Fill = new SolidColorBrush(Color.FromRgb(0, 255, 0));
-                        txtESDataResponse.Text = data.Message;
-                    }));
-        }
-        private void btnESSend_Click(object sender, RoutedEventArgs e)
-        {
-            rectESCommandResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
-            ethernetSlaveSoc?.Write(ethernetSlave.Message);
+            EthernetSlave = GetESNode();
         }
 
         private TM_Comms_EthernetSlave GetESNode()
@@ -122,10 +53,86 @@ namespace TM_Comms_WPF.Net
 
             return node;
         }
-
-        private void cmbESDataType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void EthernetSlaveSoc_ConnectState(object sender, SocketManager.SocketStateEventArgs data)
         {
-            ethernetSlave = GetESNode();
+            if (!data.State)
+            {
+                CleanSock();
+
+                Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                        (Action)(() =>
+                        {
+                            rectESCommandResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
+                            txtESDataResponse.Text = "";
+
+                            btnESConnect.Content = "Start";
+                            btnESConnect.Tag = null;
+                        }));
+            }
+        }
+        private void EthernetSlaveSoc_DataReceived(object sender, SocketManager.SocketMessageEventArgs data)
+        {
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                    (Action)(() =>
+                    {
+                        rectESCommandResponse.Fill = new SolidColorBrush(Color.FromRgb(0, 255, 0));
+                        txtESDataResponse.Text = data.Message;
+                    }));
+        } 
+        private void CleanSock()
+        {
+            if (Socket != null)
+            {
+                Socket.DataReceived -= EthernetSlaveSoc_DataReceived;
+                Socket.ConnectState += EthernetSlaveSoc_ConnectState;
+
+                Socket.StopRecieveAsync();
+                Socket.Disconnect();
+
+                Socket = null;
+            }
+        }
+
+        private void BtnESConnect_Click(object sender, RoutedEventArgs e)
+        {
+            if (btnESConnect.Tag == null)
+            {
+                CleanSock();
+
+                Socket = new SocketManager($"{App.Settings.RobotIP}:5890");
+
+                Socket.DataReceived += EthernetSlaveSoc_DataReceived;
+                Socket.ConnectState += EthernetSlaveSoc_ConnectState;
+
+                if (Socket.Connect(true))
+                {
+                    Socket.StartRecieveAsync();
+
+                    btnESConnect.Content = "Stop";
+                    btnESConnect.Tag = 1;
+                }
+                else
+                {
+                    CleanSock();
+                }
+            }
+            else
+            {
+                CleanSock();
+
+                btnESConnect.Content = "Start";
+                btnESConnect.Tag = null;
+            }
+        }
+        private void BtnESSend_Click(object sender, RoutedEventArgs e)
+        {
+            rectESCommandResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
+            Socket?.Write(EthernetSlave.Message);
+        }
+
+        private void CmbESDataType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            EthernetSlave = GetESNode();
         }
 
     }

@@ -5,12 +5,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TM_Comms_WPF.Net
+namespace SimpleModbus
 {
-    public class TM_Comms_ModbusTCP : IDisposable
+    public class SimpleModbusTCP : IDisposable
     {
         public delegate void ErrorEventHandler(object sender, Exception data);
         public event ErrorEventHandler Error;
+
+        public delegate void MessageEventHandler(string message);
+        public event MessageEventHandler Message;
 
         public SocketManagerNS.SocketManager Socket { get; private set; }
         public bool IsConnected => Socket.IsConnected;
@@ -20,9 +23,9 @@ namespace TM_Comms_WPF.Net
             Socket = new SocketManagerNS.SocketManager($"{ip}:{port}");
             try
             {
-                Socket.Connect(false);
+                Socket.Connect(true);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Error?.Invoke(this, ex);
                 return false;
@@ -35,12 +38,25 @@ namespace TM_Comms_WPF.Net
         }
         public void Disconnect() => Socket?.Disconnect();
 
+        private SimpleModbusCore.MBAP PreWrite(SimpleModbusCore.PublicFunctionCodes functionCode, int addr, int length) => Write(new SimpleModbusCore.MBAP(new SimpleModbusCore.ADU_FunctionRequest(functionCode, addr, length)));
+        private SimpleModbusCore.MBAP PreWrite(SimpleModbusCore.PublicFunctionCodes functionCode, int addr, bool value) => Write(new SimpleModbusCore.MBAP(new SimpleModbusCore.ADU_FunctionRequest(functionCode, addr, value)));
+        private SimpleModbusCore.MBAP Write(SimpleModbusCore.MBAP mbap)
+        {
+            Message?.Invoke($"W: {mbap.MessageHEXString}");
+
+            byte[] b = Socket.WriteRead(mbap.Message);
+
+            mbap = new SimpleModbusCore.MBAP(new SimpleModbusCore.ADU_FunctionResponse(), b);
+            Message?.Invoke($"R: {mbap.MessageHEXString}");
+
+            return mbap;
+        }
+
         public bool GetBool(int addr)
         {
             try
             {
-                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionRequest(SimpleModbus.PublicFunctionCodes.ReadDiscreteInput, addr, 1)).Message);
-                return ((SimpleModbus.ADU_FunctionResponse)new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionResponse(), b).PDU).Bool;
+                return ((SimpleModbusCore.ADU_FunctionResponse)PreWrite(SimpleModbusCore.PublicFunctionCodes.ReadDiscreteInput, addr, 1).PDU).Bool;
             }
 
             catch (Exception ex)
@@ -51,11 +67,9 @@ namespace TM_Comms_WPF.Net
         }
         public int GetInt16(int addr)
         {
-
             try
             {
-                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionRequest(SimpleModbus.PublicFunctionCodes.ReadInputRegister, addr, 1)).Message);
-                return ((SimpleModbus.ADU_FunctionResponse)new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionResponse(), b).PDU).Int16;
+                return ((SimpleModbusCore.ADU_FunctionResponse)PreWrite(SimpleModbusCore.PublicFunctionCodes.ReadInputRegister, addr, 1).PDU).Int16;
             }
             catch (Exception ex)
             {
@@ -67,10 +81,9 @@ namespace TM_Comms_WPF.Net
         {
             try
             {
-                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionRequest(SimpleModbus.PublicFunctionCodes.ReadInputRegister, addr, 2)).Message);
-                return ((SimpleModbus.ADU_FunctionResponse)new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionResponse(), b).PDU).Int32;
+                return ((SimpleModbusCore.ADU_FunctionResponse)PreWrite(SimpleModbusCore.PublicFunctionCodes.ReadInputRegister, addr, 2).PDU).Int32;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Error?.Invoke(this, ex);
                 return 0;
@@ -80,8 +93,7 @@ namespace TM_Comms_WPF.Net
         {
             try
             {
-                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionRequest(SimpleModbus.PublicFunctionCodes.ReadInputRegister, addr, 2)).Message);
-                return ((SimpleModbus.ADU_FunctionResponse)new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionResponse(), b).PDU).Float;
+                return ((SimpleModbusCore.ADU_FunctionResponse)PreWrite(SimpleModbusCore.PublicFunctionCodes.ReadInputRegister, addr, 2).PDU).Float;
             }
             catch (Exception ex)
             {
@@ -94,12 +106,11 @@ namespace TM_Comms_WPF.Net
             return null;
         }
 
-        public bool SetBool(int addr, bool val)
+        public bool SetBool(int addr, bool value)
         {
             try
             {
-                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionRequest(SimpleModbus.PublicFunctionCodes.WriteSingleCoil, addr, val)).Message);
-                return ((SimpleModbus.ADU_FunctionRequest)new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionResponse(), b).PDU).IsExceptionFunctionCode;
+                return ((SimpleModbusCore.ADU_FunctionResponse)PreWrite(SimpleModbusCore.PublicFunctionCodes.WriteSingleCoil, addr, value).PDU).IsExceptionFunctionCode;
             }
             catch (Exception ex)
             {
@@ -111,9 +122,7 @@ namespace TM_Comms_WPF.Net
         {
             try
             {
-                byte[] b = Socket.WriteRead(new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionRequest(SimpleModbus.PublicFunctionCodes.WriteSingleRegister, addr, value)).Message);
-                SimpleModbus.ADU_FunctionResponse res = ((SimpleModbus.ADU_FunctionResponse)new SimpleModbus.MBAP(new SimpleModbus.ADU_FunctionResponse(), b).PDU);
-                return res.IsExceptionFunctionCode;
+                return ((SimpleModbusCore.ADU_FunctionResponse)PreWrite(SimpleModbusCore.PublicFunctionCodes.WriteSingleRegister, addr, value).PDU).IsExceptionFunctionCode;
             }
             catch (Exception ex)
             {
@@ -121,7 +130,6 @@ namespace TM_Comms_WPF.Net
                 return false;
             }
         }
-
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
@@ -142,7 +150,7 @@ namespace TM_Comms_WPF.Net
         }
 
         // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        ~TM_Comms_ModbusTCP()
+        ~SimpleModbusTCP()
         {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose(false);
@@ -157,7 +165,5 @@ namespace TM_Comms_WPF.Net
             // GC.SuppressFinalize(this);
         }
         #endregion
-
-
     }
 }

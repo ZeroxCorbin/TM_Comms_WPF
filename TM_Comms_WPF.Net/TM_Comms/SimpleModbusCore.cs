@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TM_Comms_WPF.Net
+namespace SimpleModbus
 {
-    public class SimpleModbus
+    public class SimpleModbusCore
     {
         public enum PublicFunctionCodes
         {

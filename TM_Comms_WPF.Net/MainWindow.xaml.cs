@@ -3,6 +3,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 using ApplicationSettingsNS;
@@ -42,94 +43,109 @@ namespace TM_Comms_WPF.Net
     public partial class MainWindow : Window
     {
 
-        private ListenNodeWindow listenNodeWindow = null;
-        private Port8080Window port8080Window = null;
-        private EthernetSlaveWindow ethernetSlaveWindow = null;
-        private ModbusWindow modbusWindow = null;
+        private ListenNodeWindow ListenNodeWindow { get; set; } = null;
+        private Port8080Window Port8080Window { get; set; } = null;
+        private EthernetSlaveWindow EthernetSlaveWindow { get; set; } = null;
+        private ModbusWindow ModbusWindow { get; set; } = null;
+
+        private bool IsLoading { get; set; } = true;
 
         public MainWindow()
         {
-
             InitializeComponent();
             
             txtRobotIP.Text = App.Settings.RobotIP;
+
+            if (Keyboard.IsKeyDown(Key.LeftShift))
+            {
+                App.Settings.MainWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+                App.Settings.ModbusWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+                App.Settings.ListenNodeWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+                App.Settings.EthernetSlaveWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+                App.Settings.Port8080Window = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+            }
+
+            this.Left = App.Settings.MainWindow.Left;
+            this.Top = App.Settings.MainWindow.Top;
+
+            IsLoading = false;
         }
 
   
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            port8080Window?.Close();
-            ethernetSlaveWindow?.Close();
-            modbusWindow?.Close();
-            listenNodeWindow?.Close();
+            Port8080Window?.Close();
+            EthernetSlaveWindow?.Close();
+            ModbusWindow?.Close();
+            ListenNodeWindow?.Close();
 
             ApplicationSettings_Serializer.Save("appsettings.xml", App.Settings);
         }
 
         private void BtnListenNodeWindow_Click(object sender, RoutedEventArgs e)
         {
-            if (listenNodeWindow == null)
+            if (ListenNodeWindow == null)
             {
-                listenNodeWindow = new ListenNodeWindow();
-                listenNodeWindow.Closing += ModbusWindow_Closing;
-                listenNodeWindow.Owner = this;
-                listenNodeWindow.Show();
+                ListenNodeWindow = new ListenNodeWindow();
+                ListenNodeWindow.Closing += ListenNodeWindow_Closing;
+                ListenNodeWindow.Owner = this;
+                ListenNodeWindow.Show();
             }
-            listenNodeWindow.BringIntoView();
+            ListenNodeWindow.BringIntoView();
         }
         private void ListenNodeWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            listenNodeWindow = null;
+            ListenNodeWindow = null;
         }
 
         private void BtnEthernetSlaveWindow_Click(object sender, RoutedEventArgs e)
         {
-            if (ethernetSlaveWindow == null)
+            if (EthernetSlaveWindow == null)
             {
-                ethernetSlaveWindow = new EthernetSlaveWindow();
-                ethernetSlaveWindow.Closing += ModbusWindow_Closing;
-                ethernetSlaveWindow.Owner = this;
-                ethernetSlaveWindow.Show();
+                EthernetSlaveWindow = new EthernetSlaveWindow();
+                EthernetSlaveWindow.Closing += EthernetSlaveWindow_Closing;
+                EthernetSlaveWindow.Owner = this;
+                EthernetSlaveWindow.Show();
             }
-            ethernetSlaveWindow.BringIntoView();
+            EthernetSlaveWindow.BringIntoView();
         }
         private void EthernetSlaveWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            ethernetSlaveWindow = null;
+            EthernetSlaveWindow = null;
         }
 
         private void BtnPort8080Window_Click(object sender, RoutedEventArgs e)
         {
-            if (port8080Window == null)
+            if (Port8080Window == null)
             {
-                port8080Window = new Port8080Window();
-                port8080Window.Closing += ModbusWindow_Closing;
-                port8080Window.Owner = this;
-                port8080Window.Show();
+                Port8080Window = new Port8080Window();
+                Port8080Window.Closing += Port8080Window_Closing;
+                Port8080Window.Owner = this;
+                Port8080Window.Show();
             }
-            port8080Window.BringIntoView();
+            Port8080Window.BringIntoView();
         }
         private void Port8080Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            port8080Window = null; ;
+            Port8080Window = null; ;
         }
 
         private void BtnModbusWindow_Click(object sender, RoutedEventArgs e)
         {
-            if (modbusWindow == null)
+            if (ModbusWindow == null)
             {
-                modbusWindow = new ModbusWindow();
-                modbusWindow.Closing += ModbusWindow_Closing;
-                modbusWindow.Owner = this;
-                modbusWindow.Show();
+                ModbusWindow = new ModbusWindow();
+                ModbusWindow.Closing += ModbusWindow_Closing;
+                ModbusWindow.Owner = this;
+                ModbusWindow.Show();
             }
-            modbusWindow.BringIntoView();
+            ModbusWindow.BringIntoView();
             
         }
         private void ModbusWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            modbusWindow = null;
+            ModbusWindow = null;
         }      
         
         private void TxtRobotIP_TextChanged(object sender, TextChangedEventArgs e)
@@ -146,6 +162,12 @@ namespace TM_Comms_WPF.Net
             txtRobotIP.Background = Brushes.LightGreen;
         }
 
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            if (IsLoading) return;
 
+            App.Settings.MainWindow.Top = Top;
+            App.Settings.MainWindow.Left = Left;
+        }
     }
 }

@@ -49,7 +49,7 @@ namespace TM_Comms_WPF.Net
                 if (monitorSoc.Connect(true))
                 {
                     monitorSoc.DataReceived += MonitorSoc_DataReceived;
-                    monitorSoc.Disconnected += MonitorSoc_Disconnected;
+                    monitorSoc.ConnectState += MonitorSoc_ConnectState;
 
                     monitorSoc.StartRecieveAsync();
 
@@ -64,8 +64,10 @@ namespace TM_Comms_WPF.Net
             }
 
         }
-        private void MonitorSoc_Disconnected(object sender, SocketManager.SocketEventArgs data)
+        private void MonitorSoc_ConnectState(object sender, SocketManager.SocketStateEventArgs data)
         {
+            if (!data.State)
+            {
             MonitorSoc_Close();
 
             Dispatcher.BeginInvoke(DispatcherPriority.Normal,
@@ -74,20 +76,22 @@ namespace TM_Comms_WPF.Net
                         btnConnectMonitor.Content = "Start";
                         btnConnectMonitor.Tag = null;
                     }));
+            }
+
         }
         private void MonitorSoc_Close()
         {
             if (monitorSoc != null)
             {
                 monitorSoc.DataReceived -= MonitorSoc_DataReceived;
-                monitorSoc.Disconnected -= MonitorSoc_Disconnected;
+                monitorSoc.ConnectState -= MonitorSoc_ConnectState;
 
                 monitorSoc.StopRecieveAsync();
                 monitorSoc.Disconnect();
             }
 
         }
-        private void MonitorSoc_DataReceived(object sender, SocketManager.SocketEventArgs data)
+        private void MonitorSoc_DataReceived(object sender, SocketManager.SocketMessageEventArgs data)
         {
             string msg = CleanMessage(data.Message);
             if (msg != "")
