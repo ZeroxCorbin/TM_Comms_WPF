@@ -38,7 +38,8 @@ namespace SimpleModbus
         }
         public void Disconnect() => Socket?.Disconnect();
 
-        private SimpleModbusCore.MBAP PreWrite(SimpleModbusCore.PublicFunctionCodes functionCode, int addr, int length) => Write(new SimpleModbusCore.MBAP(new SimpleModbusCore.ADU_FunctionRequest(functionCode, addr, length)));
+        private SimpleModbusCore.MBAP PreWrite(SimpleModbusCore.PublicFunctionCodes functionCode, int addr, int value) => Write(new SimpleModbusCore.MBAP(new SimpleModbusCore.ADU_FunctionRequest(functionCode, addr, value)));
+        private SimpleModbusCore.MBAP PreWrite(SimpleModbusCore.PublicFunctionCodes functionCode, int addr, int length, int[] values) => Write(new SimpleModbusCore.MBAP(new SimpleModbusCore.ADU_FunctionRequest(functionCode, addr, length, values)));
         private SimpleModbusCore.MBAP PreWrite(SimpleModbusCore.PublicFunctionCodes functionCode, int addr, bool value) => Write(new SimpleModbusCore.MBAP(new SimpleModbusCore.ADU_FunctionRequest(functionCode, addr, value)));
         private SimpleModbusCore.MBAP Write(SimpleModbusCore.MBAP mbap)
         {
@@ -65,11 +66,11 @@ namespace SimpleModbus
                 return false;
             }
         }
-        public int GetInt16(int addr)
+        public int GetInt16(int addr, int qauntity = 1)
         {
             try
             {
-                return ((SimpleModbusCore.ADU_FunctionResponse)PreWrite(SimpleModbusCore.PublicFunctionCodes.ReadInputRegister, addr, 1).PDU).Int16;
+                return ((SimpleModbusCore.ADU_FunctionResponse)PreWrite(SimpleModbusCore.PublicFunctionCodes.ReadInputRegister, addr, qauntity).PDU).Int16;
             }
             catch (Exception ex)
             {
@@ -77,6 +78,19 @@ namespace SimpleModbus
                 return 0;
             }
         }
+        public int GetInt16Hr(int addr, int quantity = 1)
+        {
+            try
+            {
+                return ((SimpleModbusCore.ADU_FunctionResponse)PreWrite(SimpleModbusCore.PublicFunctionCodes.ReadHoldingRegisters, addr, quantity).PDU).Int16;
+            }
+            catch (Exception ex)
+            {
+                Error?.Invoke(this, ex);
+                return 0;
+            }
+        }
+
         public int GetInt32(int addr)
         {
             try
@@ -122,7 +136,7 @@ namespace SimpleModbus
         {
             try
             {
-                return ((SimpleModbusCore.ADU_FunctionResponse)PreWrite(SimpleModbusCore.PublicFunctionCodes.WriteSingleRegister, addr, value).PDU).IsExceptionFunctionCode;
+                return ((SimpleModbusCore.ADU_FunctionResponse)PreWrite(SimpleModbusCore.PublicFunctionCodes.WriteMultipleRegisters, addr, 1, new int[] { value}).PDU).IsExceptionFunctionCode;
             }
             catch (Exception ex)
             {
@@ -130,6 +144,7 @@ namespace SimpleModbus
                 return false;
             }
         }
+
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

@@ -477,7 +477,7 @@ namespace TM_Comms_WPF.Net
                     ((TextBox)stackModbusUserText.Children[i]).Text = ModbusTCP.GetFloat(addr).ToString();
                     break;
                 case TM_Comms_ModbusDict.MobusValue.DataTypes.Int16:
-                    ((TextBox)stackModbusUserText.Children[i]).Text = ModbusTCP.GetInt16(addr).ToString();
+                    ((TextBox)stackModbusUserText.Children[i]).Text = ModbusTCP.GetInt16Hr(addr).ToString();
                     break;
                 case TM_Comms_ModbusDict.MobusValue.DataTypes.Int32:
                     ((TextBox)stackModbusUserText.Children[i]).Text = ModbusTCP.GetInt32(addr).ToString();

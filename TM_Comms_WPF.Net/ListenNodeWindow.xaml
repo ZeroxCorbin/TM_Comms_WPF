@@ -129,7 +129,7 @@
                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5" >
                     <StackPanel>
                         <Button x:Name="btnLNInsertMove" Content="Insert" Click="BtnLNInsertMove_Click" Width="90" Margin="2" Height="26"/>
-                        <TextBox x:Name="txtLNMoves" AcceptsReturn="True" Text="Linear,Pose,430,0,320,-180.0,0,90.0,100,0,0" MinWidth="300" MinHeight="150" MaxWidth="600" MaxHeight="300" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="2" SelectionChanged="TxtLNMoves_SelectionChanged"/>
+                        <TextBox x:Name="txtLNMoves" AcceptsReturn="True" MinWidth="300" MinHeight="150" MaxWidth="600" MaxHeight="300" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="2" SelectionChanged="TxtLNMoves_SelectionChanged"/>
                     </StackPanel>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5" >

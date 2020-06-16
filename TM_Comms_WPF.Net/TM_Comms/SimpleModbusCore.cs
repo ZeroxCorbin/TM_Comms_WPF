@@ -145,6 +145,8 @@ namespace SimpleModbus
                 Data.Add(HighByte(quantity));
                 Data.Add(LowByte(quantity));
 
+                Data.Add((byte)(values.Length * 2));
+
                 if (values == null) return;
 
                 for (int i = 0; i < values.Length; i++)

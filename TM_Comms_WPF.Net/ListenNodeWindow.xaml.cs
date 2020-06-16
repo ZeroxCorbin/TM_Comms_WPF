@@ -204,14 +204,20 @@ namespace TM_Comms_WPF.Net
                 CleanSock();
 
                 Socket = new SocketManager($"{App.Settings.RobotIP}:5890", null, Socket_ConnectState, Socket_DataReceived);
-                Socket.Connect(true);
-
-                Socket.StartRecieveAsync();
+                if (Socket.Connect(true))
+                { 
+                    Socket.StartRecieveAsync();
+                    btnLNConnect.Tag = "";
+                }
+                else
+                    CleanSock();
             }
             else
             {
                 CleanSock();
                 ConnectionInActive();
+
+                btnLNConnect.Tag = null;
             }
         }
         private void BtnLNSend_Click(object sender, RoutedEventArgs e)
@@ -368,5 +374,6 @@ namespace TM_Comms_WPF.Net
             else
                 btnLNInsertMove.IsEnabled = false;
         }
+
     }
 }
