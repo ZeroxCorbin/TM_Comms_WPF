@@ -92,7 +92,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TM_Comms\PingCommand.cs" />
-    <Compile Include="TM_Comms\SimpleModbusCore.cs" />
     <Compile Include="Support\ApplicationSettings_Serializer.cs" />
     <Compile Include="Support\ConvertEuler.cs" />
     <Compile Include="EthernetSlaveWindow.xaml.cs">
@@ -111,7 +110,6 @@
     <Compile Include="TM_Comms\TM_Comms_EthernetSlave.cs" />
     <Compile Include="TM_Comms\TM_Comms_ListenNode.cs" />
     <Compile Include="TM_Comms\TM_Comms_ModbusDict.cs" />
-    <Compile Include="TM_Comms\SimpleModbusTCP.cs" />
     <Compile Include="TM_Comms\TM_Comms_MotionScriptBuilder.cs" />
     <Compile Include="TM_Comms\TM_Comms_Port8080.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -163,6 +161,10 @@
     <Resource Include="Support\favicon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SimpleModbus\SimpleModbus.csproj">
+      <Project>{0ddfaf2b-426e-4c19-a547-18e266f5dfdf}</Project>
+      <Name>SimpleModbus</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SocketManager\SocketManager.csproj">
       <Project>{4bfb50f6-69eb-4e78-a557-a314c0de371f}</Project>
       <Name>SocketManager</Name>
