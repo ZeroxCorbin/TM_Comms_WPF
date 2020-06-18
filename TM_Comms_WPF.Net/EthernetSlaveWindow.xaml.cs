@@ -86,7 +86,7 @@ namespace TM_Comms_WPF.Net
                 Socket.DataReceived -= EthernetSlaveSoc_DataReceived;
                 Socket.ConnectState += EthernetSlaveSoc_ConnectState;
 
-                Socket.StopRecieveAsync();
+                Socket.StopReceiveAsync();
                 Socket.Disconnect();
 
                 Socket = null;
@@ -106,7 +106,7 @@ namespace TM_Comms_WPF.Net
 
                 if (Socket.Connect(true))
                 {
-                    Socket.StartRecieveAsync();
+                    Socket.StartReceiveAsync();
 
                     btnESConnect.Content = "Stop";
                     btnESConnect.Tag = 1;

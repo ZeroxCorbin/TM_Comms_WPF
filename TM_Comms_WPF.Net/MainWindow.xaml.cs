@@ -10,36 +10,6 @@ using ApplicationSettingsNS;
 
 namespace TM_Comms_WPF.Net
 {
-    public static class StringExtensions
-    {
-        public static bool ToBoolean(this string value)
-        {
-            switch (value.ToLower())
-            {
-                case "true":
-                    return true;
-                case "t":
-                    return true;
-                case "1":
-                    return true;
-                case "0":
-                    return false;
-                case "false":
-                    return false;
-                case "f":
-                    return false;
-                default:
-                    throw new InvalidCastException("You can't cast that value to a bool!");
-            }
-        }
-
-        public static int ToInt(this string value)
-        {
-            if (string.IsNullOrEmpty(value)) return 0;
-            return Convert.ToInt32(value);
-        }
-    }
-
     public partial class MainWindow : Window
     {
 
@@ -71,8 +41,6 @@ namespace TM_Comms_WPF.Net
             IsLoading = false;
         }
 
-  
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Port8080Window?.Close();
@@ -92,7 +60,6 @@ namespace TM_Comms_WPF.Net
                 ListenNodeWindow.Owner = this;
                 ListenNodeWindow.Show();
             }
-            ListenNodeWindow.BringIntoView();
         }
         private void ListenNodeWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -108,7 +75,6 @@ namespace TM_Comms_WPF.Net
                 EthernetSlaveWindow.Owner = this;
                 EthernetSlaveWindow.Show();
             }
-            EthernetSlaveWindow.BringIntoView();
         }
         private void EthernetSlaveWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -124,7 +90,6 @@ namespace TM_Comms_WPF.Net
                 Port8080Window.Owner = this;
                 Port8080Window.Show();
             }
-            Port8080Window.BringIntoView();
         }
         private void Port8080Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -137,12 +102,17 @@ namespace TM_Comms_WPF.Net
             {
                 ModbusWindow = new ModbusWindow();
                 ModbusWindow.Closing += ModbusWindow_Closing;
+                ModbusWindow.Activated += AnyWindow_Activated;
                 ModbusWindow.Owner = this;
                 ModbusWindow.Show();
             }
-            ModbusWindow.BringIntoView();
-            
         }
+
+        private void AnyWindow_Activated(object sender, EventArgs e)
+        {
+                MoveToForeground.DoOnProcess("TM_Comms_WPF.Net");
+        }
+
         private void ModbusWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             ModbusWindow = null;

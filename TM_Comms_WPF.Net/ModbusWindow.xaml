@@ -23,7 +23,7 @@
                     <Button x:Name="btnPlus" HorizontalAlignment="Left" Height="36" Margin="228,11,0,0"  VerticalAlignment="Top" Width="36" Click="BtnPlus_Click" Background="#00000000" BorderBrush="{x:Null}" Foreground="{x:Null}"/>
                     <Button x:Name="btnConnect" HorizontalAlignment="Left" Height="36" Margin="124,10,0,0"  VerticalAlignment="Top" Width="36" Background="#00000000" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="BtnConnect_Click"/>
                 </Grid>
-                <Border Height="105" Width="439" BorderBrush="Black" BorderThickness="1" CornerRadius="30"  Margin="5">
+                <Border Height="105" MaxWidth="360" BorderBrush="Black" BorderThickness="1" CornerRadius="30"  Margin="5">
                     <Grid>
                         <StackPanel Orientation="Horizontal" Margin="10,10,10,73">
                             <Ellipse x:Name="elpIsError" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="20" Stroke="Black" VerticalAlignment="Top" Width="20" Margin="0,0,5,0"/>
@@ -35,7 +35,14 @@
                             </Border>                            
                         </StackPanel>
 
-                        <TextBox x:Name="txtErrorDescription" HorizontalAlignment="Left" Height="58" Margin="10,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="417" BorderBrush="{x:Null}" BorderThickness="0" IsReadOnly="True"/>
+                        <TextBox x:Name="txtErrorDescription" HorizontalAlignment="Left" Height="58" Margin="10,35,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="{x:Null}" BorderThickness="0" IsReadOnly="True"/>
+                    </Grid>
+
+                </Border>
+                <Border Height="105" MaxWidth="360" BorderBrush="Black" BorderThickness="1" CornerRadius="30"  Margin="5">
+                    <Grid>
+                        <TextBox Margin="10" x:Name="TxtSocketOutput" IsReadOnly="True" VerticalScrollBarVisibility="Auto" BorderBrush="{x:Null}" HorizontalScrollBarVisibility="Auto"/>
+
                     </Grid>
 
                 </Border>

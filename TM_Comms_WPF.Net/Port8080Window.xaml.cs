@@ -50,8 +50,8 @@ namespace TM_Comms_WPF.Net
                 {
                     monitorSoc.DataReceived += MonitorSoc_DataReceived;
                     monitorSoc.ConnectState += MonitorSoc_ConnectState;
-
-                    monitorSoc.StartRecieveAsync();
+                     
+                    monitorSoc.StartReceiveAsync();
 
                     btnConnectMonitor.Content = "Stop";
                     btnConnectMonitor.Tag = 1;
@@ -86,7 +86,7 @@ namespace TM_Comms_WPF.Net
                 monitorSoc.DataReceived -= MonitorSoc_DataReceived;
                 monitorSoc.ConnectState -= MonitorSoc_ConnectState;
 
-                monitorSoc.StopRecieveAsync();
+                monitorSoc.StopReceiveAsync();
                 monitorSoc.Disconnect();
             }
 
@@ -143,7 +143,7 @@ namespace TM_Comms_WPF.Net
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            monitorSoc?.StopRecieveAsync();
+            monitorSoc?.StopReceiveAsync();
             monitorSoc?.Disconnect();
         }
     }

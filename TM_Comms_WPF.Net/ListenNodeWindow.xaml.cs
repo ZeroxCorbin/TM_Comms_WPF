@@ -14,9 +14,11 @@ namespace TM_Comms_WPF.Net
     {
         //Private
         private bool IsLoading { get; set; } = true;
+        private ApplicationSettingsNS.ApplicationSettings_Serializer.ApplicationSettings.WindowSettings Settings { get; set; }
+
         private SocketManager Socket { get; set; }
         private TM_Comms_ListenNode ListenNode { get; set; }
-
+        private bool AutoReconnect { get; set; } = false;
         private TM_Comms_MotionScriptBuilder MotionScriptBuilder { get; set; }
         private MoveStep NewMove { get; set; }
         private string PositionRequest { get; set; } = null;
@@ -30,11 +32,6 @@ namespace TM_Comms_WPF.Net
 
             this.Left = App.Settings.ListenNodeWindow.Left;
             this.Top = App.Settings.ListenNodeWindow.Top;
-
-            if (App.Settings.ListenNodeWindow.WindowState == WindowState.Maximized)
-                RemoveMaxWidth();
-            if (App.Settings.ListenNodeWindow.WindowState == WindowState.Normal)
-                SetMaxWidth();
 
             this.WindowState = App.Settings.ListenNodeWindow.WindowState;
 
@@ -135,7 +132,7 @@ namespace TM_Comms_WPF.Net
 
         private void CleanSock()
         {
-            Socket?.StopRecieveAsync();
+            Socket?.StopReceiveAsync();
             Socket?.Disconnect();
 
             Socket?.Dispose();
@@ -155,7 +152,7 @@ namespace TM_Comms_WPF.Net
             }
             else
             {
-                Socket.StartRecieveAsync();
+                Socket.StartReceiveAsync();
 
                 Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
                     {
@@ -206,7 +203,7 @@ namespace TM_Comms_WPF.Net
                 Socket = new SocketManager($"{App.Settings.RobotIP}:5890", null, Socket_ConnectState, Socket_DataReceived);
                 if (Socket.Connect(true))
                 { 
-                    Socket.StartRecieveAsync();
+                    Socket.StartReceiveAsync();
                     btnLNConnect.Tag = "";
                 }
                 else
@@ -266,7 +263,7 @@ namespace TM_Comms_WPF.Net
             sb.Append((string)((ComboBoxItem)CmbLNMoveVelocity.SelectedItem).Tag);
             sb.Append(delim);
 
-            sb.Append("0");
+            sb.Append((string)((ComboBoxItem)CmbLNMoveAccel.SelectedItem).Tag);
             sb.Append(delim);
 
             sb.Append((string)((ComboBoxItem)CmbLNMoveBlend.SelectedItem).Tag);
@@ -322,7 +319,7 @@ namespace TM_Comms_WPF.Net
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Socket?.StopRecieveAsync();
+            Socket?.StopReceiveAsync();
             Socket?.Disconnect();
         }
         private void Window_LocationChanged(object sender, EventArgs e)
@@ -335,36 +332,10 @@ namespace TM_Comms_WPF.Net
 
         private void Window_StateChanged(object sender, EventArgs e)
         {
-            if (this.WindowState == WindowState.Normal)
-                SetMaxWidth();
-            if (this.WindowState == WindowState.Maximized)
-                RemoveMaxWidth();
-
             if (IsLoading) return;
             if (this.WindowState == WindowState.Minimized) return;
 
             App.Settings.ListenNodeWindow.WindowState = this.WindowState;
-        }
-
-        private void SetMaxWidth()
-        {
-            this.SizeToContent = SizeToContent.WidthAndHeight;
-
-            txtLNScriptData.MaxWidth = 600;
-            txtLNDataString.MaxWidth = 600;
-            txtLNMoves.MaxWidth = 600;
-            txtLNMovesCode.MaxWidth = 600;
-            txtLNDataResponse.MaxWidth = 600;
-        }
-        private void RemoveMaxWidth()
-        {
-            this.SizeToContent = SizeToContent.Manual;
-
-            txtLNScriptData.MaxWidth = double.PositiveInfinity;
-            txtLNDataString.MaxWidth = double.PositiveInfinity;
-            txtLNMoves.MaxWidth = double.PositiveInfinity;
-            txtLNMovesCode.MaxWidth = double.PositiveInfinity;
-            txtLNDataResponse.MaxWidth = double.PositiveInfinity;
         }
 
         private void TxtLNMoves_SelectionChanged(object sender, RoutedEventArgs e)

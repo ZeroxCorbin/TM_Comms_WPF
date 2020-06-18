@@ -26,8 +26,6 @@ namespace TM_Comms_WPF.Net
         private int NumModbusRegisters { get; set; } = 15;
         private int NumModbusUserRegisters { get; set; } = 15;
 
-
-
         public ModbusWindow()
         {
             InitializeComponent();
@@ -54,9 +52,17 @@ namespace TM_Comms_WPF.Net
             ModbusTCP = new SimpleModbusTCP();
 
             ModbusTCP.Error += ModbusTCP_Error;
-
+            ModbusTCP.Message += ModbusTCP_Message;
             if (ModbusTCP.Connect(App.Settings.RobotIP))
                 ThreadPool.QueueUserWorkItem(new WaitCallback(AsyncRecieveThread_DoWork));
+        }
+
+        private void ModbusTCP_Message(string message)
+        {
+            if (!Monitor.TryEnter(LockObject, 0)) return;
+
+            TxtSocketOutput.Text += $"{message}\r\n";
+            TxtSocketOutput.ScrollToEnd();
         }
 
         private void ModbusTCP_Error(object sender, Exception data)
@@ -158,18 +164,22 @@ namespace TM_Comms_WPF.Net
         }
         private void BtnStop_Click(object sender, RoutedEventArgs e)
         {
+            lock (LockObject) { };
             ModbusTCP.SetBool(ModbusRegisters.MobusData["Stop"].Addr, true);
         }
         private void BtnPlayPause_Click(object sender, RoutedEventArgs e)
         {
+            lock (LockObject) { };
             ModbusTCP.SetBool(ModbusRegisters.MobusData["Play/Pause"].Addr, true);
         }
         private void BtnMinus_Click(object sender, RoutedEventArgs e)
         {
+            lock (LockObject) { };
             ModbusTCP.SetBool(ModbusRegisters.MobusData["Stick-"].Addr, true);
         }
         private void BtnPlus_Click(object sender, RoutedEventArgs e)
         {
+            lock (LockObject) { };
             ModbusTCP.SetBool(ModbusRegisters.MobusData["Stick+"].Addr, true);
         }
         private void BtnConnect_Click(object sender, RoutedEventArgs e) => MobusConnect();
@@ -191,7 +201,7 @@ namespace TM_Comms_WPF.Net
             stackModbusReadButton.Children.Add(btn);
 
             stackModbusText.Children.Add(new Label() { Content = "Value", Height = 26, Width = 90, Margin = new Thickness(2), HorizontalContentAlignment = HorizontalAlignment.Center });
-            stackModbusWriteButton.Children.Add(new Label() { Content = "", Height = 26, Width = 60, Margin = new Thickness(2), HorizontalContentAlignment = HorizontalAlignment.Center });
+            //stackModbusWriteButton.Children.Add(new Label() { Content = "", Height = 26, Width = 60, Margin = new Thickness(2), HorizontalContentAlignment = HorizontalAlignment.Center });
 
             for (int i = 1; i <= NumModbusRegisters; i++)
             {
@@ -206,15 +216,15 @@ namespace TM_Comms_WPF.Net
                 btn.Click += BtnModbusRead_Click;
                 stackModbusReadButton.Children.Add(btn);
 
-                stackModbusText.Children.Add(new TextBox() { Height = 26, Width = 90, Margin = new Thickness(2) });
+                stackModbusText.Children.Add(new TextBox() { Height = 26, MinWidth = 90, Margin = new Thickness(2), IsReadOnly = true });
 
-                btn = new Button() { Height = 26, Width = 60, Margin = new Thickness(2) };
-                btn.Tag = i;
-                btn.Click += BtnModbusWrite_Click;
-                btn.IsEnabled = false;
-                btn.Visibility = Visibility.Hidden;
-                btn.Content = "Write";
-                stackModbusWriteButton.Children.Add(btn);
+                //btn = new Button() { Height = 26, Width = 60, Margin = new Thickness(2) };
+                //btn.Tag = i;
+                //btn.Click += BtnModbusWrite_Click;
+                //btn.IsEnabled = false;
+                //btn.Visibility = Visibility.Hidden;
+                //btn.Content = "Write";
+                //stackModbusWriteButton.Children.Add(btn);
             }
 
             isLoading = false;
@@ -233,26 +243,28 @@ namespace TM_Comms_WPF.Net
         {
             ComboBox cmb = ((ComboBox)sender);
             Button rbtn = (Button)stackModbusReadButton.Children[(int)cmb.Tag];
-            Button wbtn = (Button)stackModbusWriteButton.Children[(int)cmb.Tag];
+            //Button wbtn = (Button)stackModbusWriteButton.Children[(int)cmb.Tag];
 
             rbtn.Content = $"{ModbusRegisters.MobusData[(string)cmb.SelectedValue].Addr} / {ModbusRegisters.MobusData[(string)cmb.SelectedValue].Addr:X2}";
 
-            if (ModbusRegisters.MobusData[(string)cmb.SelectedValue].Access == TM_Comms_ModbusDict.MobusValue.AccessTypes.R)
-            {
-                wbtn.IsEnabled = false;
-                wbtn.Visibility = Visibility.Hidden;
-            }
-            else
-            {
-                wbtn.IsEnabled = true;
-                wbtn.Visibility = Visibility.Visible;
-            }
+            //if (ModbusRegisters.MobusData[(string)cmb.SelectedValue].Access == TM_Comms_ModbusDict.MobusValue.AccessTypes.R)
+            //{
+            //    wbtn.IsEnabled = false;
+            //    wbtn.Visibility = Visibility.Hidden;
+            //}
+            //else
+            //{
+            //    wbtn.IsEnabled = true;
+            //    wbtn.Visibility = Visibility.Visible;
+            //}
 
             ((TextBox)stackModbusText.Children[(int)cmb.Tag]).Text = string.Empty;
         }
         private void BtnModbusWrite_Click(object sender, RoutedEventArgs e)
         {
             if (ModbusTCP == null) return;
+
+            lock (LockObject) { };
 
             int i = (int)((Button)sender).Tag;
             string val = (String)((ComboBox)stackModbusComboBox.Children[i]).SelectedValue;
@@ -265,21 +277,18 @@ namespace TM_Comms_WPF.Net
                 switch (ModbusRegisters.MobusData[val].Type)
                 {
                     case TM_Comms_ModbusDict.MobusValue.DataTypes.Bool:
-                        bool send = ((TextBox)stackModbusText.Children[i]).Text.ToBoolean();
-                        ModbusTCP.SetBool(addr, send);
+                        if (bool.TryParse(((TextBox)stackModbusText.Children[i]).Text, out bool b))
+                            ModbusTCP.SetBool(addr, b);
+                        else
+                            ((TextBox)stackModbusText.Children[i]).Background = Brushes.LightSalmon;
                         break;
                     case TM_Comms_ModbusDict.MobusValue.DataTypes.Float:
-
                         break;
                     case TM_Comms_ModbusDict.MobusValue.DataTypes.Int16:
-                        short data = (short)((TextBox)stackModbusText.Children[i]).Text.ToInt();
-                        ModbusTCP.SetInt16(addr, data);
                         break;
                     case TM_Comms_ModbusDict.MobusValue.DataTypes.Int32:
-
                         break;
                     case TM_Comms_ModbusDict.MobusValue.DataTypes.String:
-
                         break;
                 }
             }
@@ -287,6 +296,8 @@ namespace TM_Comms_WPF.Net
         private void BtnModbusRead_Click(object sender, RoutedEventArgs e)
         {
             if (ModbusTCP == null) return;
+
+            lock (LockObject) { };
 
             int i = (int)((Button)sender).Tag;
             string val = (String)((ComboBox)stackModbusComboBox.Children[i]).SelectedValue;
@@ -313,6 +324,8 @@ namespace TM_Comms_WPF.Net
                     ((TextBox)stackModbusText.Children[i]).Text = ModbusTCP.GetString(addr);
                     break;
             }
+
+
 
         }
         private void BtnModbusReadAll_Click(object sender, RoutedEventArgs e)
@@ -359,7 +372,7 @@ namespace TM_Comms_WPF.Net
                 btn.Click += BtnModbusUserRead_Click;
                 stackModbusUserReadButton.Children.Add(btn);
 
-                stackModbusUserText.Children.Add(new TextBox() { Height = 26, Width = 90, Margin = new Thickness(2) });
+                stackModbusUserText.Children.Add(new TextBox() { Height = 26, MinWidth = 90, Margin = new Thickness(2) });
 
                 btn = new Button() { Height = 26, Width = 70, Margin = new Thickness(2) };
                 btn.Tag = i;
@@ -427,38 +440,62 @@ namespace TM_Comms_WPF.Net
         {
             if (ModbusTCP == null) return;
 
-            int i = (int)((Button)sender).Tag;
+            lock (LockObject) { };
 
-            object tag = ((ComboBox)stackModbusUserComboBox.Children[i]).Tag;
+            int ind = (int)((Button)sender).Tag;
+
+            object tag = ((ComboBox)stackModbusUserComboBox.Children[ind]).Tag;
             if (tag == null) return;
             TM_Comms_ModbusDict.MobusValue.DataTypes type = (TM_Comms_ModbusDict.MobusValue.DataTypes)tag;
 
-            int addr = Convert.ToInt32((string)((Button)stackModbusUserReadButton.Children[i]).Content);
+            int addr = Convert.ToInt32((string)((Button)stackModbusUserReadButton.Children[ind]).Content);
 
+            TextBox tb = (TextBox)stackModbusUserText.Children[ind];
+            int res = 0;
             switch (type)
             {
                 case TM_Comms_ModbusDict.MobusValue.DataTypes.Bool:
-                    bool send = ((TextBox)stackModbusUserText.Children[i]).Text.ToBoolean();
-                    ModbusTCP.SetBool(addr, send);
+                    res = bool.TryParse(tb.Text, out bool b) ? 0 : 1;
+                    if (res == 0) res = (ModbusTCP.SetBool(addr, b) ? 1 : 0) << 1 | res;
                     break;
+
                 case TM_Comms_ModbusDict.MobusValue.DataTypes.Float:
-
+                    res = float.TryParse(tb.Text, out float f) ? 0 : 1;
+                    if (res == 0) res = (ModbusTCP.SetFloat(addr, new float[] { f }) ? 1 : 0) << 1 | res;
                     break;
+
                 case TM_Comms_ModbusDict.MobusValue.DataTypes.Int16:
-                    short data = (short)((TextBox)stackModbusUserText.Children[i]).Text.ToInt();
-                    ModbusTCP.SetInt16(addr, data);
+                    res = short.TryParse(tb.Text, out short s) ? 0 : 1;
+                    if (res == 0) res = (ModbusTCP.SetInt16(addr, new short[] { s }) ? 1 : 0) << 1 | res;
                     break;
-                case TM_Comms_ModbusDict.MobusValue.DataTypes.Int32:
 
+                case TM_Comms_ModbusDict.MobusValue.DataTypes.Int32:
+                    res = int.TryParse(tb.Text, out int i) ? 0 : 1;
+                    if (res == 0) res = (ModbusTCP.SetInt32(addr, new int[] { i }) ? 1 : 0) << 1 | res;
                     break;
+
                 case TM_Comms_ModbusDict.MobusValue.DataTypes.String:
 
+                    break;
+            }
+            switch (res)
+            {
+                case 0:
+                    tb.Background = Brushes.LightGreen;
+                    break;
+                case 1:
+                    tb.Background = Brushes.LightYellow;
+                    break;
+                case 2:
+                    tb.Background = Brushes.LightSalmon;
                     break;
             }
         }
         private void BtnModbusUserRead_Click(object sender, RoutedEventArgs e)
         {
             if (ModbusTCP == null) return;
+
+            lock (LockObject) { };
 
             int i = (int)((Button)sender).Tag;
 
@@ -474,18 +511,20 @@ namespace TM_Comms_WPF.Net
                     ((TextBox)stackModbusUserText.Children[i]).Text = ModbusTCP.GetBool(addr).ToString();
                     break;
                 case TM_Comms_ModbusDict.MobusValue.DataTypes.Float:
-                    ((TextBox)stackModbusUserText.Children[i]).Text = ModbusTCP.GetFloat(addr).ToString();
+                    ((TextBox)stackModbusUserText.Children[i]).Text = ModbusTCP.GetFloatHr(addr).ToString();
                     break;
                 case TM_Comms_ModbusDict.MobusValue.DataTypes.Int16:
                     ((TextBox)stackModbusUserText.Children[i]).Text = ModbusTCP.GetInt16Hr(addr).ToString();
                     break;
                 case TM_Comms_ModbusDict.MobusValue.DataTypes.Int32:
-                    ((TextBox)stackModbusUserText.Children[i]).Text = ModbusTCP.GetInt32(addr).ToString();
+                    ((TextBox)stackModbusUserText.Children[i]).Text = ModbusTCP.GetInt32Hr(addr).ToString();
                     break;
                 case TM_Comms_ModbusDict.MobusValue.DataTypes.String:
                     ((TextBox)stackModbusUserText.Children[i]).Text = ModbusTCP.GetString(addr).ToString();
                     break;
             }
+
+
         }
         private void BtnModbusUserReadAll_Click(object sender, RoutedEventArgs e)
         {
@@ -500,7 +539,8 @@ namespace TM_Comms_WPF.Net
 
         private void CleanSock()
         {
-            lock (LockObject) isRunning = false;
+            isRunning = false;
+            lock (LockObject) { }
 
             if (ModbusTCP != null)
             {
@@ -515,9 +555,13 @@ namespace TM_Comms_WPF.Net
         //Window
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //int i = 0;
-            //foreach (ComboBox cmb in stackModbusComboBox.Children)
-            //    App.Settings.ModbusComboBoxIndices[i++] = (string)cmb.SelectedValue;
+            App.Settings.ModbusComboBoxIndices = new string[NumModbusRegisters];
+            for (int i = 1; i <= NumModbusRegisters; i++)
+                App.Settings.ModbusComboBoxIndices[i-1] = ((string)((ComboBox)stackModbusComboBox.Children[i]).SelectedValue);
+
+            App.Settings.ModbusUserComboBoxIndices = new string[NumModbusUserRegisters];
+            for (int i = 1; i <= NumModbusUserRegisters; i++)
+                App.Settings.ModbusUserComboBoxIndices[i-1] = ((string)((ComboBox)stackModbusUserComboBox.Children[i]).SelectedValue);
 
             CleanSock();
         }
