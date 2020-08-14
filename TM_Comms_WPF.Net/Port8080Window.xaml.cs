@@ -1,19 +1,7 @@
-﻿using SocketManagerNS;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
+using SocketManagerNS;
 
 namespace TM_Comms_WPF.Net
 {
@@ -46,12 +34,12 @@ namespace TM_Comms_WPF.Net
             {
                 monitorSoc = new SocketManager($"{App.Settings.RobotIP}:8080");
 
-                if (monitorSoc.Connect(true))
+                if (monitorSoc.Connect())
                 {
                     monitorSoc.DataReceived += MonitorSoc_DataReceived;
                     monitorSoc.ConnectState += MonitorSoc_ConnectState;
                      
-                    monitorSoc.StartReceiveAsync();
+                    monitorSoc.ReceiveAsync();
 
                     btnConnectMonitor.Content = "Stop";
                     btnConnectMonitor.Tag = 1;
@@ -64,9 +52,9 @@ namespace TM_Comms_WPF.Net
             }
 
         }
-        private void MonitorSoc_ConnectState(object sender, SocketManager.SocketStateEventArgs data)
+        private void MonitorSoc_ConnectState(object sender, bool data)
         {
-            if (!data.State)
+            if (!data)
             {
             MonitorSoc_Close();
 
@@ -87,18 +75,18 @@ namespace TM_Comms_WPF.Net
                 monitorSoc.ConnectState -= MonitorSoc_ConnectState;
 
                 monitorSoc.StopReceiveAsync();
-                monitorSoc.Disconnect();
+                monitorSoc.Close();
             }
 
         }
-        private void MonitorSoc_DataReceived(object sender, SocketManager.SocketMessageEventArgs data)
+        private void MonitorSoc_DataReceived(object sender, string data)
         {
-            string msg = CleanMessage(data.Message);
+            string msg = CleanMessage(data);
             if (msg != "")
                 this.data = TM_Monitor.Parse(msg);
             if (this.data != null)
             {
-                Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action<TM_Monitor.Rootobject, string>(MonitorViewUpdate), this.data, data.Message);
+                Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action<TM_Monitor.Rootobject, string>(MonitorViewUpdate), this.data, data);
             }
         }
         private string CleanMessage(string msg)
@@ -144,7 +132,7 @@ namespace TM_Comms_WPF.Net
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             monitorSoc?.StopReceiveAsync();
-            monitorSoc?.Disconnect();
+            monitorSoc?.Close();
         }
     }
 }

@@ -53,9 +53,9 @@ namespace TM_Comms_WPF.Net
 
             return node;
         }
-        private void EthernetSlaveSoc_ConnectState(object sender, SocketManager.SocketStateEventArgs data)
+        private void EthernetSlaveSoc_ConnectState(object sender, bool data)
         {
-            if (!data.State)
+            if (!data)
             {
                 CleanSock();
 
@@ -70,13 +70,13 @@ namespace TM_Comms_WPF.Net
                         }));
             }
         }
-        private void EthernetSlaveSoc_DataReceived(object sender, SocketManager.SocketMessageEventArgs data)
+        private void EthernetSlaveSoc_DataReceived(object sender, string data)
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Normal,
                     (Action)(() =>
                     {
                         rectESCommandResponse.Fill = new SolidColorBrush(Color.FromRgb(0, 255, 0));
-                        txtESDataResponse.Text = data.Message;
+                        txtESDataResponse.Text = data;
                     }));
         } 
         private void CleanSock()
@@ -87,7 +87,7 @@ namespace TM_Comms_WPF.Net
                 Socket.ConnectState += EthernetSlaveSoc_ConnectState;
 
                 Socket.StopReceiveAsync();
-                Socket.Disconnect();
+                Socket.Close();
 
                 Socket = null;
             }
@@ -104,9 +104,9 @@ namespace TM_Comms_WPF.Net
                 Socket.DataReceived += EthernetSlaveSoc_DataReceived;
                 Socket.ConnectState += EthernetSlaveSoc_ConnectState;
 
-                if (Socket.Connect(true))
+                if (Socket.Connect())
                 {
-                    Socket.StartReceiveAsync();
+                    Socket.ReceiveAsync();
 
                     btnESConnect.Content = "Stop";
                     btnESConnect.Tag = 1;

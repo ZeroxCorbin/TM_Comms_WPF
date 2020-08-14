@@ -133,14 +133,14 @@ namespace TM_Comms_WPF.Net
         private void CleanSock()
         {
             Socket?.StopReceiveAsync();
-            Socket?.Disconnect();
+            Socket?.Close();
 
             Socket?.Dispose();
             Socket = null;
         }
-        private void Socket_ConnectState(object sender, SocketManager.SocketStateEventArgs data)
+        private void Socket_ConnectState(object sender, bool data)
         {
-            if (!data.State)
+            if (!data)
             {
                 CleanSock();
 
@@ -152,7 +152,7 @@ namespace TM_Comms_WPF.Net
             }
             else
             {
-                Socket.StartReceiveAsync();
+                Socket.ReceiveAsync();
 
                 Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
                     {
@@ -161,11 +161,11 @@ namespace TM_Comms_WPF.Net
 
             }
         }
-        private void Socket_DataReceived(object sender, SocketManager.SocketMessageEventArgs data)
+        private void Socket_DataReceived(object sender, string data)
         {
             if (PositionRequest != null)
             {
-                string[] spl = data.Message.Trim('\0').Split(',');
+                string[] spl = data.Trim('\0').Split(',');
 
                 if (spl[0].Equals("$TMSTA"))
                 {
@@ -173,7 +173,7 @@ namespace TM_Comms_WPF.Net
                     {
                         PositionRequest = null;
 
-                        spl = data.Message.Trim('\0').Split('{');
+                        spl = data.Trim('\0').Split('{');
                         string pos = spl[1].Substring(0, spl[1].IndexOf('}'));
 
                         Dispatcher.BeginInvoke(DispatcherPriority.Normal,
@@ -189,7 +189,7 @@ namespace TM_Comms_WPF.Net
                     (Action)(() =>
                     {
                         rectCommandResponse.Fill = new SolidColorBrush(Color.FromRgb(0, 255, 0));
-                        txtLNDataResponse.Text += data.Message.Trim('\0');
+                        txtLNDataResponse.Text += data.Trim('\0');
                         txtLNDataResponse.ScrollToEnd();
                     }));
         }
@@ -201,9 +201,9 @@ namespace TM_Comms_WPF.Net
                 CleanSock();
 
                 Socket = new SocketManager($"{App.Settings.RobotIP}:5890", null, Socket_ConnectState, Socket_DataReceived);
-                if (Socket.Connect(true))
+                if (Socket.Connect())
                 { 
-                    Socket.StartReceiveAsync();
+                    Socket.ReceiveAsync();
                     btnLNConnect.Tag = "";
                 }
                 else
@@ -320,7 +320,7 @@ namespace TM_Comms_WPF.Net
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Socket?.StopReceiveAsync();
-            Socket?.Disconnect();
+            Socket?.Close();
         }
         private void Window_LocationChanged(object sender, EventArgs e)
         {

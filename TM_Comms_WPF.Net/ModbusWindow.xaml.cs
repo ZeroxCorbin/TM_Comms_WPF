@@ -545,7 +545,7 @@ namespace TM_Comms_WPF.Net
             if (ModbusTCP != null)
             {
                 ModbusTCP.Error -= ModbusTCP_Error;
-                ModbusTCP.Disconnect();
+                ModbusTCP.Close();
                 ModbusTCP.Dispose();
             }
 
