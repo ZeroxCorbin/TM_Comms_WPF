@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TM_Comms_WPF.Net
+namespace TM_Comms_WPF
 {
     public class TM_Comms_EthernetSlave
     {

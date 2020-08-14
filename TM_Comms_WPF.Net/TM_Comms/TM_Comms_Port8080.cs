@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace TM_Comms_WPF.Net
+namespace TM_Comms_WPF
 {
     public class TM_Monitor
     {

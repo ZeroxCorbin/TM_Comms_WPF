@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace TM_Comms_WPF.Net
+namespace TM_Comms_WPF
 {
     public partial class EthernetSlaveWindow : Window
     {

@@ -5,7 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TM_Comms_WPF.Net
+namespace TM_Comms_WPF
 {
     public enum MotionResult
     {

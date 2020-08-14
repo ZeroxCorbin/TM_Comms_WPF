@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
 
-namespace TM_Comms_WPF.Net
+namespace TM_Comms_WPF
 {
     public class MoveToForeground
     {

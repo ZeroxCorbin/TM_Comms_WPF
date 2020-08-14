@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 
-namespace TM_Comms_WPF.Net
+namespace TM_Comms_WPF
 {
     /// <summary>
     /// Interaction logic for ModbusWindow.xaml

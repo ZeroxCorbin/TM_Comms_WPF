@@ -1,9 +1,9 @@
-﻿<Window x:Name="window" x:Class="TM_Comms_WPF.Net.ListenNodeWindow"
+﻿<Window x:Name="window" x:Class="TM_Comms_WPF.ListenNodeWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TM_Comms_WPF.Net"
+        xmlns:local="clr-namespace:TM_Comms_WPF"
         mc:Ignorable="d"
         Title="ListenNodeWindow" Closing="Window_Closing" WindowStartupLocation="Manual" SizeToContent="WidthAndHeight" LocationChanged="Window_LocationChanged" StateChanged="Window_StateChanged" ResizeMode="NoResize" MinWidth="1024" Top="{Binding Settings.Top, ElementName=window}">
     <Grid>

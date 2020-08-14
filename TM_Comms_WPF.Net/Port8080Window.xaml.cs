@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Threading;
 using SocketManagerNS;
 
-namespace TM_Comms_WPF.Net
+namespace TM_Comms_WPF
 {
     /// <summary>
     /// Interaction logic for Port8080Window.xaml

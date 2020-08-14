@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 using ApplicationSettingsNS;
 
-namespace TM_Comms_WPF.Net
+namespace TM_Comms_WPF
 {
     public partial class MainWindow : Window
     {
@@ -110,7 +110,7 @@ namespace TM_Comms_WPF.Net
 
         private void AnyWindow_Activated(object sender, EventArgs e)
         {
-                MoveToForeground.DoOnProcess("TM_Comms_WPF.Net");
+                MoveToForeground.DoOnProcess("TM_Comms_WPF");
         }
 
         private void ModbusWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
