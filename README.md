@@ -1,2 +1,2 @@
-# TM_Comms_WPF.Net
+# TM_Comms_WPF
 TM Robot Communication Demo
