@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 using SocketManagerNS;
@@ -79,19 +80,26 @@ namespace TM_Comms_WPF.Net
             }
 
         }
-        private void MonitorSoc_DataReceived(object sender, string data)
+        private void MonitorSoc_DataReceived(object sender, string message)
         {
-            string msg = CleanMessage(data);
+            string msg = CleanMessage(message);
             if (msg != "")
                 this.data = TM_Monitor.Parse(msg);
             if (this.data != null)
-            {
-                Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action<TM_Monitor.Rootobject, string>(MonitorViewUpdate), this.data, data);
-            }
+                Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action<TM_Monitor.Rootobject, string>(MonitorViewUpdate), this.data, message);
+
+            Thread.Sleep(1);
         }
         private string CleanMessage(string msg)
         {
-            string[] str = msg.Split('?');
+            int loc = msg.IndexOf("{\"D");
+
+            if (loc == -1) return "";
+
+            msg = msg.Remove(0, loc);
+            msg = msg.Trim('\x81');
+
+            string[] str = msg.Split('~');
 
             foreach (string s in str)
             {
