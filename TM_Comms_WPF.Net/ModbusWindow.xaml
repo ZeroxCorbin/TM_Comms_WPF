@@ -10,7 +10,7 @@
         <StackPanel>
             <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="BtnConnect" Content="Start" Width="86" Click="BtnConnect_Click"/>
+                    <Button x:Name="BtnConnect" Content="Connect" Width="86" Click="BtnConnect_Click"/>
 
                 </StackPanel>
             </Border>

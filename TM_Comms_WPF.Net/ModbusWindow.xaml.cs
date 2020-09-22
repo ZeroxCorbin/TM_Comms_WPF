@@ -169,33 +169,44 @@ namespace TM_Comms_WPF
         }
         private void BtnStop_Click(object sender, RoutedEventArgs e)
         {
-            lock (LockObject) { };
-            ModbusTCP.SetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Stop"].Addr, true);
+            if (ModbusTCP == null) return;
+
+            lock (LockObject)
+            {
+                ModbusTCP.SetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Stop"].Addr, true);
+            }
         }
         private void BtnPlayPause_Click(object sender, RoutedEventArgs e)
         {
+            if (ModbusTCP == null) return;
+
             lock (LockObject)
             {
                 ModbusTCP.SetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Play/Pause"].Addr, true);
-            };
+            }
         }
         private void BtnMinus_Click(object sender, RoutedEventArgs e)
         {
+            if (ModbusTCP == null) return;
+
             lock (LockObject)
             {
                 ModbusTCP.SetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Stick-"].Addr, true);
-            };
+            }
         }
         private void BtnPlus_Click(object sender, RoutedEventArgs e)
         {
+            if (ModbusTCP == null) return;
+
             lock (LockObject)
             {
-                ;
                 ModbusTCP.SetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Stick+"].Addr, true);
             }
         }
         private void BtnAutoActive_Click(object sender, RoutedEventArgs e)
         {
+            if (ModbusTCP == null) return;
+
             lock (LockObject)
             {
                 if (ModbusTCP.GetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Auto Remote Mode Active"].Addr))
@@ -349,6 +360,8 @@ namespace TM_Comms_WPF
         }
         private void BtnModbusReadAll_Click(object sender, RoutedEventArgs e)
         {
+            if (ModbusTCP == null) return;
+
             for (int i = 1; i <= NumModbusRegisters; i++)
                 BtnModbusRead_Click(stackModbusReadButton.Children[i], new RoutedEventArgs());
         }
@@ -547,11 +560,15 @@ namespace TM_Comms_WPF
         }
         private void BtnModbusUserReadAll_Click(object sender, RoutedEventArgs e)
         {
+            if (ModbusTCP == null) return;
+
             for (int i = 1; i <= NumModbusUserRegisters; i++)
                 BtnModbusUserRead_Click(stackModbusUserReadButton.Children[i], new RoutedEventArgs());
         }
         private void BtnModbusUserWriteAll_Click(object sender, RoutedEventArgs e)
         {
+            if (ModbusTCP == null) return;
+
             for (int i = 1; i <= NumModbusUserRegisters; i++)
                 BtnModbusUserWrite_Click(stackModbusUserWriteButton.Children[i], new RoutedEventArgs());
         }
