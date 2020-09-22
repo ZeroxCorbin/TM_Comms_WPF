@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,89 +9,62 @@ namespace TM_Comms_WPF
 {
     public class TM_Comms_EthernetSlave
     {
-        public const string StartByte = "$";
-        public const string Separator = ",";
-        public const string ChecksumSign = "*";
-        public const string EndBytes = "\r\n";
+        public TM_Comms_EthernetSlave(string item_Value, HEADERS header = HEADERS.TMSVR, string transactionID = "1", MODES mode = MODES.STRING)
+        {
+            Header = header;
+            TransactionID = transactionID;
+            Mode = mode;
+            Item_Value = item_Value;
+        }
+        public const string StartChar = "$";
+        public const string SeparatorChar = ",";
+        public const string ChecksumChar = "*";
+        public const string EndChar = "\r\n";
         public enum HEADERS
         { 
             TMSVR, //External Script
             CPERR  //Communication data error
         }
 
-        private HEADERS _header;
-        public HEADERS Header
-        {
-            get { return _header; }
-            set { _header = value; }
-        }
+        public HEADERS Header { get; set; }
+        public string HeaderString => Header.ToString(); 
 
-        private string _headerString
+        public enum MODES
         {
-            get { return _header.ToString(); }
+            STRING_RESPONSE,
+            BINARY,
+            STRING,
+            JSON
         }
+        public string TransactionID { get; private set; } = "1";
+        public MODES Mode { get; private set; } = MODES.STRING;
+        public string Item_Value { get; private set; } = string.Empty;
 
-        public int Length
+
+        public string Data => $"{TransactionID}{SeparatorChar}{Mode:D}{SeparatorChar}{Item_Value}";
+
+        public int DataLength
         {
             get
             {
-                if(_header == HEADERS.TMSVR)
-                    return  _scriptID.ToString().Length + Separator.Length + _data.Length;
+                if(Header == HEADERS.TMSVR)
+                    return Data.Length;
                 else
-                    return "00".Length;
+                    return 2;
             }
         }
 
-        private int _scriptID = 1; //new Random().Next();
-        public int ScriptID
-        {
-            get { return _scriptID; }
-        }
+        public byte Checksum => CalCheckSum();
+        public string ChecksumString=> CalCheckSum().ToString("X2");
 
-        private string _data;
-        public string Data
-        {
-            get { return _data; }
-            set { _data = value; }
-        }
-
-        public byte Checksum
-        {
-            get { return CalCheckSum(); }
-        }
-
-        private string _checksumString
-        {
-            get { return CalCheckSum().ToString("X2"); }
-        }
         public string Message
         {
             get
             {
-                if(_header == HEADERS.TMSVR)
-                {
-                    return StartByte + _headerString + Separator + Length.ToString() + Separator + _scriptID.ToString() + Separator + _data + Separator + ChecksumSign + _checksumString + EndBytes;
-                }
-                return StartByte + _headerString + Separator + Length.ToString() + Separator + "00" + Separator + ChecksumSign + _checksumString + EndBytes;
+                if(Header == HEADERS.TMSVR)
+                    return StartChar + HeaderString + SeparatorChar + DataLength.ToString() + SeparatorChar + Data + SeparatorChar + ChecksumChar + ChecksumString + EndChar;
+                return StartChar + HeaderString + SeparatorChar + DataLength.ToString() + SeparatorChar + "00" + SeparatorChar + ChecksumChar + ChecksumString + EndChar;
             }
-            set
-            {
-
-            }
-
-        }
-
-        public TM_Comms_EthernetSlave()
-        {
-            this._header = HEADERS.TMSVR;
-            this._data = "";
-        }
-
-        public TM_Comms_EthernetSlave(HEADERS header = HEADERS.TMSVR, string data = "")
-        {
-            this._header = header;
-            this._data = data;
-
         }
 
         private byte CalCheckSum()
@@ -98,10 +72,10 @@ namespace TM_Comms_WPF
             Byte _CheckSumByte = 0x00;
 
             Byte[] bData;
-            if (_header == HEADERS.TMSVR)
-                bData = Encoding.ASCII.GetBytes(_headerString + Separator + Length.ToString() + Separator + _scriptID.ToString() + Separator + _data + Separator);
+            if (Header == HEADERS.TMSVR)
+                bData = Encoding.ASCII.GetBytes(HeaderString + SeparatorChar + DataLength.ToString() + SeparatorChar + Data + SeparatorChar);
             else
-                bData = Encoding.ASCII.GetBytes(_headerString + Separator + Length.ToString() + Separator + "00" + Separator);
+                bData = Encoding.ASCII.GetBytes(HeaderString + SeparatorChar + DataLength.ToString() + SeparatorChar + "00" + SeparatorChar);
             
             for (int i = 0; i < bData.Length; i++)
                 _CheckSumByte ^= bData[i];

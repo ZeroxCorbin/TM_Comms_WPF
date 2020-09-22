@@ -5,48 +5,63 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF"
         mc:Ignorable="d"
-        Title="Port8080Window" Height="589.569" Width="740.882" Closing="Window_Closing">
+        Title="Port8080Window" Closing="Window_Closing" ResizeMode="NoResize" SizeToContent="WidthAndHeight" LocationChanged="Window_LocationChanged" Icon="Support/favicon.ico">
     <Grid>
-        <Border Margin="0,10,10,0" BorderThickness="1" BorderBrush="Black" Height="216" VerticalAlignment="Top" HorizontalAlignment="Right" Width="156">
-            <Grid>
-                <TextBox x:Name="txtMonitorRobot_X" HorizontalAlignment="Left" Height="22" Margin="19,49,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                <TextBox x:Name="txtMonitorRobot_Y" HorizontalAlignment="Left" Height="22" Margin="19,76,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                <TextBox x:Name="txtMonitorRobot_Z" HorizontalAlignment="Left" Height="22" Margin="19,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                <TextBox x:Name="txtMonitorRobot_RX" HorizontalAlignment="Left" Height="22" Margin="19,130,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                <TextBox x:Name="txtMonitorRobot_RY" HorizontalAlignment="Left" Height="22" Margin="19,157,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                <TextBox x:Name="txtMonitorRobot_RZ" HorizontalAlignment="Left" Height="22" Margin="19,184,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                <TextBox x:Name="txtMonitorRobot_Base" HorizontalAlignment="Left" Height="22" Margin="19,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="125" IsReadOnly="True"/>
-                <TextBox x:Name="txtMonitorRobot_Xa" HorizontalAlignment="Left" Height="22" Margin="84,49,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                <TextBox x:Name="txtMonitorRobot_Ya" HorizontalAlignment="Left" Height="22" Margin="84,76,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                <TextBox x:Name="txtMonitorRobot_Za" HorizontalAlignment="Left" Height="22" Margin="84,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                <TextBox x:Name="txtMonitorRobot_RXa" HorizontalAlignment="Left" Height="22" Margin="84,130,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                <TextBox x:Name="txtMonitorRobot_RYa" HorizontalAlignment="Left" Height="22" Margin="84,157,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                <TextBox x:Name="txtMonitorRobot_RZa" HorizontalAlignment="Left" Height="22" Margin="84,184,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
-                <Label Content="Current Base" HorizontalAlignment="Left" Margin="19,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="125" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom"/>
-                <Label Content="X" HorizontalAlignment="Left" Margin="0,49,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                <Label Content="Y" HorizontalAlignment="Left" Margin="0,76,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                <Label Content="Z" HorizontalAlignment="Left" Margin="0,103,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                <Label Content="RX" HorizontalAlignment="Left" Margin="0,130,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                <Label Content="RY" HorizontalAlignment="Left" Margin="0,157,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                <Label Content="RZ" HorizontalAlignment="Left" Margin="0,184,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-            </Grid>
-        </Border>
-        <Border HorizontalAlignment="Left" Height="52" Margin="10,10,0,0" VerticalAlignment="Top" Width="255" BorderBrush="Black" BorderThickness="1">
-            <Grid>
-                <Label Content="Monitor Connection String ( IP:8080 )" HorizontalAlignment="Left" Margin="10,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="233" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top"/>
-                <TextBox x:Name="txtMonitorConnectionString" HorizontalAlignment="Left" Height="22" Margin="10,22,0,-6" TextWrapping="Wrap" Text="192.168.20.1:8080" VerticalAlignment="Top" Width="142"/>
-                <Button x:Name="btnConnectMonitor" Content="Start" VerticalAlignment="Top" RenderTransformOrigin="-0.878,0.728" HorizontalAlignment="Left" Width="86" Margin="157,22,0,0" Click="btnConnectMonitor_Click" Height="22"/>
-            </Grid>
+        <StackPanel>
+            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
+                <StackPanel Orientation="Horizontal">
 
-        </Border>
-        <Border Margin="10,67,171,10" BorderBrush="Black" BorderThickness="1">
-            <Grid>
-                <Label Content="Data Type" HorizontalAlignment="Left" Margin="10,10,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="64" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                <TextBox x:Name="txtMonitorDataType" HorizontalAlignment="Left" Height="22" Margin="79,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="64" IsReadOnly="True" RenderTransformOrigin="0.375,2.318"/>
-                <TextBox x:Name="txtMonitorResults" Margin="10,37,10,10" TextWrapping="Wrap"/>
-            </Grid>
+                    <Button x:Name="BtnConnect" Content="Start" Width="86" Click="BtnConnect_Click"/>
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="3" VerticalAlignment="Top">
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel>
+                                <Label Content="Display Rate" Padding="0" HorizontalContentAlignment="Center"/>
+                                <TextBox x:Name="TxtDisplayRate" Width="64" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                            </StackPanel>
+                            <Slider x:Name="SldUpdateFreq" Maximum="1000" Minimum="10" SmallChange="10" TickFrequency="10" LargeChange="100" MinWidth="180" Panel.ZIndex="-7" TickPlacement="TopLeft" Value="500" ValueChanged="SldUpdateFreq_ValueChanged"/>
+                            <StackPanel>
+                                <Label Content="Avg./Message" Padding="0" HorizontalContentAlignment="Center"/>
+                                <TextBox x:Name="TxtAverageMessage" MinWidth="64" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+            <StackPanel Orientation="Horizontal">
+                <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5" VerticalAlignment="Top">
 
-        </Border>
+                    <TextBox x:Name="txtMonitorDataType" MinHeight="22" MinWidth="64" IsReadOnly="True" VerticalAlignment="Top"/>
+                </Border>
+                <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5" VerticalAlignment="Top">
 
+                    <TextBox x:Name="txtMonitorResults" TextWrapping="WrapWithOverflow" MinHeight="22" MinWidth="64" MaxHeight="512" MaxWidth="512" IsReadOnly="True" VerticalScrollBarVisibility="Auto"/>
+                </Border>
+                <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5" VerticalAlignment="Top">
+                    <Grid>
+                        <TextBox x:Name="txtMonitorRobot_X" HorizontalAlignment="Left" Height="22" Margin="19,49,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                        <TextBox x:Name="txtMonitorRobot_Y" HorizontalAlignment="Left" Height="22" Margin="19,76,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                        <TextBox x:Name="txtMonitorRobot_Z" HorizontalAlignment="Left" Height="22" Margin="19,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                        <TextBox x:Name="txtMonitorRobot_RX" HorizontalAlignment="Left" Height="22" Margin="19,130,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                        <TextBox x:Name="txtMonitorRobot_RY" HorizontalAlignment="Left" Height="22" Margin="19,157,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                        <TextBox x:Name="txtMonitorRobot_RZ" HorizontalAlignment="Left" Height="22" Margin="19,184,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                        <TextBox x:Name="txtMonitorRobot_Base" HorizontalAlignment="Left" Height="22" Margin="19,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="125" IsReadOnly="True"/>
+                        <TextBox x:Name="txtMonitorRobot_Xa" HorizontalAlignment="Left" Height="22" Margin="84,49,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                        <TextBox x:Name="txtMonitorRobot_Ya" HorizontalAlignment="Left" Height="22" Margin="84,76,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                        <TextBox x:Name="txtMonitorRobot_Za" HorizontalAlignment="Left" Height="22" Margin="84,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                        <TextBox x:Name="txtMonitorRobot_RXa" HorizontalAlignment="Left" Height="22" Margin="84,130,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                        <TextBox x:Name="txtMonitorRobot_RYa" HorizontalAlignment="Left" Height="22" Margin="84,157,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                        <TextBox x:Name="txtMonitorRobot_RZa" HorizontalAlignment="Left" Height="22" Margin="84,184,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" IsReadOnly="True"/>
+                        <Label Content="Current Base" HorizontalAlignment="Left" Margin="19,0,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="125" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom"/>
+                        <Label Content="X" HorizontalAlignment="Left" Margin="0,49,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+                        <Label Content="Y" HorizontalAlignment="Left" Margin="0,76,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+                        <Label Content="Z" HorizontalAlignment="Left" Margin="0,103,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+                        <Label Content="RX" HorizontalAlignment="Left" Margin="0,130,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+                        <Label Content="RY" HorizontalAlignment="Left" Margin="0,157,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+                        <Label Content="RZ" HorizontalAlignment="Left" Margin="0,184,0,0" RenderTransformOrigin="-14.85,0.857" Height="22" Width="19" Padding="1,2,1,1" UseLayoutRounding="False" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </StackPanel>
+        
     </Grid>
 </Window>

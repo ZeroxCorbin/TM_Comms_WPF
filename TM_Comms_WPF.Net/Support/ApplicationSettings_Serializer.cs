@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using System.Xml.Serialization;
+using TM_Comms_WPF;
 
 namespace ApplicationSettingsNS
 {
@@ -42,6 +43,8 @@ namespace ApplicationSettingsNS
         public partial class ApplicationSettings
         {
             public string RobotIP { get; set; } = "192.168.1.1";
+
+            public TM_Comms_ModbusDict.Versions Version { get; set; } = TM_Comms_ModbusDict.Versions.V1_80_3300;
 
             public string[] ModbusComboBoxIndices { get; set; } = {
                 "Current Base With Tool X",

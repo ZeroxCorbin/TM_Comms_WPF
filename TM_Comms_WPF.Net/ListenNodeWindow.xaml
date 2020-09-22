@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF"
         mc:Ignorable="d"
-        Title="ListenNodeWindow" Closing="Window_Closing" WindowStartupLocation="Manual" SizeToContent="WidthAndHeight" LocationChanged="Window_LocationChanged" StateChanged="Window_StateChanged" ResizeMode="NoResize" MinWidth="1024" Top="{Binding Settings.Top, ElementName=window}">
+        Title="ListenNodeWindow" Closing="Window_Closing" WindowStartupLocation="Manual" SizeToContent="WidthAndHeight" LocationChanged="Window_LocationChanged" StateChanged="Window_StateChanged" ResizeMode="NoResize" MinWidth="1024" Top="{Binding Settings.Top, ElementName=window}" Icon="Support/favicon.ico">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -14,7 +14,7 @@
         <StackPanel Grid.Column="0" >
             <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="btnLNConnect" Content="Connect" Click="BtnLNConnect_Click" Width="90" Height="26"/>
+                    <Button x:Name="BtnConnect" Content="Connect" Click="BtnConnect_Click" Width="90" Height="26"/>
                     <CheckBox x:Name="ChkAutoReconnect" Content="Auto Reconnect" VerticalContentAlignment="Center" Margin="2"/>
 
                 </StackPanel>
@@ -50,9 +50,10 @@
             <Border BorderThickness="1" BorderBrush="Black" CornerRadius="3" Padding="3" Margin="5">
                 <StackPanel>
                     <Label Content="Response" HorizontalContentAlignment="Center" Height="26"/>
+                    <Rectangle x:Name="RectCommandHasResponse" Fill="Yellow" HorizontalAlignment="Left"/>
                     <TextBox x:Name="txtLNDataResponse" IsReadOnly="True" VerticalScrollBarVisibility="Auto" MaxHeight="400" MinHeight="150" HorizontalScrollBarVisibility="Auto" Margin="2"/>
 
-                    <Rectangle x:Name="rectCommandResponse" Fill="Yellow" HorizontalAlignment="Left"/>
+                    
                 </StackPanel>
             </Border>
         </StackPanel>

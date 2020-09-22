@@ -1,7 +1,14 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
+using ApplicationSettingsNS;
+using RingBuffer;
 using SocketManagerNS;
 
 namespace TM_Comms_WPF
@@ -11,136 +18,200 @@ namespace TM_Comms_WPF
     /// </summary>
     public partial class Port8080Window : Window
     {
-        SocketManager monitorSoc;
-
         private TM_Monitor.Rootobject _data;
         public TM_Monitor.Rootobject data
         {
             get { return _data; }
             set { _data = value; }
         }
-        
+
+        private bool IsLoading = true;
         public Port8080Window()
         {
             InitializeComponent();
 
-            txtMonitorConnectionString.Text = $"{App.Settings.RobotIP}:8080"; 
-        }
+            if (Keyboard.IsKeyDown(Key.LeftShift))
+                App.Settings.Port8080Window = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
 
-        private void btnConnectMonitor_Click(object sender, RoutedEventArgs e)
-        {
-            MonitorSoc_Close();
+            this.Left = App.Settings.Port8080Window.Left;
+            this.Top = App.Settings.Port8080Window.Top;
 
-            if (btnConnectMonitor.Tag == null)
-            {
-                monitorSoc = new SocketManager($"{App.Settings.RobotIP}:8080");
-
-                if (monitorSoc.Connect())
-                {
-                    monitorSoc.DataReceived += MonitorSoc_DataReceived;
-                    monitorSoc.ConnectState += MonitorSoc_ConnectState;
-                     
-                    monitorSoc.ReceiveAsync();
-
-                    btnConnectMonitor.Content = "Stop";
-                    btnConnectMonitor.Tag = 1;
-                }
-            }
-            else
-            {
-                btnConnectMonitor.Content = "Start";
-                btnConnectMonitor.Tag = null;
-            }
-
-        }
-        private void MonitorSoc_ConnectState(object sender, bool data)
-        {
-            if (!data)
-            {
-            MonitorSoc_Close();
-
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                    (Action)(() =>
-                    {
-                        btnConnectMonitor.Content = "Start";
-                        btnConnectMonitor.Tag = null;
-                    }));
-            }
-
-        }
-        private void MonitorSoc_Close()
-        {
-            if (monitorSoc != null)
-            {
-                monitorSoc.DataReceived -= MonitorSoc_DataReceived;
-                monitorSoc.ConnectState -= MonitorSoc_ConnectState;
-
-                monitorSoc.StopReceiveAsync();
-                monitorSoc.Close();
-            }
-
-        }
-        private void MonitorSoc_DataReceived(object sender, string message)
-        {
-            string msg = CleanMessage(message);
-            if (msg != "")
-                this.data = TM_Monitor.Parse(msg);
-            if (this.data != null)
-                Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action<TM_Monitor.Rootobject, string>(MonitorViewUpdate), this.data, message);
-
-            Thread.Sleep(1);
+            IsLoading = false;
         }
         private string CleanMessage(string msg)
         {
-            int loc = msg.IndexOf("{\"D");
-
-            if (loc == -1) return "";
-
-            msg = msg.Remove(0, loc);
-            msg = msg.Trim('\x81');
-
-            string[] str = msg.Split('~');
-
-            foreach (string s in str)
-            {
-                if (s.StartsWith("{\"DataType\""))
-                    if (s.EndsWith("}"))
-                        return s;
-            }
-            return "";
-
+            msg = msg.Replace("�~�", "");
+            return msg;
         }
-
         private void MonitorViewUpdate(TM_Monitor.Rootobject data, string msg)
         {
             txtMonitorDataType.Text = data.DataType.ToString();
-            txtMonitorResults.Text = msg;
+            txtMonitorResults.Text = msg.TrimEnd('\n').TrimEnd('\r');
 
             if (data.DataType == 1300)
             {
                 txtMonitorRobot_Base.Text = data._Data.CurrentBaseName;
-                txtMonitorRobot_X.Text = (string)data._Data.RobotPoint1[0].ToString();
-                txtMonitorRobot_Y.Text = (string)data._Data.RobotPoint1[1].ToString();
-                txtMonitorRobot_Z.Text = (string)data._Data.RobotPoint1[2].ToString();
+                txtMonitorRobot_X.Text = data._Data.RobotPoint1[0].ToString();
+                txtMonitorRobot_Y.Text = data._Data.RobotPoint1[1].ToString();
+                txtMonitorRobot_Z.Text = data._Data.RobotPoint1[2].ToString();
 
-                txtMonitorRobot_RX.Text = (string)data._Data.RobotPoint1[3].ToString();
-                txtMonitorRobot_RY.Text = (string)data._Data.RobotPoint1[4].ToString();
-                txtMonitorRobot_RZ.Text = (string)data._Data.RobotPoint1[5].ToString();
+                txtMonitorRobot_RX.Text = data._Data.RobotPoint1[3].ToString();
+                txtMonitorRobot_RY.Text = data._Data.RobotPoint1[4].ToString();
+                txtMonitorRobot_RZ.Text = data._Data.RobotPoint1[5].ToString();
 
-                txtMonitorRobot_Xa.Text = (string)data._Data.RobotPoint1[6].ToString();
-                txtMonitorRobot_Ya.Text = (string)data._Data.RobotPoint1[7].ToString();
-                txtMonitorRobot_Za.Text = (string)data._Data.RobotPoint1[8].ToString();
+                txtMonitorRobot_Xa.Text = data._Data.RobotPoint1[6].ToString();
+                txtMonitorRobot_Ya.Text = data._Data.RobotPoint1[7].ToString();
+                txtMonitorRobot_Za.Text = data._Data.RobotPoint1[8].ToString();
 
-                txtMonitorRobot_RXa.Text = (string)data._Data.RobotPoint1[9].ToString();
-                txtMonitorRobot_RYa.Text = (string)data._Data.RobotPoint1[10].ToString();
-                txtMonitorRobot_RZa.Text = (string)data._Data.RobotPoint1[11].ToString();
+                txtMonitorRobot_RXa.Text = data._Data.RobotPoint1[9].ToString();
+                txtMonitorRobot_RYa.Text = data._Data.RobotPoint1[10].ToString();
+                txtMonitorRobot_RZa.Text = data._Data.RobotPoint1[11].ToString();
             }
         }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        //Connect Socket
+        private SocketManager Socket { get; set; }
+        private void BtnConnect_Click(object sender, RoutedEventArgs e)
         {
-            monitorSoc?.StopReceiveAsync();
-            monitorSoc?.Close();
+            if (BtnConnect.Tag == null)
+            {
+                if (Connect())
+                {
+                    BtnConnect.Content = "Close";
+                    BtnConnect.Tag = 1;
+                    return;
+                }
+            }
+            CleanSock();
+
+            BtnConnect.Content = "Connect";
+            BtnConnect.Tag = null;
         }
+        private bool Connect()
+        {
+            CleanSock();
+
+            Socket = new SocketManager($"{App.Settings.RobotIP}:8080");
+
+            Socket.ConnectState += Socket_ConnectState;
+
+            if (Socket.Connect())
+                return true;
+            else
+            {
+                CleanSock();
+                return false;
+            }
+        }
+        private void CleanSock()
+        {
+            if (Socket != null)
+            {
+                Socket.MessageReceived -= Socket_MessageReceived;
+                Socket.ConnectState -= Socket_ConnectState;
+
+                Socket.StopReceiveAsync();
+                Socket.Close();
+
+                Socket = null;
+            }
+        }
+        private void Socket_ConnectState(object sender, bool data)
+        {
+            if (!data)
+            {
+                CleanSock();
+
+                Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                        (Action)(() =>
+                        {
+                            BtnConnect.Content = "Start";
+                            BtnConnect.Tag = null;
+                        }));
+            }
+            else
+            {
+                Socket.MessageReceived += Socket_MessageReceived;
+
+                Socket.StartReceiveMessages(@"[�~\u0005�]", "==\"}");
+
+                DataReceiveStopWatch.Restart();
+            }
+        }
+        //Receive Data
+        private class PacketRate : RingBuffer<long>
+        {
+            public PacketRate(int length) : base(length) { }
+
+            public int Count { get; set; } = int.MaxValue - 1;
+            public new long Add(long o)
+            {
+                Count++;
+                base.Add(o);
+                return 0;
+            }
+
+            public long Average
+            {
+                get
+                {
+                    long[] lst = base.Raw;
+                    long total = 0;
+                    foreach (long l in lst)
+                        total += l;
+                    return total /= base.Length;
+                }
+            }
+        }
+        private PacketRate PackRate { get; set; } = new PacketRate(100);
+        private Stopwatch DataReceiveStopWatch { get; set; } = new Stopwatch();
+        private void Socket_MessageReceived(object sender, string message, string pattern)
+        {
+            long time = DataReceiveStopWatch.ElapsedMilliseconds;
+            PackRate.Add(time);
+            DataReceiveStopWatch.Restart();
+
+            int updateRate;
+            if (!PackRate.IsFull)
+                updateRate = (int)(SliderValue / time);
+            else
+                updateRate = (int)(SliderValue / PackRate.Average);
+
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                    (Action)(() =>
+                    {
+                        TxtAverageMessage.Text = PackRate.Average.ToString("# ms");
+                    }));
+
+            if (PackRate.Count < updateRate)
+                return;
+
+            PackRate.Count = 0;
+
+                string msg = CleanMessage(message);
+                if (msg != "")
+                    this.data = TM_Monitor.Parse(msg);
+
+                if (this.data != null)
+                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action<TM_Monitor.Rootobject, string>(MonitorViewUpdate), this.data, message);
+            
+        }
+        //Receive Rate Control
+        private double SliderValue { get; set; }
+        private void SldUpdateFreq_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            SliderValue = SldUpdateFreq.Value;
+            TxtDisplayRate.Text = (SliderValue / 1000).ToString("0.00 sec");
+        }
+        //Window Changes
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            if (IsLoading) return;
+
+            App.Settings.EthernetSlaveWindow.Top = Top;
+            App.Settings.EthernetSlaveWindow.Left = Left;
+        }
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => CleanSock();
+
+
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF"
         mc:Ignorable="d"
-        Title="TM Communication" Closing="Window_Closing" SizeToContent="WidthAndHeight" LocationChanged="Window_LocationChanged">
+        Title="TM Communication" Closing="Window_Closing" SizeToContent="WidthAndHeight" LocationChanged="Window_LocationChanged" Activated="AnyWindow_Activated" ResizeMode="NoResize" Icon="Support/favicon.ico">
     <Window.Resources>
         <Style x:Key="dgStyleModbus" TargetType="{x:Type DataGrid}">
             <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
@@ -31,8 +31,14 @@
         <Border Margin="5" Padding="10" VerticalAlignment="Top" BorderThickness="1" BorderBrush="Black" CornerRadius="10">
             <Grid>
                 <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
-                    <Label Content="Robot IP Address:" HorizontalContentAlignment="Right"/>
-                    <TextBox x:Name="txtRobotIP" Width="160" Margin="2,0" TextChanged="TxtRobotIP_TextChanged" VerticalContentAlignment="Center"/>
+                    <StackPanel>
+                        <Label Content="Robot IP Address" Padding="0" Margin="3,0" HorizontalContentAlignment="Center"/>
+                        <TextBox x:Name="txtRobotIP" Width="160" Height="22" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TextChanged="TxtRobotIP_TextChanged"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <Label Content="System Version" Padding="0" Margin="3,0" HorizontalContentAlignment="Center"/>
+                        <ComboBox x:Name="CmbSystemVersions"  Width="120" IsReadOnly="True"  Margin="3,0" SelectionChanged="CmbSystemVersions_SelectionChanged"/>
+                    </StackPanel>
                     <Button x:Name="btnModbusWindow" Content="Modbus" Width="110" Margin="2,0" Click="BtnModbusWindow_Click"/>
                     <Button x:Name="btnListenNodeWindow" Content="Listen Node" Width="110" Margin="2,0" Click="BtnListenNodeWindow_Click" />
                     <Button x:Name="btnEthernetSlaveWindow" Content="Ethernet Slave" Width="110" Margin="2,0" Click="BtnEthernetSlaveWindow_Click"/>

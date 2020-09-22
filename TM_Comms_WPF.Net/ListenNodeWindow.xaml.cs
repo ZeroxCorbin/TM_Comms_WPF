@@ -1,10 +1,15 @@
-﻿using SocketManagerNS;
+﻿using ApplicationSettingsNS;
+using RingBuffer;
+using SocketManagerNS;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 
@@ -15,8 +20,6 @@ namespace TM_Comms_WPF
         //Private
         private bool IsLoading { get; set; } = true;
         private ApplicationSettingsNS.ApplicationSettings_Serializer.ApplicationSettings.WindowSettings Settings { get; set; }
-
-        private SocketManager Socket { get; set; }
         private TM_Comms_ListenNode ListenNode { get; set; }
         private bool AutoReconnect { get; set; } = false;
         private TM_Comms_MotionScriptBuilder MotionScriptBuilder { get; set; }
@@ -29,6 +32,9 @@ namespace TM_Comms_WPF
             InitializeComponent();
 
             ListenNode = GetLNNode();
+
+            if (Keyboard.IsKeyDown(Key.LeftShift))
+                App.Settings.ListenNodeWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
 
             this.Left = App.Settings.ListenNodeWindow.Left;
             this.Top = App.Settings.ListenNodeWindow.Top;
@@ -43,17 +49,16 @@ namespace TM_Comms_WPF
         //Private
         private void ConnectionActive()
         {
-            btnLNConnect.Content = "Stop";
-            btnLNConnect.Tag = 1;
-
             btnLNSend.IsEnabled = true;
             btnLNSendMoves.IsEnabled = true;
             btnLNNewReadPosition.IsEnabled = true;
         }
         private void ConnectionInActive()
         {
-            btnLNConnect.Content = "Start";
-            btnLNConnect.Tag = null;
+            RectCommandHasResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
+
+            BtnConnect.Content = "Connect";
+            BtnConnect.Tag = null;
 
             btnLNSend.IsEnabled = false;
             btnLNSendMoves.IsEnabled = false;
@@ -130,50 +135,84 @@ namespace TM_Comms_WPF
 
         }
 
+        private SocketManager Socket { get; set; }
+        private void BtnConnect_Click(object sender, RoutedEventArgs e)
+        {
+            if (BtnConnect.Tag == null)
+            {
+                if (Connect())
+                {
+                    BtnConnect.Content = "Close";
+                    BtnConnect.Tag = 1;
+                    return;
+                }
+            }
+            CleanSock();
+        }
+        private bool Connect()
+        {
+            CleanSock();
+
+            Socket = new SocketManager($"{App.Settings.RobotIP}:5890");
+
+            Socket.ConnectState += Socket_ConnectState;
+
+            if (Socket.Connect())
+                return true;
+            else
+            {
+                CleanSock();
+                return false;
+            }
+        }
         private void CleanSock()
         {
-            Socket?.StopReceiveAsync();
-            Socket?.Close();
+            if (Socket != null)
+            {
+                Dispatcher.BeginInvoke(DispatcherPriority.Render,
+                        (Action)(() =>
+                        {
+                            ConnectionInActive();
+                        }));
 
-            Socket?.Dispose();
-            Socket = null;
+                Socket.MessageReceived -= Socket_MessageReceived;
+                Socket.ConnectState -= Socket_ConnectState;
+
+                Socket.StopReceiveAsync();
+                Socket.Close();
+
+                Socket = null;
+            }
         }
         private void Socket_ConnectState(object sender, bool data)
         {
             if (!data)
             {
                 CleanSock();
-
-                Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
-                    {
-                        rectCommandResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
-                        ConnectionInActive();
-                    }));
             }
             else
             {
-                Socket.ReceiveAsync();
+                Dispatcher.BeginInvoke(DispatcherPriority.Render,
+                        (Action)(() =>
+                        {
+                            ConnectionActive();
+                        }));
 
-                Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
-                    {
-                        ConnectionActive();
-                    }));
+                Socket.MessageReceived += Socket_MessageReceived;
 
+                Socket.StartReceiveMessages(@"[$]", @"[*][A-Z0-9][A-Z0-9]");
             }
         }
-        private void Socket_DataReceived(object sender, string data)
+        //Receive Data
+        private void Socket_MessageReceived(object sender, string message, string pattern)
         {
             if (PositionRequest != null)
             {
-                string[] spl = data.Trim('\0').Split(',');
-
-                if (spl[0].Equals("$TMSTA"))
+                if (Regex.IsMatch(message, @"^[$]TMSTA,\w*,90,"))
                 {
-                    if (spl[2].Equals("90"))
-                    {
                         PositionRequest = null;
 
-                        spl = data.Trim('\0').Split('{');
+                        string[] spl = message.Split('{');
                         string pos = spl[1].Substring(0, spl[1].IndexOf('}'));
 
                         Dispatcher.BeginInvoke(DispatcherPriority.Normal,
@@ -181,51 +220,46 @@ namespace TM_Comms_WPF
                                 {
                                     txtLNNewPosition.Text = pos;
                                 }));
-                    }
+                  
                 }
             }
 
             Dispatcher.BeginInvoke(DispatcherPriority.Normal,
                     (Action)(() =>
                     {
-                        rectCommandResponse.Fill = new SolidColorBrush(Color.FromRgb(0, 255, 0));
-                        txtLNDataResponse.Text += data.Trim('\0');
+                        RectCommandHasResponse.Fill = new SolidColorBrush(Color.FromRgb(0, 255, 0));
+                        txtLNDataResponse.Text += message + "\r\n";
                         txtLNDataResponse.ScrollToEnd();
                     }));
-        }
 
-        private void BtnLNConnect_Click(object sender, RoutedEventArgs e)
+        }
+        //Window Changes
+        private void Window_LocationChanged(object sender, EventArgs e)
         {
-            if (btnLNConnect.Tag == null)
-            {
-                CleanSock();
+            if (IsLoading) return;
 
-                Socket = new SocketManager($"{App.Settings.RobotIP}:5890", null, Socket_ConnectState, Socket_DataReceived);
-                if (Socket.Connect())
-                { 
-                    Socket.ReceiveAsync();
-                    btnLNConnect.Tag = "";
-                }
-                else
-                    CleanSock();
-            }
-            else
-            {
-                CleanSock();
-                ConnectionInActive();
-
-                btnLNConnect.Tag = null;
-            }
+            App.Settings.ListenNodeWindow.Top = Top;
+            App.Settings.ListenNodeWindow.Left = Left;
         }
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if (IsLoading) return;
+            if (this.WindowState == WindowState.Minimized) return;
+
+            App.Settings.ListenNodeWindow.WindowState = this.WindowState;
+        }
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => CleanSock();
+
+
         private void BtnLNSend_Click(object sender, RoutedEventArgs e)
         {
-            rectCommandResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
+            RectCommandHasResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
             Socket?.Write(ListenNode.Message);
         }
 
         private void BtnLNNewReadPosition_Click(object sender, RoutedEventArgs e)
         {
-            if(((string)((ComboBoxItem)CmdPositionType.SelectedItem).Tag) == "0")
+            if (((string)((ComboBoxItem)CmdPositionType.SelectedItem).Tag) == "0")
             {
                 TM_Comms_ListenNode ln = new TM_Comms_ListenNode(TM_Comms_ListenNode.HEADERS.TMSCT, "ListenSend(90, GetString(Robot[1].CoordRobot, 10, 3))");
                 PositionRequest = ln.ScriptID.ToString();
@@ -298,7 +332,7 @@ namespace TM_Comms_WPF
         }
         private void BtnLNSendMoves_Click(object sender, RoutedEventArgs e)
         {
-            rectCommandResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
+            RectCommandHasResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
             Socket?.Write(txtLNMovesCode.Text);
         }
 
@@ -317,26 +351,8 @@ namespace TM_Comms_WPF
             ListenNode = GetLNNode();
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            Socket?.StopReceiveAsync();
-            Socket?.Close();
-        }
-        private void Window_LocationChanged(object sender, EventArgs e)
-        {
-            if (IsLoading) return;
 
-            App.Settings.ListenNodeWindow.Top = Top;
-            App.Settings.ListenNodeWindow.Left = Left;
-        }
 
-        private void Window_StateChanged(object sender, EventArgs e)
-        {
-            if (IsLoading) return;
-            if (this.WindowState == WindowState.Minimized) return;
-
-            App.Settings.ListenNodeWindow.WindowState = this.WindowState;
-        }
 
         private void TxtLNMoves_SelectionChanged(object sender, RoutedEventArgs e)
         {
