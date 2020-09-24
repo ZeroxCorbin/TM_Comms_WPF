@@ -63,15 +63,15 @@ namespace TM_Comms_WPF
 
             switch ((TMflowVersions)CmbSystemVersions.SelectedItem)
             {
-                case TMflowVersions.V1_68_6800:
+                case TMflowVersions.V1_68_xxxx:
                     btnPort8080Window.IsEnabled = true;
                     btnEthernetSlaveWindow.IsEnabled = false;
                     break;
-                case TMflowVersions.V1_76_3300:
+                case TMflowVersions.V1_76_xxxx:
                     btnPort8080Window.IsEnabled = true;
                     btnEthernetSlaveWindow.IsEnabled = true;
                     break;
-                case TMflowVersions.V1_80_3300:
+                case TMflowVersions.V1_80_xxxx:
                     btnPort8080Window.IsEnabled = false;
                     btnEthernetSlaveWindow.IsEnabled = true;
                     break;

@@ -76,6 +76,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Support\ApplicationSettings_Serializer.cs" />
     <Compile Include="TM_Comms\TMflowVersions.cs" />
     <Page Include="EthernetSlaveWindow.xaml">
       <SubType>Designer</SubType>
@@ -95,7 +96,6 @@
     </Compile>
     <Compile Include="RingBuffer.cs" />
     <Compile Include="TM_Comms\PingCommand.cs" />
-    <Compile Include="Support\ApplicationSettings_Serializer.cs" />
     <Compile Include="Support\ConvertEuler.cs" />
     <Compile Include="EthernetSlaveWindow.xaml.cs">
       <DependentUpon>EthernetSlaveWindow.xaml</DependentUpon>

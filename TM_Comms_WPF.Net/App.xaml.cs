@@ -111,7 +111,17 @@ namespace TM_Comms_WPF
 
         public static ApplicationSettings_Serializer.ApplicationSettings Settings { get; set; }
 
-        public App() => Settings = ApplicationSettings_Serializer.Load("appsettings.xml");
+        public App()
+        {
+            try
+            {
+                Settings = ApplicationSettings_Serializer.Load("appsettings.xml");
+            }
+            catch (Exception)
+            {
+                Settings = new ApplicationSettings_Serializer.ApplicationSettings();
+            }
+        }
 
         protected override void OnStartup(StartupEventArgs e)
         {

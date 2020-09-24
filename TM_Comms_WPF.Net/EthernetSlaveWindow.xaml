@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF"
         mc:Ignorable="d"
-        Title="EthernetSlaveWindow" ResizeMode="NoResize" WindowStartupLocation="Manual" SizeToContent="WidthAndHeight" Closing="Window_Closing" LocationChanged="Window_LocationChanged" Icon="Support/favicon.ico">
+        Title="Ethernet Slave" ResizeMode="NoResize" WindowStartupLocation="Manual" SizeToContent="WidthAndHeight" Closing="Window_Closing" LocationChanged="Window_LocationChanged" Icon="Support/favicon.ico">
 
     <Grid>
         <StackPanel>
@@ -33,8 +33,8 @@
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,3" >
                         <StackPanel>
                             <Label Content="Message Type" Padding="0" HorizontalContentAlignment="Center" Margin="3,0"/>
-                            <ComboBox x:Name="cmbESDataType" Width="120" IsReadOnly="True" SelectedIndex="0" SelectionChanged="CmbESDataType_SelectionChanged_1" Margin="3,0">
-                                <ComboBoxItem Content="TMSVR (Script)" Tag="0"/>
+                            <ComboBox x:Name="cmbESDataType" IsReadOnly="True" SelectedIndex="0" SelectionChanged="CmbESDataType_SelectionChanged_1" Margin="3,0">
+                                <ComboBoxItem Content="TMSVR (Read/Write)" Tag="0"/>
                                 <ComboBoxItem Content="CPERR (Error)" Tag="1"/>
                             </ComboBox>
                         </StackPanel>

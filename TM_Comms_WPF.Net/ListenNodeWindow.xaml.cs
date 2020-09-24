@@ -65,15 +65,15 @@ namespace TM_Comms_WPF
         {
             int i = -1;
             TreeViewItem tviParent = null;
-            foreach(string cmd in ListenNode.Commands[App.Settings.Version])
+            foreach (string cmd in ListenNode.Commands[App.Settings.Version])
             {
-                if(Regex.IsMatch(cmd, @"^[0-9][.][0-9]"))
+                if (Regex.IsMatch(cmd, @"^[0-9][.][0-9]"))
                 {
                     if (tviParent != null)
                     {
                         LstCommandList.Items.Add(tviParent);
                     }
-                        
+
 
                     tviParent = new TreeViewItem()
                     {
@@ -93,16 +93,33 @@ namespace TM_Comms_WPF
 
         private void TviParent_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            TreeViewItem tvi = (TreeViewItem)sender;
+
         }
 
         private void TviChild_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             TreeViewItem tvi = (TreeViewItem)sender;
-            string text = (string)tvi.Header;
+            string insert = "";
 
-            TxtScript.Text += ((string)tvi.Header);
-       }
+            if (TxtScript.SelectionStart == TxtScript.Text.Length)
+            {
+                if (TxtScript.SelectionStart != 0)
+                    if (TxtScript.Text[TxtScript.SelectionStart - 1] != '\n')
+                        insert += "\r\n";
+            }
+            else if (TxtScript.Text[TxtScript.SelectionStart] == '\r')
+            {
+                if(TxtScript.SelectionStart != 0)
+                    if(TxtScript.Text[TxtScript.SelectionStart-1] != '\n')
+                    insert += "\r\n";
+            }
+                
+
+            insert += (string)tvi.Header;
+            TxtScript.Text = TxtScript.Text.Insert(TxtScript.SelectionStart, insert);
+
+            TxtScript.SelectionStart = TxtScript.SelectionStart + insert.Length;
+        }
 
         //Private
         private void ConnectionActive()
@@ -268,17 +285,17 @@ namespace TM_Comms_WPF
             {
                 if (Regex.IsMatch(message, @"^[$]TMSTA,\w*,90,"))
                 {
-                        PositionRequest = null;
+                    PositionRequest = null;
 
-                        string[] spl = message.Split('{');
-                        string pos = spl[1].Substring(0, spl[1].IndexOf('}'));
+                    string[] spl = message.Split('{');
+                    string pos = spl[1].Substring(0, spl[1].IndexOf('}'));
 
-                        Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                                (Action)(() =>
-                                {
-                                    txtLNNewPosition.Text = pos;
-                                }));
-                  
+                    Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                            (Action)(() =>
+                            {
+                                txtLNNewPosition.Text = pos;
+                            }));
+
                 }
             }
 

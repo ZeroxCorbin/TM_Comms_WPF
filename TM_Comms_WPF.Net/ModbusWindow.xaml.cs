@@ -41,7 +41,7 @@ namespace TM_Comms_WPF
             RecalcUserRegisters();
             IsLoading = true;
 
-            if (App.Settings.Version == TMflowVersions.V1_80_3300)
+            if (App.Settings.Version == TMflowVersions.V1_80_xxxx)
             {
                 BdrRemoteAuto.IsEnabled = true;
                 BdrRemoteAuto.Visibility = Visibility.Visible;
@@ -108,7 +108,7 @@ namespace TM_Comms_WPF
                         else
                             elpEstopButton.Fill = Disabled;
 
-                        if (App.Settings.Version == TMflowVersions.V1_80_3300)
+                        if (App.Settings.Version == TMflowVersions.V1_80_xxxx)
                         {
                             if (ModbusTCP.GetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Get Control"].Addr))
                                 ElpGetControl.Fill = Good;
