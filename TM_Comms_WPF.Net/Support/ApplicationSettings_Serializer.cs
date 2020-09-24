@@ -80,6 +80,8 @@ namespace ApplicationSettingsNS
             {
                 public double Left { get; set; } = 0;
                 public double Top { get; set; } = 0;
+                public double Width { get; set; } = 1024;
+                public double Height { get; set; } = 768;
                 public WindowState WindowState { get; set; } = WindowState.Normal;
             }
         }

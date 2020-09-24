@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF"
         mc:Ignorable="d"
-        Title="ListenNodeWindow" Closing="Window_Closing" WindowStartupLocation="Manual" LocationChanged="Window_LocationChanged" StateChanged="Window_StateChanged" ResizeMode="CanResizeWithGrip" Icon="Support/favicon.ico">
+        Title="ListenNodeWindow" Closing="Window_Closing" WindowStartupLocation="Manual" LocationChanged="Window_LocationChanged" StateChanged="Window_StateChanged" ResizeMode="CanResizeWithGrip" Icon="Support/favicon.ico" SizeChanged="window_SizeChanged">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1.3*" />
             <!--This will make any control in this column of grid take 2/5 of total width-->
             <ColumnDefinition Width="1*" />
             <!--This will make any control in this column of grid take 3/5 of total width-->
@@ -20,24 +20,29 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Column="0" Grid.Row="0" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
-            <StackPanel>
-
-                <Label Content="Listen Node" FontSize="18" HorizontalContentAlignment="Center">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="34"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Content="Listen Node" FontSize="18" HorizontalContentAlignment="Center">
                     <Label.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FF4c88d6" Offset="0"/>
-                            <GradientStop Color="White" Offset="0.298"/>
+                            <GradientStop Color="White" Offset="0.3"/>
                         </LinearGradientBrush>
                     </Label.Background>
                 </Label>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button x:Name="BtnConnect" Content="Connect" Click="BtnConnect_Click" Width="90" Height="48" BorderBrush="{x:Null}">
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
 
-                    </Button>
-                    <CheckBox x:Name="ChkAutoReconnect" Content="Auto Reconnect" VerticalContentAlignment="Center" Margin="2"/>
-
-                </StackPanel>
-            </StackPanel>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" x:Name="BtnConnect" Content="Connect" Click="BtnConnect_Click" Width="90" BorderBrush="{x:Null}" HorizontalAlignment="Right"/>
+                    <CheckBox Grid.Column="1" x:Name="ChkAutoReconnect" Content="Auto Reconnect" VerticalContentAlignment="Center" Margin="2" HorizontalAlignment="Left"/>
+                </Grid>
+            </Grid>
         </Border>
 
         <Border Grid.Column="0" Grid.Row="1" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
@@ -50,9 +55,9 @@
 
                 <Label Grid.Row="0" Content="Message Builder" FontSize="18" HorizontalContentAlignment="Center">
                     <Label.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FF4c88d6" Offset="0"/>
-                            <GradientStop Color="White" Offset="0.298"/>
+                        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                            <GradientStop Color="#FF4C88D6"/>
+                            <GradientStop Color="White" Offset="0.3"/>
                         </LinearGradientBrush>
                     </Label.Background>
                 </Label>
@@ -85,13 +90,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Label Content="Command List" HorizontalContentAlignment="Center" Padding="5,3"/>
-                        <ListView Grid.Row="1" x:Name="LstCommandList" IsSynchronizedWithCurrentItem="True" SelectionMode="Single" >
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                        </ListView>
+                        <TreeView Grid.Row="1" x:Name="LstCommandList"/>
 
                     </Grid>
 
@@ -103,8 +102,8 @@
                             <RowDefinition Height="30"/>
                         </Grid.RowDefinitions>
                         <Label Grid.Row="0" Content="Script (Any Function from Expression Editor)" Padding="5,3"/>
-                        <TextBox Grid.Row="1" x:Name="txtLNScriptData" TextWrapping="Wrap" TextChanged="TxtLNScriptData_TextChanged" Text="ChangeBase(&quot;RobotBase&quot;)" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
-                        <TextBox Grid.Row="2" x:Name="txtLNDataString" TextWrapping="Wrap" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Grid.IsSharedSizeScope="True"/>
+                        <TextBox Grid.Row="1" x:Name="TxtScript"  IsInactiveSelectionHighlightEnabled="True" IsManipulationEnabled="True" AcceptsReturn="True" TextChanged="TxtScript_TextChanged" />
+                        <TextBox Grid.Row="2" x:Name="TxtMessage" IsReadOnly="True" VerticalScrollBarVisibility="Auto"/>
                         <Button Grid.Row="3" x:Name="btnLNSend" Content="Send" Click="BtnLNSend_Click" Width="90" Height="26" BorderBrush="{x:Null}"/>
                     </Grid>
                 </Grid>
@@ -121,7 +120,7 @@
                     <Label.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FF4c88d6" Offset="0"/>
-                            <GradientStop Color="White" Offset="0.298"/>
+                            <GradientStop Color="White" Offset="0.3"/>
                         </LinearGradientBrush>
                     </Label.Background>
                 </Label>
@@ -133,30 +132,38 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="34"/>
-                    <RowDefinition Height="34"/>
-                    <RowDefinition Height="62"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="48"/>
+                    <RowDefinition Height="47"/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Content="Motion Builder" FontSize="18" HorizontalContentAlignment="Center">
                     <Label.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FF4c88d6" Offset="0"/>
-                            <GradientStop Color="White" Offset="0.298"/>
+                            <GradientStop Color="White" Offset="0.3"/>
                         </LinearGradientBrush>
                     </Label.Background>
                 </Label>
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition MaxWidth="94"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition MaxWidth="94"/>
+                        <ColumnDefinition Width="90"/>
+                        <ColumnDefinition Width="90"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Grid.Row="0" x:Name="btnLNNewReadPosition" Content="Read" Width="90" Click="BtnLNNewReadPosition_Click" Margin="2" Height="26" BorderBrush="{x:Null}"/>
-                    <TextBox Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" x:Name="txtLNNewPosition" Text="430,0,320,-180.0,0,90.0" Margin="2" Height="26" VerticalContentAlignment="Center"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Content="Read Position&#10; from Robot" Padding="5,3" HorizontalContentAlignment="Center" />
+                    <ComboBox Grid.Column="1" Grid.Row="0" x:Name="CmdPositionType" IsReadOnly="True" SelectedIndex="0">
+                        <ComboBoxItem Content="Pose (Euler)" Tag="0"/>
+                        <ComboBoxItem Content="Joint" Tag="1"/>
+                    </ComboBox>
+                    <Button Grid.Column="1" Grid.Row="1" x:Name="btnLNNewReadPosition" Content="Read" Click="BtnLNNewReadPosition_Click" BorderBrush="{x:Null}"/>
+                    <TextBox Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" x:Name="txtLNNewPosition" Text="430,0,320,-180.0,0,90.0"/>
                 </Grid>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
@@ -167,17 +174,12 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Label Grid.Column="0" Grid.Row="0" Content="Move Type" Padding="5,3" />
-                    <ComboBox Grid.Column="0" Grid.Row="1" x:Name="CmdMoveType" IsReadOnly="True" SelectedIndex="0" Margin="2" Height="26">
+                    <ComboBox Grid.Column="0" Grid.Row="1" x:Name="CmdMoveType" IsReadOnly="True" SelectedIndex="0">
                         <ComboBoxItem Content="Linear" Tag="0"/>
                         <ComboBoxItem Content="Joint" Tag="1"/>
                     </ComboBox>
-                    <Label Grid.Column="1" Grid.Row="0" Content="Position Type" Padding="5,3" />
-                    <ComboBox Grid.Column="1" Grid.Row="1" x:Name="CmdPositionType" IsReadOnly="True" SelectedIndex="0" Margin="2" Height="26">
-                        <ComboBoxItem Content="Pose (Euler)" Tag="0"/>
-                        <ComboBoxItem Content="Joint" Tag="1"/>
-                    </ComboBox>
-                    <Label Grid.Column="2" Grid.Row="0" Content="Acceleration %" Padding="5,3"/>
-                    <ComboBox Grid.Column="2" Grid.Row="1" x:Name="CmbLNMoveAccel" IsEditable="True" SelectedIndex="0" Margin="2" Height="26">
+                    <Label Grid.Column="1" Grid.Row="0" Content="Acceleration %" Padding="5,3"/>
+                    <ComboBox Grid.Column="1" Grid.Row="1" x:Name="CmbLNMoveAccel" IsEditable="True" SelectedIndex="0">
                         <ComboBoxItem Content="0" Tag="0"/>
                         <ComboBoxItem Content="100" Tag="100"/>
                         <ComboBoxItem Content="90" Tag="90"/>
@@ -190,8 +192,8 @@
                         <ComboBoxItem Content="20" Tag="20"/>
                         <ComboBoxItem Content="10" Tag="10"/>
                     </ComboBox>
-                    <Label Grid.Column="3" Grid.Row="0" Content="Velocity %" Padding="5,3"/>
-                    <ComboBox Grid.Column="3" Grid.Row="1" x:Name="CmbLNMoveVelocity" IsEditable="True" SelectedIndex="0" Margin="2" Height="26">
+                    <Label Grid.Column="2" Grid.Row="0" Content="Velocity %" Padding="5,3"/>
+                    <ComboBox Grid.Column="2" Grid.Row="1" x:Name="CmbLNMoveVelocity" IsEditable="True" SelectedIndex="0">
                         <ComboBoxItem Content="100" Tag="100"/>
                         <ComboBoxItem Content="90" Tag="90"/>
                         <ComboBoxItem Content="80" Tag="80"/>
@@ -203,8 +205,8 @@
                         <ComboBoxItem Content="20" Tag="20"/>
                         <ComboBoxItem Content="10" Tag="10"/>
                     </ComboBox>
-                    <Label Grid.Column="4" Grid.Row="0" Content="Blend %" Padding="5,3"/>
-                    <ComboBox Grid.Column="4" Grid.Row="1" x:Name="CmbLNMoveBlend" IsEditable="True" SelectedIndex="0" Margin="2" Height="26">
+                    <Label Grid.Column="3" Grid.Row="0" Content="Blend %" Padding="5,3"/>
+                    <ComboBox Grid.Column="3" Grid.Row="1" x:Name="CmbLNMoveBlend" IsEditable="True" SelectedIndex="0">
                         <ComboBoxItem Content="0" Tag="0"/>
                         <ComboBoxItem Content="10" Tag="10"/>
                         <ComboBoxItem Content="20" Tag="20"/>

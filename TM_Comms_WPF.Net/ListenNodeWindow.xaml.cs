@@ -40,7 +40,8 @@ namespace TM_Comms_WPF
 
             this.Left = App.Settings.ListenNodeWindow.Left;
             this.Top = App.Settings.ListenNodeWindow.Top;
-
+            this.Width = App.Settings.ListenNodeWindow.Width;
+            this.Height = App.Settings.ListenNodeWindow.Height;
             this.WindowState = App.Settings.ListenNodeWindow.WindowState;
 
             if (!CheckOnScreen.IsOnScreen(this))
@@ -49,16 +50,59 @@ namespace TM_Comms_WPF
 
                 this.Left = App.Settings.ListenNodeWindow.Left;
                 this.Top = App.Settings.ListenNodeWindow.Top;
-
+                this.Width = App.Settings.ListenNodeWindow.Width;
+                this.Height = App.Settings.ListenNodeWindow.Height;
                 this.WindowState = App.Settings.ListenNodeWindow.WindowState;
             }
 
-            LstCommandList.ItemsSource = ListenNode.Commands[App.Settings.Version];
+            LoadCommandTreeView();
 
             IsLoading = false;
 
             ConnectionInActive();
         }
+        private void LoadCommandTreeView()
+        {
+            int i = -1;
+            TreeViewItem tviParent = null;
+            foreach(string cmd in ListenNode.Commands[App.Settings.Version])
+            {
+                if(Regex.IsMatch(cmd, @"^[0-9][.][0-9]"))
+                {
+                    if (tviParent != null)
+                    {
+                        LstCommandList.Items.Add(tviParent);
+                    }
+                        
+
+                    tviParent = new TreeViewItem()
+                    {
+                        Header = cmd,
+                    };
+                    tviParent.MouseDoubleClick += TviParent_MouseDoubleClick;
+                    continue;
+                }
+                TreeViewItem tviChild = new TreeViewItem()
+                {
+                    Header = cmd,
+                };
+                tviChild.MouseDoubleClick += TviChild_MouseDoubleClick;
+                tviParent.Items.Add(tviChild);
+            }
+        }
+
+        private void TviParent_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            TreeViewItem tvi = (TreeViewItem)sender;
+        }
+
+        private void TviChild_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            TreeViewItem tvi = (TreeViewItem)sender;
+            string text = (string)tvi.Header;
+
+            TxtScript.Text += ((string)tvi.Header);
+       }
 
         //Private
         private void ConnectionActive()
@@ -94,9 +138,9 @@ namespace TM_Comms_WPF
             }
 
 
-            node.Data = txtLNScriptData.Text;
+            node.Data = TxtScript.Text;
 
-            txtLNDataString.Text = node.Message;
+            TxtMessage.Text = node.Message;
 
             return node;
         }
@@ -255,6 +299,13 @@ namespace TM_Comms_WPF
             App.Settings.ListenNodeWindow.Top = Top;
             App.Settings.ListenNodeWindow.Left = Left;
         }
+        private void window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (IsLoading) return;
+
+            App.Settings.ListenNodeWindow.Width = Width;
+            App.Settings.ListenNodeWindow.Height = Height;
+        }
         private void Window_StateChanged(object sender, EventArgs e)
         {
             if (IsLoading) return;
@@ -265,11 +316,7 @@ namespace TM_Comms_WPF
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => CleanSock();
 
 
-        private void BtnLNSend_Click(object sender, RoutedEventArgs e)
-        {
-            //RectCommandHasResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
-            Socket?.Write(ListenNode.Message);
-        }
+        private void BtnLNSend_Click(object sender, RoutedEventArgs e) => Socket?.Write(ListenNode.Message);
 
         private void BtnLNNewReadPosition_Click(object sender, RoutedEventArgs e)
         {
@@ -344,29 +391,23 @@ namespace TM_Comms_WPF
             ListenNode ln = MotionScriptBuilder.BuildScriptData();
             txtLNMovesCode.Text = ln.Message;
         }
-        private void BtnLNSendMoves_Click(object sender, RoutedEventArgs e)
-        {
-            //RectCommandHasResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
-            Socket?.Write(txtLNMovesCode.Text);
-        }
+        private void BtnLNSendMoves_Click(object sender, RoutedEventArgs e) => Socket?.Write(txtLNMovesCode.Text);
 
-        private void TxtLNScriptData_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtScript_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (ListenNode != null)
             {
-                ListenNode.Data = txtLNScriptData.Text;
-                txtLNDataString.Text = ListenNode.Message;
+                ListenNode.Data = TxtScript.Text;
+                TxtMessage.Text = ListenNode.Message;
             }
         }
+
         private void CmbLNDataType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoading) return;
 
             ListenNode = GetLNNode();
         }
-
-
-
 
         private void TxtLNMoves_SelectionChanged(object sender, RoutedEventArgs e)
         {
@@ -375,6 +416,7 @@ namespace TM_Comms_WPF
             else
                 btnLNInsertMove.IsEnabled = false;
         }
+
 
     }
 }

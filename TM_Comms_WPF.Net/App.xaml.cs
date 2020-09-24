@@ -115,7 +115,7 @@ namespace TM_Comms_WPF
 
         protected override void OnStartup(StartupEventArgs e)
         {
-           // GetData d = new GetData();
+           //GetData d = new GetData();
             base.OnStartup(e);
         }
     }
