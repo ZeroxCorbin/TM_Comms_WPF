@@ -9,19 +9,18 @@
     <Grid>
         <StackPanel>
             <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
-                <StackPanel Orientation="Horizontal">
-
-                    <Button x:Name="BtnConnect" Content="Start" Width="86" Click="BtnConnect_Click"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="BtnConnect" Content="Start" Width="86" Click="BtnConnect_Click" BorderBrush="{x:Null}"/>
                     <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="3" VerticalAlignment="Top">
                         <StackPanel Orientation="Horizontal">
                             <StackPanel>
                                 <Label Content="Display Rate" Padding="0" HorizontalContentAlignment="Center"/>
-                                <TextBox x:Name="TxtDisplayRate" Width="64" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                                <TextBox x:Name="TxtDisplayRate" Width="64" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" BorderBrush="{x:Null}"/>
                             </StackPanel>
                             <Slider x:Name="SldUpdateFreq" Maximum="1000" Minimum="10" SmallChange="10" TickFrequency="10" LargeChange="100" MinWidth="180" Panel.ZIndex="-7" TickPlacement="TopLeft" Value="500" ValueChanged="SldUpdateFreq_ValueChanged"/>
                             <StackPanel>
                                 <Label Content="Avg./Message" Padding="0" HorizontalContentAlignment="Center"/>
-                                <TextBox x:Name="TxtAverageMessage" MinWidth="64" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                                <TextBox x:Name="TxtAverageMessage" MinWidth="64" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" BorderBrush="{x:Null}"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -29,11 +28,9 @@
             </Border>
             <StackPanel Orientation="Horizontal">
                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5" VerticalAlignment="Top">
-
                     <TextBox x:Name="txtMonitorDataType" MinHeight="22" MinWidth="64" IsReadOnly="True" VerticalAlignment="Top"/>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5" VerticalAlignment="Top">
-
                     <TextBox x:Name="txtMonitorResults" TextWrapping="WrapWithOverflow" MinHeight="22" MinWidth="64" MaxHeight="512" MaxWidth="512" IsReadOnly="True" VerticalScrollBarVisibility="Auto"/>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5" VerticalAlignment="Top">
@@ -62,6 +59,5 @@
                 </Border>
             </StackPanel>
         </StackPanel>
-        
     </Grid>
 </Window>

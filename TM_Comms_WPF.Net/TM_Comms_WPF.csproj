@@ -50,6 +50,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
@@ -75,6 +76,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="TM_Comms\TMflowVersions.cs" />
     <Page Include="EthernetSlaveWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -107,12 +109,12 @@
     <Compile Include="Port8080Window.xaml.cs">
       <DependentUpon>Port8080Window.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TM_Comms\TM_Comms_ErrorCodes.cs" />
-    <Compile Include="TM_Comms\TM_Comms_EthernetSlave.cs" />
-    <Compile Include="TM_Comms\TM_Comms_ListenNode.cs" />
-    <Compile Include="TM_Comms\TM_Comms_ModbusDict.cs" />
-    <Compile Include="TM_Comms\TM_Comms_MotionScriptBuilder.cs" />
-    <Compile Include="TM_Comms\TM_Comms_Port8080.cs" />
+    <Compile Include="TM_Comms\ErrorCodes.cs" />
+    <Compile Include="TM_Comms\EthernetSlave.cs" />
+    <Compile Include="TM_Comms\ListenNode.cs" />
+    <Compile Include="TM_Comms\ModbusDictionary.cs" />
+    <Compile Include="TM_Comms\MotionScriptBuilder.cs" />
+    <Compile Include="TM_Comms\Port8080.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -154,6 +156,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Support\question-mark.png" />
     <Resource Include="Support\TMControllerImage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

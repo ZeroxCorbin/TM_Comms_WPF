@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace TM_Comms_WPF
 {
-    public class TM_Comms_EthernetSlave
+    public class EthernetSlave
     {
-        public TM_Comms_EthernetSlave(string item_Value, HEADERS header = HEADERS.TMSVR, string transactionID = "1", MODES mode = MODES.STRING)
+        public EthernetSlave(string item_Value, HEADERS header = HEADERS.TMSVR, string transactionID = "1", MODES mode = MODES.STRING)
         {
             Header = header;
             TransactionID = transactionID;
@@ -21,13 +21,13 @@ namespace TM_Comms_WPF
         public const string ChecksumChar = "*";
         public const string EndChar = "\r\n";
         public enum HEADERS
-        { 
+        {
             TMSVR, //External Script
             CPERR  //Communication data error
         }
 
         public HEADERS Header { get; set; }
-        public string HeaderString => Header.ToString(); 
+        public string HeaderString => Header.ToString();
 
         public enum MODES
         {
@@ -47,7 +47,7 @@ namespace TM_Comms_WPF
         {
             get
             {
-                if(Header == HEADERS.TMSVR)
+                if (Header == HEADERS.TMSVR)
                     return Data.Length;
                 else
                     return 2;
@@ -55,13 +55,13 @@ namespace TM_Comms_WPF
         }
 
         public byte Checksum => CalCheckSum();
-        public string ChecksumString=> CalCheckSum().ToString("X2");
+        public string ChecksumString => CalCheckSum().ToString("X2");
 
         public string Message
         {
             get
             {
-                if(Header == HEADERS.TMSVR)
+                if (Header == HEADERS.TMSVR)
                     return StartChar + HeaderString + SeparatorChar + DataLength.ToString() + SeparatorChar + Data + SeparatorChar + ChecksumChar + ChecksumString + EndChar;
                 return StartChar + HeaderString + SeparatorChar + DataLength.ToString() + SeparatorChar + "00" + SeparatorChar + ChecksumChar + ChecksumString + EndChar;
             }
@@ -76,10 +76,11 @@ namespace TM_Comms_WPF
                 bData = Encoding.ASCII.GetBytes(HeaderString + SeparatorChar + DataLength.ToString() + SeparatorChar + Data + SeparatorChar);
             else
                 bData = Encoding.ASCII.GetBytes(HeaderString + SeparatorChar + DataLength.ToString() + SeparatorChar + "00" + SeparatorChar);
-            
+
             for (int i = 0; i < bData.Length; i++)
                 _CheckSumByte ^= bData[i];
             return _CheckSumByte;
         }
     }
+
 }

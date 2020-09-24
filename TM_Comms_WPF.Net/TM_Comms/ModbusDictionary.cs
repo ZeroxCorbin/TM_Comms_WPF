@@ -6,14 +6,9 @@ using System.Threading.Tasks;
 
 namespace TM_Comms_WPF
 {
-    public class TM_Comms_ModbusDict
+    public class ModbusDictionary
     {
-        public enum Versions
-        {
-            V1_68_6800,
-            V1_76_3300,
-            V1_80_3300
-        }
+
         public class MobusValue
         {
             public enum DataTypes
@@ -36,9 +31,9 @@ namespace TM_Comms_WPF
             public AccessTypes Access { get; set; }
         }
 
-        public Dictionary<Versions, Dictionary<string, MobusValue>> ModbusData = new Dictionary<Versions, Dictionary<string, MobusValue>>()
+        public Dictionary<TMflowVersions, Dictionary<string, MobusValue>> ModbusData = new Dictionary<TMflowVersions, Dictionary<string, MobusValue>>()
         {
-            { Versions.V1_68_6800 , new Dictionary<string, MobusValue>()
+            { TMflowVersions.V1_68_6800 , new Dictionary<string, MobusValue>()
                 {
                     { "Error", new MobusValue { Addr=0x1C21, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.R } },
                     { "Project Running", new MobusValue { Addr=0x1C22, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.R } },
@@ -186,7 +181,7 @@ namespace TM_Comms_WPF
                     { "Robot Light", new MobusValue { Addr=0x1CA4, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } }
                 }
             },
-            { Versions.V1_76_3300 , new Dictionary<string, MobusValue>()
+            { TMflowVersions.V1_76_3300 , new Dictionary<string, MobusValue>()
                 {
                     { "Error", new MobusValue { Addr=0x1C21, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.R } },
                     { "Project Running", new MobusValue { Addr=0x1C22, Type=MobusValue.DataTypes.Bool, Access=MobusValue.AccessTypes.R } },
@@ -334,7 +329,7 @@ namespace TM_Comms_WPF
                     { "Robot Light", new MobusValue { Addr=0x1CA4, Type=MobusValue.DataTypes.Int16, Access=MobusValue.AccessTypes.R } }
                 }
             },
-            { Versions.V1_80_3300 , new Dictionary<string, MobusValue>()
+            { TMflowVersions.V1_80_3300 , new Dictionary<string, MobusValue>()
                 {
                     { "Current Base No Tool X", new MobusValue { Addr=0x1B59, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },
                     { "Current Base No Tool Y", new MobusValue { Addr=0x1B5B, Type=MobusValue.DataTypes.Float, Access=MobusValue.AccessTypes.R } },

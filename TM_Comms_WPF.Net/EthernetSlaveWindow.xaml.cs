@@ -23,7 +23,7 @@ namespace TM_Comms_WPF
     public partial class EthernetSlaveWindow : Window
     {
 
-        private TM_Comms_EthernetSlave EthernetSlave { get; set; }
+        private EthernetSlave EthernetSlave { get; set; }
 
         private bool IsLoading { get; set; } = true;
         public EthernetSlaveWindow()
@@ -36,31 +36,39 @@ namespace TM_Comms_WPF
             this.Left = App.Settings.EthernetSlaveWindow.Left;
             this.Top = App.Settings.EthernetSlaveWindow.Top;
 
+            if (!CheckOnScreen.IsOnScreen(this))
+            {
+                App.Settings.EthernetSlaveWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+
+                this.Left = App.Settings.EthernetSlaveWindow.Left;
+                this.Top = App.Settings.EthernetSlaveWindow.Top;
+            }
+
             EthernetSlave = GetESNode();
 
             IsLoading = false;
         }
 
-        private TM_Comms_EthernetSlave GetESNode()
+        private EthernetSlave GetESNode()
         {
-            TM_Comms_EthernetSlave.HEADERS h;
+            EthernetSlave.HEADERS h;
 
             if ((string)((ComboBoxItem)cmbESDataType.SelectedItem).Tag == "0")
-                h = TM_Comms_EthernetSlave.HEADERS.TMSVR;
+                h = EthernetSlave.HEADERS.TMSVR;
             else
-                h = TM_Comms_EthernetSlave.HEADERS.CPERR;
+                h = EthernetSlave.HEADERS.CPERR;
 
-            TM_Comms_EthernetSlave.MODES m;
+            EthernetSlave.MODES m;
             if ((string)((ComboBoxItem)cmbESDataMode.SelectedItem).Tag == "0")
-                m = TM_Comms_EthernetSlave.MODES.STRING;
+                m = EthernetSlave.MODES.STRING;
             else if ((string)((ComboBoxItem)cmbESDataMode.SelectedItem).Tag == "1")
-                m = TM_Comms_EthernetSlave.MODES.JSON;
+                m = EthernetSlave.MODES.JSON;
             else if ((string)((ComboBoxItem)cmbESDataMode.SelectedItem).Tag == "2")
-                m = TM_Comms_EthernetSlave.MODES.STRING_RESPONSE;
+                m = EthernetSlave.MODES.STRING_RESPONSE;
             else
-                m = TM_Comms_EthernetSlave.MODES.STRING;
+                m = EthernetSlave.MODES.STRING;
 
-            TM_Comms_EthernetSlave node = new TM_Comms_EthernetSlave(TxtCommandData.Text, h, txtESTransactionID.Text, m);
+            EthernetSlave node = new EthernetSlave(TxtCommandData.Text, h, txtESTransactionID.Text, m);
 
             TxtCommand.Text = node.Message;
 

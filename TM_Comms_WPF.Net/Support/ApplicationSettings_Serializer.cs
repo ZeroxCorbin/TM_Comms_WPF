@@ -44,7 +44,7 @@ namespace ApplicationSettingsNS
         {
             public string RobotIP { get; set; } = "192.168.1.1";
 
-            public TM_Comms_ModbusDict.Versions Version { get; set; } = TM_Comms_ModbusDict.Versions.V1_80_3300;
+            public TMflowVersions Version { get; set; } = TMflowVersions.V1_80_3300;
 
             public string[] ModbusComboBoxIndices { get; set; } = {
                 "Current Base With Tool X",

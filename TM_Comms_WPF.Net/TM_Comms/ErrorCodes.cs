@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TM_Comms_WPF
 {
-    public class TM_Comms_ErrorCodes
+    public class ErrorCodes
     {
         public static Dictionary<uint, string> Codes = new Dictionary<uint, string>()
         {

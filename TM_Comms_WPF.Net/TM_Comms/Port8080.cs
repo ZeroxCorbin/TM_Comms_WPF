@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace TM_Comms_WPF
 {
-    public class TM_Monitor
+    public class Port8080
     {
         public static Rootobject Parse(string json)
         {

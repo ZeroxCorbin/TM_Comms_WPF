@@ -12,21 +12,14 @@ namespace TM_Comms_WPF
 {
     public partial class MainWindow : Window
     {
-
-        private ListenNodeWindow ListenNodeWindow { get; set; } = null;
-        private Port8080Window Port8080Window { get; set; } = null;
-        private EthernetSlaveWindow EthernetSlaveWindow { get; set; } = null;
-        private ModbusWindow ModbusWindow { get; set; } = null;
-
         private bool IsLoading { get; set; } = true;
-
         public MainWindow()
         {
             InitializeComponent();
 
             txtRobotIP.Text = App.Settings.RobotIP;
 
-            CmbSystemVersions.ItemsSource = Enum.GetValues(typeof(TM_Comms_ModbusDict.Versions));
+            CmbSystemVersions.ItemsSource = Enum.GetValues(typeof(TMflowVersions));
             CmbSystemVersions.SelectedItem = App.Settings.Version;
 
             if (Keyboard.IsKeyDown(Key.LeftShift))
@@ -40,6 +33,14 @@ namespace TM_Comms_WPF
 
             this.Left = App.Settings.MainWindow.Left;
             this.Top = App.Settings.MainWindow.Top;
+
+            if (!CheckOnScreen.IsOnScreen(this))
+            {
+                App.Settings.MainWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+
+                this.Left = App.Settings.MainWindow.Left;
+                this.Top = App.Settings.MainWindow.Top;
+            }
 
             IsLoading = false;
         }
@@ -55,22 +56,22 @@ namespace TM_Comms_WPF
 
             App.Settings.RobotIP = ip.ToString();
 
-            txtRobotIP.Background = Brushes.LightGreen;
+            txtRobotIP.Background = new SolidColorBrush(Color.FromArgb(255, 0, 255, 255));
         }
         private void CmbSystemVersions_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
-            switch ((TM_Comms_ModbusDict.Versions)CmbSystemVersions.SelectedItem)
+            switch ((TMflowVersions)CmbSystemVersions.SelectedItem)
             {
-                case TM_Comms_ModbusDict.Versions.V1_68_6800:
+                case TMflowVersions.V1_68_6800:
                     btnPort8080Window.IsEnabled = true;
                     btnEthernetSlaveWindow.IsEnabled = false;
                     break;
-                case TM_Comms_ModbusDict.Versions.V1_76_3300:
+                case TMflowVersions.V1_76_3300:
                     btnPort8080Window.IsEnabled = true;
                     btnEthernetSlaveWindow.IsEnabled = true;
                     break;
-                case TM_Comms_ModbusDict.Versions.V1_80_3300:
+                case TMflowVersions.V1_80_3300:
                     btnPort8080Window.IsEnabled = false;
                     btnEthernetSlaveWindow.IsEnabled = true;
                     break;
@@ -78,7 +79,7 @@ namespace TM_Comms_WPF
 
             if (IsLoading) return;
 
-            App.Settings.Version = (TM_Comms_ModbusDict.Versions)CmbSystemVersions.SelectedItem;
+            App.Settings.Version = (TMflowVersions)CmbSystemVersions.SelectedItem;
         }
 
         private void WindowShow()
@@ -86,7 +87,6 @@ namespace TM_Comms_WPF
             CmbSystemVersions.IsEnabled = false;
             txtRobotIP.IsEnabled = false;
         }
-
         private void WindowClose()
         {
             if (ListenNodeWindow == null &&
@@ -98,6 +98,8 @@ namespace TM_Comms_WPF
                 txtRobotIP.IsEnabled = true;
             }
         }
+
+        private ListenNodeWindow ListenNodeWindow { get; set; } = null;
         private void BtnListenNodeWindow_Click(object sender, RoutedEventArgs e)
         {
             if (ListenNodeWindow == null)
@@ -116,7 +118,7 @@ namespace TM_Comms_WPF
             ListenNodeWindow = null;
             WindowClose();
         }
-
+        private EthernetSlaveWindow EthernetSlaveWindow { get; set; } = null;
         private void BtnEthernetSlaveWindow_Click(object sender, RoutedEventArgs e)
         {
             if (EthernetSlaveWindow == null)
@@ -135,7 +137,7 @@ namespace TM_Comms_WPF
             EthernetSlaveWindow = null;
             WindowClose();
         }
-
+        private Port8080Window Port8080Window { get; set; } = null;
         private void BtnPort8080Window_Click(object sender, RoutedEventArgs e)
         {
             if (Port8080Window == null)
@@ -154,7 +156,7 @@ namespace TM_Comms_WPF
             Port8080Window = null;
             WindowClose();
         }
-
+        private ModbusWindow ModbusWindow { get; set; } = null;
         private void BtnModbusWindow_Click(object sender, RoutedEventArgs e)
         {
             if (ModbusWindow == null)
@@ -192,6 +194,5 @@ namespace TM_Comms_WPF
 
             ApplicationSettings_Serializer.Save("appsettings.xml", App.Settings);
         }
-
     }
 }

@@ -10,19 +10,19 @@
     <Grid>
         <StackPanel>
             <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 
-                    <Button x:Name="BtnConnect" Content="Connect" Width="86" Click="BtnConnect_Click"/>
+                    <Button x:Name="BtnConnect" Content="Connect" Width="86" Click="BtnConnect_Click" BorderBrush="{x:Null}"/>
                     <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="3" VerticalAlignment="Top">
                         <StackPanel Orientation="Horizontal">
                             <StackPanel>
                                 <Label Content="Display Rate" Padding="0" HorizontalContentAlignment="Center" Margin="3,0"/>
-                                <TextBox x:Name="TxtDisplayRate" Width="64" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="3,0"/>
+                                <TextBox x:Name="TxtDisplayRate" Width="64" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="3,0" BorderBrush="{x:Null}"/>
                             </StackPanel>
                             <Slider x:Name="SldUpdateFreq" Maximum="1000" Minimum="10" SmallChange="10" TickFrequency="10" LargeChange="100" MinWidth="180" Panel.ZIndex="-7" TickPlacement="TopLeft" Value="500" ValueChanged="SldUpdateFreq_ValueChanged"/>
                             <StackPanel>
                                 <Label Content="Avg./Message" Padding="0" HorizontalContentAlignment="Center" Margin="3,0"/>
-                                <TextBox x:Name="TxtAverageMessage" MinWidth="64" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="3,0"/>
+                                <TextBox x:Name="TxtAverageMessage" MinWidth="64" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="3,0" BorderBrush="{x:Null}"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -59,7 +59,7 @@
             <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
                 <StackPanel Orientation="Horizontal">
                     <TextBox x:Name="TxtCommand" IsReadOnly="True" Height="72" Width="367" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="3,0"/>
-                    <Button x:Name="BtnSend" Content="Send" Height="48" Width="86" Click="BtnSend_Click" Margin="3,0"/>
+                    <Button x:Name="BtnSend" Content="Send" Height="48" Width="86" Click="BtnSend_Click" Margin="3,0" BorderBrush="{x:Null}"/>
                     <Rectangle x:Name="RectCommandHasResponse" Fill="Yellow"  Stroke="Black" Width="7" Margin="3,0,0,0"/>
                     <TextBox x:Name="TxtCommandResponse" IsReadOnly="True" Height="72" Width="367" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,0,3,0" />
                 </StackPanel>

@@ -18,8 +18,8 @@ namespace TM_Comms_WPF
     /// </summary>
     public partial class Port8080Window : Window
     {
-        private TM_Monitor.Rootobject _data;
-        public TM_Monitor.Rootobject data
+        private Port8080.Rootobject _data;
+        public Port8080.Rootobject data
         {
             get { return _data; }
             set { _data = value; }
@@ -36,6 +36,14 @@ namespace TM_Comms_WPF
             this.Left = App.Settings.Port8080Window.Left;
             this.Top = App.Settings.Port8080Window.Top;
 
+            if (!CheckOnScreen.IsOnScreen(this))
+            {
+                App.Settings.Port8080Window = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+
+                this.Left = App.Settings.Port8080Window.Left;
+                this.Top = App.Settings.Port8080Window.Top;
+            }
+
             IsLoading = false;
         }
         private string CleanMessage(string msg)
@@ -43,7 +51,7 @@ namespace TM_Comms_WPF
             msg = msg.Replace("�~�", "");
             return msg;
         }
-        private void MonitorViewUpdate(TM_Monitor.Rootobject data, string msg)
+        private void MonitorViewUpdate(Port8080.Rootobject data, string msg)
         {
             txtMonitorDataType.Text = data.DataType.ToString();
             txtMonitorResults.Text = msg.TrimEnd('\n').TrimEnd('\r');
@@ -189,10 +197,10 @@ namespace TM_Comms_WPF
 
                 string msg = CleanMessage(message);
                 if (msg != "")
-                    this.data = TM_Monitor.Parse(msg);
+                    this.data = Port8080.Parse(msg);
 
                 if (this.data != null)
-                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action<TM_Monitor.Rootobject, string>(MonitorViewUpdate), this.data, message);
+                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action<Port8080.Rootobject, string>(MonitorViewUpdate), this.data, message);
             
         }
         //Receive Rate Control

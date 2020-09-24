@@ -1,11 +1,16 @@
 ﻿using ApplicationSettingsNS;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 
 namespace TM_Comms_WPF
 {
+
     public class MoveToForeground
     {
         [DllImportAttribute("User32.dll")]
@@ -30,13 +35,88 @@ namespace TM_Comms_WPF
             }
         }
     }
-    
+
+    public class CheckOnScreen
+    {
+
+        public static bool IsOnScreen(Window window)
+        {
+            System.Windows.Forms.Screen[] screens = System.Windows.Forms.Screen.AllScreens;
+            foreach (System.Windows.Forms.Screen screen in screens)
+            {
+                System.Drawing.Rectangle formRectangle = new System.Drawing.Rectangle((int)window.Left * 2, (int)window.Top * 2,
+                                                         (int)window.Width * 2, (int)window.Height * 2);
+
+                if (screen.WorkingArea.Contains(formRectangle))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+    }
+
+
     public partial class App : Application
     {
-        public static ApplicationSettings_Serializer.ApplicationSettings Settings;
+        public class GetData
+        {
+
+            public List<string> Commands { get; private set; } = new List<string>();
+            public GetData()
+            {
+                using (StreamReader file = new StreamReader("ListenNodeCommands_Raw_1.68.6800.txt"))
+                {
+                    StringBuilder sb = new StringBuilder();
+
+                    bool build = false;
+                    string ln;
+                    while ((ln = file.ReadLine()) != null)
+                    {
+                        if (Regex.IsMatch(ln, @"^[0-9][.][0-9]\w*"))
+                        {
+                            Commands.Add(ln.Trim(new char[] { '\r', '\n' }));
+                            continue;
+                        }
+
+                        if (build)
+                        {
+                            if (ln.StartsWith("Ex"))
+                                continue;
+
+                            if (ln.StartsWith("Con"))
+                                continue;
+
+                            sb.Append(ln.Trim(new char[] { '\r', '\n' }));
+
+                            if (ln.Contains(")"))
+                            {
+                                build = false;
+                                Commands.Add(sb.ToString());
+                                sb.Clear();
+                            }
+                        }
+
+                        if (ln.StartsWith("syntax", StringComparison.OrdinalIgnoreCase))
+                            build = true;
+                    }
+                }
+                File.WriteAllLines("ListenNodeCommands.txt", Commands.ToArray());
+            }
+        }
+
+
+        public static ApplicationSettings_Serializer.ApplicationSettings Settings { get; set; }
 
         public App() => Settings = ApplicationSettings_Serializer.Load("appsettings.xml");
 
-        protected override void OnStartup(StartupEventArgs e) => base.OnStartup(e);
+        protected override void OnStartup(StartupEventArgs e)
+        {
+           // GetData d = new GetData();
+            base.OnStartup(e);
+        }
     }
 }
