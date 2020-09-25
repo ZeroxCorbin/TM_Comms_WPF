@@ -35,27 +35,32 @@ namespace TM_Comms_WPF
 
             ListenNode = GetLNNode();
 
+            LoadCommandTreeView();
+
+
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
             if (Keyboard.IsKeyDown(Key.LeftShift))
                 App.Settings.ListenNodeWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
 
+            if (double.IsNaN(App.Settings.ListenNodeWindow.Left))
+            {
+                App.Settings.ListenNodeWindow.Left = Owner.Left;
+                App.Settings.ListenNodeWindow.Top = Owner.Top + Owner.Height;
+            }
+
             this.Left = App.Settings.ListenNodeWindow.Left;
             this.Top = App.Settings.ListenNodeWindow.Top;
-            this.Width = App.Settings.ListenNodeWindow.Width;
-            this.Height = App.Settings.ListenNodeWindow.Height;
-            this.WindowState = App.Settings.ListenNodeWindow.WindowState;
 
             if (!CheckOnScreen.IsOnScreen(this))
             {
-                App.Settings.ListenNodeWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+                App.Settings.ListenNodeWindow.Left = Owner.Left;
+                App.Settings.ListenNodeWindow.Top = Owner.Top + Owner.Height;
 
                 this.Left = App.Settings.ListenNodeWindow.Left;
                 this.Top = App.Settings.ListenNodeWindow.Top;
-                this.Width = App.Settings.ListenNodeWindow.Width;
-                this.Height = App.Settings.ListenNodeWindow.Height;
-                this.WindowState = App.Settings.ListenNodeWindow.WindowState;
             }
-
-            LoadCommandTreeView();
 
             IsLoading = false;
 
@@ -380,17 +385,31 @@ namespace TM_Comms_WPF
 
             sb.Append((string)((ComboBoxItem)CmbLNMoveBlend.SelectedItem).Tag);
 
-            int start = txtLNMoves.SelectionStart;
+            string insert = "";
+            if (TxtMoveList.SelectionStart == TxtMoveList.Text.Length)
+            {
+                if (TxtMoveList.SelectionStart != 0)
+                    if (TxtMoveList.Text[TxtMoveList.SelectionStart - 1] != '\n')
+                        insert += "\r\n";
+            }
+            else if (TxtMoveList.Text[TxtMoveList.SelectionStart] == '\r')
+            {
+                if (TxtMoveList.SelectionStart != 0)
+                    if (TxtMoveList.Text[TxtMoveList.SelectionStart - 1] != '\n')
+                        insert += "\r\n";
+            }
 
-            txtLNMoves.Text = txtLNMoves.Text.Insert(txtLNMoves.SelectionStart, sb.ToString());
-            txtLNMoves.Focus();
-            txtLNMoves.SelectionStart = start + sb.ToString().Length;
+
+            insert += sb.ToString();
+            TxtMoveList.Text = TxtMoveList.Text.Insert(TxtMoveList.SelectionStart, insert);
+
+            TxtMoveList.SelectionStart = TxtMoveList.SelectionStart + insert.Length;
 
         }
 
         private void BtnLNValidateMoves_Click(object sender, RoutedEventArgs e)
         {
-            string[] spl = txtLNMoves.Text.Split('\n');
+            string[] spl = TxtMoveList.Text.Split('\n');
 
             List<MoveStep> moves = new List<MoveStep>();
 
@@ -426,14 +445,12 @@ namespace TM_Comms_WPF
             ListenNode = GetLNNode();
         }
 
-        private void TxtLNMoves_SelectionChanged(object sender, RoutedEventArgs e)
+        private void TxtMoveList_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            if (txtLNMoves.IsSelectionActive)
+            if (TxtMoveList.IsSelectionActive)
                 btnLNInsertMove.IsEnabled = true;
             else
                 btnLNInsertMove.IsEnabled = false;
         }
-
-
     }
 }

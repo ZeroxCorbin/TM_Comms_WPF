@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF"
         mc:Ignorable="d"
-        Title="Port 8080" Closing="Window_Closing" ResizeMode="NoResize" SizeToContent="WidthAndHeight" LocationChanged="Window_LocationChanged" Icon="Support/favicon.ico">
+        Title="Port 8080" Closing="Window_Closing" ResizeMode="NoResize" SizeToContent="WidthAndHeight" LocationChanged="Window_LocationChanged" Icon="Support/favicon.ico" Loaded="Window_Loaded">
     <Grid>
         <StackPanel>
             <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">

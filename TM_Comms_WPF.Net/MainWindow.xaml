@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF"
         mc:Ignorable="d"
-        Title="TM Communication" Closing="Window_Closing" SizeToContent="WidthAndHeight" LocationChanged="Window_LocationChanged" Activated="AnyWindow_Activated" ResizeMode="NoResize" Icon="Support/favicon.ico">
+        Title="TM Communication" Closing="Window_Closing" SizeToContent="WidthAndHeight" LocationChanged="Window_LocationChanged" Activated="AnyWindow_Activated" ResizeMode="NoResize" Icon="Support/favicon.ico" Loaded="Window_Loaded">
     <Window.Resources>
         <Style x:Key="dgStyleModbus" TargetType="{x:Type DataGrid}">
             <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>

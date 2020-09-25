@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF"
         mc:Ignorable="d"
-        Title="Listen Node" Closing="Window_Closing" WindowStartupLocation="Manual" LocationChanged="Window_LocationChanged" StateChanged="Window_StateChanged" ResizeMode="CanResizeWithGrip" Icon="Support/favicon.ico" SizeChanged="window_SizeChanged" Height="557" Width="913">
+        Title="Listen Node" Closing="Window_Closing" WindowStartupLocation="Manual" LocationChanged="Window_LocationChanged" StateChanged="Window_StateChanged" ResizeMode="CanResizeWithGrip" Icon="Support/favicon.ico" SizeChanged="window_SizeChanged" Height="768" Width="1024" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.3*" />
@@ -70,7 +70,7 @@
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center">
                         <Label Content="Script ID" HorizontalContentAlignment="Center" Padding="5,3"/>
-                        <TextBox x:Name="txtLNScriptID" IsReadOnly="True" Height="22" HorizontalContentAlignment="Center"/>
+                        <TextBox x:Name="txtLNScriptID" IsReadOnly="True" Height="22" HorizontalContentAlignment="Center" Background="#19000000"/>
                     </StackPanel>
                 </StackPanel>
 
@@ -85,7 +85,7 @@
                             <RowDefinition Height="22"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Label Content="Command List" HorizontalContentAlignment="Center" Padding="5,3"/>
+                        <Label Content="Available Commands" HorizontalContentAlignment="Center" Padding="5,3"/>
                         <TreeView Grid.Row="1" x:Name="LstCommandList"/>
 
                     </Grid>
@@ -94,13 +94,15 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="22"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="22"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="30"/>
                         </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Content="Script (Any Function from Expression Editor)" Padding="5,3"/>
-                        <TextBox Grid.Row="1" x:Name="TxtScript"  IsInactiveSelectionHighlightEnabled="True" IsManipulationEnabled="True" AcceptsReturn="True" TextChanged="TxtScript_TextChanged" IsReadOnlyCaretVisible="True" CaretBrush="Black" />
-                        <TextBox Grid.Row="2" x:Name="TxtMessage" IsReadOnly="True" VerticalScrollBarVisibility="Auto"/>
-                        <Button Grid.Row="3" x:Name="btnLNSend" Content="Send" Click="BtnLNSend_Click" Width="90" Height="26" BorderBrush="{x:Null}"/>
+                        <Label Grid.Row="0" Content="List of Commands" Padding="5,3"/>
+                        <TextBox Grid.Row="1" x:Name="TxtScript"  IsInactiveSelectionHighlightEnabled="True" IsManipulationEnabled="True" AcceptsReturn="True" TextChanged="TxtScript_TextChanged" IsReadOnlyCaretVisible="True" CaretBrush="Black" Background="#19FFFF00" />
+                        <Label Grid.Row="2" Content="Message to Send" Padding="5,3"/>
+                        <TextBox Grid.Row="3" x:Name="TxtMessage" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Background="#19000000"/>
+                        <Button Grid.Row="4" x:Name="btnLNSend" Content="Send Message" Click="BtnLNSend_Click" Width="90" Height="26" BorderBrush="{x:Null}"/>
                     </Grid>
                 </Grid>
             </Grid>
@@ -120,7 +122,7 @@
                         </LinearGradientBrush>
                     </Label.Background>
                 </Label>
-                <TextBox Grid.Row="1" x:Name="txtLNDataResponse" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
+                <TextBox Grid.Row="1" x:Name="txtLNDataResponse" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="#19000000"/>
             </Grid>
         </Border>
 
@@ -129,7 +131,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="34"/>
                     <RowDefinition Height="48"/>
-                    <RowDefinition Height="47"/>
+                    <RowDefinition Height="48"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Content="Motion Builder" FontSize="18" HorizontalContentAlignment="Center">
@@ -156,7 +158,7 @@
                         <ComboBoxItem Content="Joint" Tag="1"/>
                     </ComboBox>
                     <Button Grid.Column="1" Grid.Row="1" x:Name="btnLNNewReadPosition" Content="Read" Click="BtnLNNewReadPosition_Click" BorderBrush="{x:Null}"/>
-                    <TextBox Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" x:Name="txtLNNewPosition" Text="430,0,320,-180.0,0,90.0"/>
+                    <TextBox Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" x:Name="txtLNNewPosition" Text="430,0,320,-180.0,0,90.0" Background="#19FFFF00"/>
                 </Grid>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
@@ -220,6 +222,11 @@
                 </Grid>
 
                 <Grid  Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="32"/>
                         <RowDefinition Height="*"/>
@@ -227,12 +234,13 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="32"/>
                     </Grid.RowDefinitions>
-                    <Button Grid.Row="0" x:Name="btnLNInsertMove" Content="Insert" Width="90" Click="BtnLNInsertMove_Click" Margin="2" Height="26" BorderBrush="{x:Null}"/>
-
-                    <TextBox Grid.Row="1" x:Name="txtLNMoves" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="2" SelectionChanged="TxtLNMoves_SelectionChanged"/>
-                    <Button Grid.Row="2" x:Name="btnLNValidateMoves" Content="Validate / Generate" Click="BtnLNValidateMoves_Click" Width="120" Margin="2" Height="26" BorderBrush="{x:Null}"/>
-                    <TextBox Grid.Row="3" x:Name="txtLNMovesCode" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="2"/>
-                    <Button Grid.Row="4" x:Name="btnLNSendMoves" Content="Send" Click="BtnLNSendMoves_Click" Width="90" Margin="2" Height="26" BorderBrush="{x:Null}"/>
+                    <Button Grid.Row="0" Grid.Column="1" x:Name="btnLNInsertMove" Content="Insert" Width="90" Click="BtnLNInsertMove_Click" Margin="2" Height="26" BorderBrush="{x:Null}"/>
+                    <Label Grid.Row="0" Grid.Column="0" Content="List of Positions" Padding="5,3" VerticalAlignment="Bottom"/>
+                    <TextBox Grid.Row="1" Grid.ColumnSpan="3" x:Name="TxtMoveList" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="2" SelectionChanged="TxtMoveList_SelectionChanged" Background="#19FFFF00"/>
+                    <Button Grid.Row="2" Grid.Column="1" x:Name="btnLNValidateMoves" Content="Generate Message" Click="BtnLNValidateMoves_Click" Width="120" Margin="2" Height="26" BorderBrush="{x:Null}"/>
+                    <Label Grid.Row="2" Grid.Column="0" Content="Message to Send" Padding="5,3" VerticalAlignment="Bottom"/>
+                    <TextBox Grid.Row="3" Grid.ColumnSpan="3" x:Name="txtLNMovesCode" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="2" Background="#19000000"/>
+                    <Button Grid.Row="4" Grid.Column="1" x:Name="btnLNSendMoves" Content="Send" Click="BtnLNSendMoves_Click" Width="90" Margin="2" Height="26" BorderBrush="{x:Null}"/>
                 </Grid>
             </Grid>
         </Border>

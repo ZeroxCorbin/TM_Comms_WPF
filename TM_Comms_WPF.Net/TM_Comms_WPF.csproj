@@ -77,6 +77,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Support\ApplicationSettings_Serializer.cs" />
+    <Compile Include="Support\EthernetSlaveXMLData.cs" />
     <Compile Include="TM_Comms\TMflowVersions.cs" />
     <Page Include="EthernetSlaveWindow.xaml">
       <SubType>Designer</SubType>
@@ -175,6 +176,14 @@
       <Project>{4bfb50f6-69eb-4e78-a557-a314c0de371f}</Project>
       <Name>SocketManager</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Support\EthernetSlave_V1.76.xxxx.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Support\EthernetSlave_V1.80.xxxx.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

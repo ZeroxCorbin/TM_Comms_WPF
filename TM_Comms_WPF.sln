@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocketManager", "..\SocketM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleModbus", "..\SimpleModbus\SimpleModbus.csproj", "{0DDFAF2B-426E-4C19-A547-18E266F5DFDF}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "TM_Comms_WPF_Setup", "TM_Comms_WPF_Setup\TM_Comms_WPF_Setup.vdproj", "{24CABDE6-A06D-46B7-A19A-0120080A33EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TM_Comms_WPF_Uninstall", "TM_Comms_WPF_Uninstall\TM_Comms_WPF_Uninstall.csproj", "{866128AE-852F-4458-8533-1A4D9908D8DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +59,25 @@ Global
 		{0DDFAF2B-426E-4C19-A547-18E266F5DFDF}.Release|x64.Build.0 = Release|Any CPU
 		{0DDFAF2B-426E-4C19-A547-18E266F5DFDF}.Release|x86.ActiveCfg = Release|Any CPU
 		{0DDFAF2B-426E-4C19-A547-18E266F5DFDF}.Release|x86.Build.0 = Release|Any CPU
+		{24CABDE6-A06D-46B7-A19A-0120080A33EE}.Debug|Any CPU.ActiveCfg = Debug
+		{24CABDE6-A06D-46B7-A19A-0120080A33EE}.Debug|x64.ActiveCfg = Debug
+		{24CABDE6-A06D-46B7-A19A-0120080A33EE}.Debug|x86.ActiveCfg = Debug
+		{24CABDE6-A06D-46B7-A19A-0120080A33EE}.Release|Any CPU.ActiveCfg = Release
+		{24CABDE6-A06D-46B7-A19A-0120080A33EE}.Release|Any CPU.Build.0 = Release
+		{24CABDE6-A06D-46B7-A19A-0120080A33EE}.Release|x64.ActiveCfg = Release
+		{24CABDE6-A06D-46B7-A19A-0120080A33EE}.Release|x86.ActiveCfg = Release
+		{866128AE-852F-4458-8533-1A4D9908D8DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{866128AE-852F-4458-8533-1A4D9908D8DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{866128AE-852F-4458-8533-1A4D9908D8DA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{866128AE-852F-4458-8533-1A4D9908D8DA}.Debug|x64.Build.0 = Debug|Any CPU
+		{866128AE-852F-4458-8533-1A4D9908D8DA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{866128AE-852F-4458-8533-1A4D9908D8DA}.Debug|x86.Build.0 = Debug|Any CPU
+		{866128AE-852F-4458-8533-1A4D9908D8DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{866128AE-852F-4458-8533-1A4D9908D8DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{866128AE-852F-4458-8533-1A4D9908D8DA}.Release|x64.ActiveCfg = Release|Any CPU
+		{866128AE-852F-4458-8533-1A4D9908D8DA}.Release|x64.Build.0 = Release|Any CPU
+		{866128AE-852F-4458-8533-1A4D9908D8DA}.Release|x86.ActiveCfg = Release|Any CPU
+		{866128AE-852F-4458-8533-1A4D9908D8DA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

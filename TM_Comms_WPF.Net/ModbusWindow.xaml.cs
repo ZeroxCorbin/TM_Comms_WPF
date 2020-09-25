@@ -52,15 +52,26 @@ namespace TM_Comms_WPF
                 BdrRemoteAuto.IsEnabled = false;  
             }
 
+
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
             if (Keyboard.IsKeyDown(Key.LeftShift))
                 App.Settings.ModbusWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+
+            if (double.IsNaN(App.Settings.ModbusWindow.Left))
+            {
+                App.Settings.ModbusWindow.Left = Owner.Left;
+                App.Settings.ModbusWindow.Top = Owner.Top + Owner.Height;
+            }
 
             this.Left = App.Settings.ModbusWindow.Left;
             this.Top = App.Settings.ModbusWindow.Top;
 
             if (!CheckOnScreen.IsOnScreen(this))
             {
-                App.Settings.ModbusWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+                App.Settings.ModbusWindow.Left = Owner.Left;
+                App.Settings.ModbusWindow.Top = Owner.Top + Owner.Height;
 
                 this.Left = App.Settings.ModbusWindow.Left;
                 this.Top = App.Settings.ModbusWindow.Top;

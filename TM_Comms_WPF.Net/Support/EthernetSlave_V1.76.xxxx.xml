@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<File ID="DCD558F25AD4964BC15A77E4265AE732">
+  <Version>1</Version>
+  <FormType>TRANSMIT</FormType>
+  <CommMode>JSON</CommMode>
+  <CodeTable>
+    <Setting Item="Robot_Error" Description="Error or Not" DataType="bool" DataLength="1" Accessibility="R" Note1="Yes:1 No: 0 " WritableMode="" />
+    <Setting Item="Project_Run" Description="Project Running or Not" DataType="bool" DataLength="1" Accessibility="R" Note1="Yes:1 No: 0 " WritableMode="" />
+    <Setting Item="Project_Edit" Description="Project Editing or Not" DataType="bool" DataLength="1" Accessibility="R" Note1="Yes:1 No: 0 " WritableMode="" />
+    <Setting Item="Project_Pause" Description="Project Pause or Not" DataType="bool" DataLength="1" Accessibility="R" Note1="Yes:1 No: 0 " WritableMode="" />
+    <Setting Item="Get_Control" Description="Get Control or Not" DataType="bool" DataLength="1" Accessibility="R" Note1="Yes:1 No: 0 " WritableMode="" />
+    <Setting Item="Camera_Light" Description="Light" DataType="byte" DataLength="1" Accessibility="R/W" Note1="Enable: 1 Disable: 0 " WritableMode="" />
+    <Setting Item="Safeguard_A" Description="Safety IO (Safeguard Port A trigger)" DataType="bool" DataLength="1" Accessibility="R" Note1="Triggered: 1 Restored: 0" WritableMode="" />
+    <Setting Item="ESTOP" Description="Emergency Stop" DataType="bool" DataLength="1" Accessibility="R" Note1="Triggered: 1 Restored: 0" WritableMode="" />
+    <Setting Item="Coord_Base_Flange" Description="Cartesian coordinate w.r.t. current Base without tool" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: mm" WritableMode="" />
+    <Setting Item="Joint_Angle" Description="Joint 1 angle - Joint 6 angle" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: degree" WritableMode="" />
+    <Setting Item="Coord_Base_Tool" Description="Cartesian coordinate w.r.t. current Base with tool" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: mm" WritableMode="" />
+    <Setting Item="Coord_Robot_Flange" Description="Cartesian coordinate w.r.t. Robot Base without tool" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: mm" WritableMode="" />
+    <Setting Item="Coord_Robot_Tool" Description="Cartesian coordinate w.r.t. Robot Base with tool" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: mm" WritableMode="" />
+    <Setting Item="Touch_Coord_Base_Flange" Description="Cartesian coordinate w.r.t. current Base without tool&amp;#13;&amp;#10;(When touchstop node be triggered)" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: mm" WritableMode="" />
+    <Setting Item="Touch_Joint_Angle_Stop" Description="Joint 1 angle - Joint 6 angle&amp;#13;&amp;#10;(When touchstop node be triggered)" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: degree" WritableMode="" />
+    <Setting Item="Touch_Coord_Base_Tool" Description="Cartesian coordinate w.r.t. current Base with tool&amp;#13;&amp;#10;(When touchstop node be triggered)" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: mm" WritableMode="" />
+    <Setting Item="Touch_Coord_Robot_Flange" Description="Cartesian coordinate w.r.t. Robot Base without tool&amp;#13;&amp;#10;(When touchstop node be triggered)" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: mm" WritableMode="" />
+    <Setting Item="Touch_Coord_Robot_Tool" Description="Cartesian coordinate w.r.t. Robot Base with tool&amp;#13;&amp;#10;(When touchstop node be triggered)" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: mm" WritableMode="" />
+    <Setting Item="TCP_Name" Description="TCP Name" DataType="string" DataLength="0" Accessibility="R" Note1="" WritableMode="" />
+    <Setting Item="TCP_Value" Description="TCP Value" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: mm" WritableMode="" />
+    <Setting Item="TCP_Mass" Description="Mass (TCP Value)" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: kg" WritableMode="" />
+    <Setting Item="TCP_MOI" Description="Ixx, Iyy, Izz (Principal moments of inertia)" DataType="float" DataLength="3" Accessibility="R" Note1="" WritableMode="" />
+    <Setting Item="TCP_MCF" Description="Mass center frames with principal axes w.r.t. tool frame" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: mm" WritableMode="" />
+    <Setting Item="Base_Name" Description="Base Name" DataType="string" DataLength="0" Accessibility="R" Note1="" WritableMode="" />
+    <Setting Item="Base_Value" Description="Base Value" DataType="float" DataLength="6" Accessibility="R" Note1="" WritableMode="" />
+    <Setting Item="Project_Name" Description="Project Name" DataType="string" DataLength="0" Accessibility="R/W" Note1="" WritableMode="" />
+    <Setting Item="Project_Speed" Description="Project Running Speed " DataType="int" DataLength="1" Accessibility="R" Note1="Unit: %" WritableMode="" />
+    <Setting Item="Robot_Mode" Description="M/A Mode" DataType="int" DataLength="1" Accessibility="R" Note1="None:0, A:1; M:2" WritableMode="" />
+    <Setting Item="Stick_PlayPause" Description="Play/Pause Button" DataType="bool" DataLength="1" Accessibility="R/W" Note1="Triggered as 1 received" WritableMode="" />
+    <Setting Item="Stick_Stop" Description="Stop Button" DataType="bool" DataLength="1" Accessibility="R/W" Note1="Triggered as 1 received" WritableMode="" />
+    <Setting Item="Stick_Plus" Description="Stick+ Button" DataType="bool" DataLength="1" Accessibility="R/W" Note1="Triggered as 1 received" WritableMode="M" />
+    <Setting Item="Stick_Minus" Description="Stick- Button" DataType="bool" DataLength="1" Accessibility="R/W" Note1="Triggered as 1 received" WritableMode="M" />
+    <Setting Item="TCP_Force" Description="FX, FY, FZ" DataType="float" DataLength="3" Accessibility="R" Note1="Unit: N" WritableMode="" />
+    <Setting Item="TCP_Force3D" Description="F3D" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: N" WritableMode="" />
+    <Setting Item="TCP_Speed3D" Description="3D" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: mm/s" WritableMode="" />
+    <Setting Item="Joint_Torque" Description="Joint 1 - 6" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: mNm" WritableMode="" />
+    <Setting Item="Safety_TCP_Speed" Description="Non-Collaborative Stop Criteria: TCP Speed" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: m/s" WritableMode="" />
+    <Setting Item="Safety_TCP_Speed_HandGuide" Description="Non-Collaborative Stop Criteria: TCP Speed under hand guide mode" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: m/s" WritableMode="" />
+    <Setting Item="Safety_TCP_Force" Description="Non-Collaborative Stop Criteria: TCP Force" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: N" WritableMode="" />
+    <Setting Item="Safety_Joint_Speed" Description="Non-Collaborative Stop Criteria: Joint 1 - Joint 6 Speed" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: deg/sec" WritableMode="" />
+    <Setting Item="Safety_Joint_Torque" Description="Non-Collaborative Stop Criteria: Joint 1 - Joint 6 Torque" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: Nm" WritableMode="" />
+    <Setting Item="Safety_Joint_Angle_Min" Description="Non-Collaborative Stop Criteria: Min Joint 1 -Joint 6 angle" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: degree" WritableMode="" />
+    <Setting Item="Safety_Joint_Angle_Max" Description="Non-Collaborative Stop Criteria: Max Joint 1 -Joint 6 angle" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: degree" WritableMode="" />
+    <Setting Item="Col_TCP_Speed" Description="Collaborative Stop Criteria: TCP Speed" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: m/s" WritableMode="" />
+    <Setting Item="Col_TCP_Speed_HandGuide" Description="Collaborative Stop Criteria: TCP Speed under hand guide mode" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: m/s" WritableMode="" />
+    <Setting Item="Col_TCP_Force" Description="Collaborative Stop Criteria: TCP Force" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: N" WritableMode="" />
+    <Setting Item="Col_Joint_Speed" Description="Collaborative Stop Criteria: Joint 1 - Joint 6 Speed" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: deg/sec" WritableMode="" />
+    <Setting Item="Col_Joint_Torque" Description="Collaborative Stop Criteria: Joint 1 - Joint 6 Torque" DataType="float" DataLength="6" Accessibility="R" Note1="Unit: Nm" WritableMode="" />
+    <Setting Item="Col_Motion_Speed" Description="Collaborative Speed: Motion Speed" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: mm/s" WritableMode="" />
+    <Setting Item="Col_PTP_Speed" Description="Collaborative Speed: PTP Speed" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: %" WritableMode="" />
+    <Setting Item="Col_Deceleration_Time" Description="Collaborative Deceleration Time" DataType="int" DataLength="1" Accessibility="R" Note1="Unit: ms" WritableMode="" />
+    <Setting Item="Col_Contact_Area" Description="Collaborative Minimum possible contact area" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: cm x cm" WritableMode="" />
+    <Setting Item="GSensor" Description="Safety Setting: Enable Gsensor" DataType="bool" DataLength="1" Accessibility="R" Note1="" WritableMode="" />
+    <Setting Item="ControlBox_SN" Description="Serial Number of Control Box" DataType="string" DataLength="0" Accessibility="R" Note1="" WritableMode="" />
+    <Setting Item="Current_Time" Description="Current Time" DataType="string" DataLength="0" Accessibility="R" Note1="Format: [YYYY]-[MM]-[DD]T[hh]:[mm]:[ss.sss]" WritableMode="" />
+    <Setting Item="Connect_Number" Description="IPC Connection Number" DataType="int" DataLength="1" Accessibility="R" Note1="" WritableMode="" />
+    <Setting Item="TMflow_Version" Description="TMflow Version" DataType="string" DataLength="0" Accessibility="R" Note1="X.XX.XXXX" WritableMode="" />
+    <Setting Item="EtherCAT_Status" Description="EtherCAT package losing status" DataType="int" DataLength="1" Accessibility="R" Note1="OK: 0 Warning: 1 Error: 2 " WritableMode="" />
+    <Setting Item="Camera_Status" Description="Camera linking(USB) status" DataType="int" DataLength="1" Accessibility="R" Note1="OK: 0 Warning: 1 Error: 2 " WritableMode="" />
+    <Setting Item="Compensation_Signal" Description="Compensation of flywheel signal" DataType="int" DataLength="1" Accessibility="R" Note1="OK: 0 Warning: 1 Error: 2 " WritableMode="" />
+    <Setting Item="Harmonic_Life" Description="Harmonic driver remaining life" DataType="int" DataLength="1" Accessibility="R" Note1="OK: 0 Warning: 1 Error: 2 " WritableMode="" />
+    <Setting Item="Connect_Number_Limit" Description="User Connect Limit" DataType="int" DataLength="1" Accessibility="R" Note1="0: No limit " WritableMode="" />
+    <Setting Item="Error_Code" Description="Last Error Code" DataType="int" DataLength="1" Accessibility="R" Note1="Hexadecimal" WritableMode="" />
+    <Setting Item="Error_Content" Description="Last Error " DataType="string" DataLength="0" Accessibility="R" Note1="" WritableMode="" />
+    <Setting Item="Error_Time" Description="Last Error Time" DataType="string" DataLength="0" Accessibility="R" Note1="Format: [YYYY]-[MM]-[DD]T[hh]:[mm]:[ss.sss]" WritableMode="" />
+    <Setting Item="Controller_Temperature" Description="Controller Temperature" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: Celsius " WritableMode="" />
+    <Setting Item="Manipulator_Voltage" Description="Manipulator Voltage" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: Voltage" WritableMode="" />
+    <Setting Item="Manipulator_Consumption" Description="Manipulator Power Consumption" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: Watt" WritableMode="" />
+    <Setting Item="Manipulator_Current" Description="Manipulator Current" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: Ampere" WritableMode="" />
+    <Setting Item="ControlBox_IO_Current" Description="Control Box IO Current" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: mA" WritableMode="" />
+    <Setting Item="End_IO_Current" Description="End Module IO Current" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: mA" WritableMode="" />
+    <Setting Item="Robot_Light" Description="Robot Light" DataType="int" DataLength="1" Accessibility="R" Note1="0: Light off, when the emergency stop button is pressed.&amp;#13;&amp;#10;1: Solid Red, fatal error.&amp;#13;&amp;#10;2: Flashing Red, Robot is initializing.&amp;#13;&amp;#10;3: Solid Blue, standby in Auto Mode.&amp;#13;&amp;#10;4. Flashing Blue, in Auto Mode.&amp;#13;&amp;#10;5: Solid Green, standby in Manual Mode.&amp;#13;&amp;#10;6. Flashing Green, in Manual Mode.&amp;#13;&amp;#10;9: Alternating Blue&amp;Red, Auto Mode error.&amp;#13;&amp;#10;10: Alternating Green&amp;Red, Manual Mode error.&amp;#13;&amp;#10;13. Alternating Purple&amp;Green, in Manual Mode (Safeguard Port B trigger).&amp;#13;&amp;#10;14. Alternating Purple&amp;Blue, in Auto Mode (Safeguard Port B trigger).&amp;#13;&amp;#10;17. Alternating White&amp;Green, in Manual Mode &amp; Reduced Space.&amp;#13;&amp;#10;18. Alternating White&amp;Blue, in Auto Mode &amp; Reduced Space.&amp;#13;&amp;#10;19. Flashing light blue, representing that it enters the Safe Startup Mode." WritableMode="" />
+    <Setting Item="Ctrl_DO0" Description="Digital Output 0" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DO1" Description="Digital Output 1" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DO2" Description="Digital Output 2" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DO3" Description="Digital Output 3" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DO4" Description="Digital Output 4" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DO5" Description="Digital Output 5" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DO6" Description="Digital Output 6" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DO7" Description="Digital Output 7" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DO8" Description="Digital Output 8" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DO9" Description="Digital Output 9" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DO10" Description="Digital Output 10" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DO11" Description="Digital Output 11" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DO12" Description="Digital Output 12" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DO13" Description="Digital Output 13" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DO14" Description="Digital Output 14" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DO15" Description="Digital Output 15" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DI0" Description="Digital Input 0" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DI1" Description="Digital Input 1" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DI2" Description="Digital Input 2" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DI3" Description="Digital Input 3" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DI4" Description="Digital Input 4" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DI5" Description="Digital Input 5" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DI6" Description="Digital Input 6" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DI7" Description="Digital Input 7" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DI8" Description="Digital Input 8" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DI9" Description="Digital Input 9" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DI10" Description="Digital Input 10" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DI11" Description="Digital Input 11" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DI12" Description="Digital Input 12" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DI13" Description="Digital Input 13" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DI14" Description="Digital Input 14" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_DI15" Description="Digital Input 15" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ctrl_AO0" Description="Analog Output 0" DataType="float" DataLength="1" Accessibility="R/W" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ctrl_AO1" Description="Analog Output 1" DataType="float" DataLength="1" Accessibility="R/W" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ctrl_AI0" Description="Analog Input 0" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ctrl_AI1" Description="Analog Input 1" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="End_DO0" Description="End Module Digital Output 0" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="End_DO1" Description="End Module Digital Output 1" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="End_DO2" Description="End Module Digital Output 2" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="End_DO3" Description="End Module Digital Output 3" DataType="byte" DataLength="1" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="End_DI0" Description="End Module Digital Input 0" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="End_DI1" Description="End Module Digital Input 1" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="End_DI2" Description="End Module Digital Input 2" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="End_DI3" Description="End Module Digital Input 3" DataType="byte" DataLength="1" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="End_AO0" Description="End Module Analog Output 0" DataType="float" DataLength="1" Accessibility="R/W" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="End_AI0" Description="End Module Analog Input 0" DataType="float" DataLength="1" Accessibility="R" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ext0_DO" Description="External Module 0 Digital Output" DataType="byte" DataLength="128" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext0_DO_Mask" Description="External Module 0 Digital Output Mask" DataType="byte" DataLength="128" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext0_DI" Description="External Module 0 Digital Input" DataType="byte" DataLength="128" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext0_AO" Description="External Module 0 Analog Output" DataType="float" DataLength="8" Accessibility="R/W" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ext0_AO_Mask" Description="External Module 0 Analog Output Mask" DataType="byte" DataLength="8" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext0_AI" Description="External Module 0 Analog Input" DataType="float" DataLength="8" Accessibility="R" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ext1_DO" Description="External Module 1 Digital Output" DataType="byte" DataLength="128" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext1_DO_Mask" Description="External Module 1 Digital Output Mask" DataType="byte" DataLength="128" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext1_DI" Description="External Module 1 Digital Input" DataType="byte" DataLength="128" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext1_AO" Description="External Module 1 Analog Output" DataType="float" DataLength="8" Accessibility="R/W" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ext1_AO_Mask" Description="External Module 1 Analog Output Mask" DataType="byte" DataLength="8" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext1_AI" Description="External Module 1 Analog Input" DataType="float" DataLength="8" Accessibility="R" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ext2_DO" Description="External Module 2 Digital Output" DataType="byte" DataLength="128" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext2_DO_Mask" Description="External Module 2 Digital Output Mask" DataType="byte" DataLength="128" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext2_DI" Description="External Module 2 Digital Input" DataType="byte" DataLength="128" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext2_AO" Description="External Module 2 Analog Output" DataType="float" DataLength="8" Accessibility="R/W" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ext2_AO_Mask" Description="External Module 2 Analog Output Mask" DataType="byte" DataLength="8" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext2_AI" Description="External Module 2 Analog Input" DataType="float" DataLength="8" Accessibility="R" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ext3_DO" Description="External Module 3 Digital Output" DataType="byte" DataLength="128" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext3_DO_Mask" Description="External Module 3 Digital Output Mask" DataType="byte" DataLength="128" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext3_DI" Description="External Module 3 Digital Input" DataType="byte" DataLength="128" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext3_AO" Description="External Module 3 Analog Output" DataType="float" DataLength="8" Accessibility="R/W" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ext3_AO_Mask" Description="External Module 3 Analog Output Mask" DataType="byte" DataLength="8" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext3_AI" Description="External Module 3 Analog Input" DataType="float" DataLength="8" Accessibility="R" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ext4_DO" Description="External Module 4 Digital Output" DataType="byte" DataLength="128" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext4_DO_Mask" Description="External Module 4 Digital Output Mask" DataType="byte" DataLength="128" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext4_DI" Description="External Module 4 Digital Input" DataType="byte" DataLength="128" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext4_AO" Description="External Module 4 Analog Output" DataType="float" DataLength="8" Accessibility="R/W" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ext4_AO_Mask" Description="External Module 4 Analog Output Mask" DataType="byte" DataLength="8" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext4_AI" Description="External Module 4 Analog Input" DataType="float" DataLength="8" Accessibility="R" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ext5_DO" Description="External Module 5 Digital Output" DataType="byte" DataLength="128" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext5_DO_Mask" Description="External Module 5 Digital Output Mask" DataType="byte" DataLength="128" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext5_DI" Description="External Module 5 Digital Input" DataType="byte" DataLength="128" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext5_AO" Description="External Module 5 Analog Output" DataType="float" DataLength="8" Accessibility="R/W" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ext5_AO_Mask" Description="External Module 5 Analog Output Mask" DataType="byte" DataLength="8" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext5_AI" Description="External Module 5 Analog Input" DataType="float" DataLength="8" Accessibility="R" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ext6_DO" Description="External Module 6 Digital Output" DataType="byte" DataLength="128" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext6_DO_Mask" Description="External Module 6 Digital Output Mask" DataType="byte" DataLength="128" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext6_DI" Description="External Module 6 Digital Input" DataType="byte" DataLength="128" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext6_AO" Description="External Module 6 Analog Output" DataType="float" DataLength="8" Accessibility="R/W" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ext6_AO_Mask" Description="External Module 6 Analog Output Mask" DataType="byte" DataLength="8" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext6_AI" Description="External Module 6 Analog Input" DataType="float" DataLength="8" Accessibility="R" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ext7_DO" Description="External Module 7 Digital Output" DataType="byte" DataLength="128" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext7_DO_Mask" Description="External Module 7 Digital Output Mask" DataType="byte" DataLength="128" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext7_DI" Description="External Module 7 Digital Input" DataType="byte" DataLength="128" Accessibility="R" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext7_AO" Description="External Module 7 Analog Output" DataType="float" DataLength="8" Accessibility="R/W" Note1="Unit: Volt" WritableMode="" />
+    <Setting Item="Ext7_AO_Mask" Description="External Module 7 Analog Output Mask" DataType="byte" DataLength="8" Accessibility="R/W" Note1="High: 1 Low: 0" WritableMode="" />
+    <Setting Item="Ext7_AI" Description="External Module 7 Analog Input" DataType="float" DataLength="8" Accessibility="R" Note1="Unit: Volt" WritableMode="" />
+  </CodeTable>
+</File>

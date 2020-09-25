@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Transactions;
 using System.Windows;
 using System.Xml.Serialization;
 using TM_Comms_WPF;
@@ -42,9 +44,9 @@ namespace ApplicationSettingsNS
         [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
         public partial class ApplicationSettings
         {
-            public string RobotIP { get; set; } = "192.168.1.1";
+            public string RobotIP { get; set; } = "Enter a valid IP.";
 
-            public TMflowVersions Version { get; set; } = TMflowVersions.V1_80_xxxx;
+            public TMflowVersions Version { get; set; } = TMflowVersions.V1_76_xxxx;
 
             public string[] ModbusComboBoxIndices { get; set; } = {
                 "Current Base With Tool X",
@@ -78,10 +80,10 @@ namespace ApplicationSettingsNS
 
             public class WindowSettings
             {
-                public double Left { get; set; } = 0;
-                public double Top { get; set; } = 0;
-                public double Width { get; set; } = 1024;
-                public double Height { get; set; } = 768;
+                public double Left { get; set; } = double.NaN;
+                public double Top { get; set; } = double.NaN;
+                public double Width { get; set; } = double.NaN;
+                public double Height { get; set; } = double.NaN;
                 public WindowState WindowState { get; set; } = WindowState.Normal;
             }
         }

@@ -29,16 +29,25 @@ namespace TM_Comms_WPF
         public Port8080Window()
         {
             InitializeComponent();
-
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
             if (Keyboard.IsKeyDown(Key.LeftShift))
                 App.Settings.Port8080Window = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+
+            if (double.IsNaN(App.Settings.Port8080Window.Left))
+            {
+                App.Settings.Port8080Window.Left = Owner.Left;
+                App.Settings.Port8080Window.Top = Owner.Top + Owner.Height;
+            }
 
             this.Left = App.Settings.Port8080Window.Left;
             this.Top = App.Settings.Port8080Window.Top;
 
             if (!CheckOnScreen.IsOnScreen(this))
             {
-                App.Settings.Port8080Window = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+                App.Settings.Port8080Window.Left = Owner.Left;
+                App.Settings.Port8080Window.Top = Owner.Top + Owner.Height;
 
                 this.Left = App.Settings.Port8080Window.Left;
                 this.Top = App.Settings.Port8080Window.Top;

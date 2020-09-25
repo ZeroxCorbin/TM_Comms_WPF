@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -31,29 +32,46 @@ namespace TM_Comms_WPF
                 App.Settings.Port8080Window = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
             }
 
-            this.Left = App.Settings.MainWindow.Left;
-            this.Top = App.Settings.MainWindow.Top;
-
-            if (!CheckOnScreen.IsOnScreen(this))
+            if (double.IsNaN(App.Settings.MainWindow.Left))
+                this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            else
             {
-                App.Settings.MainWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
-
                 this.Left = App.Settings.MainWindow.Left;
                 this.Top = App.Settings.MainWindow.Top;
+
+                if (!CheckOnScreen.IsOnScreen(this))
+                    this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             }
 
+           
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (WindowStartupLocation == WindowStartupLocation.CenterScreen)
+            {
+                WindowStartupLocation = WindowStartupLocation.Manual;
+                IsLoading = false;
+                this.Top /= 2;
+            }
             IsLoading = false;
         }
-
+        private bool IPValid { get; set; } = false;
         private void TxtRobotIP_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            if (!Regex.IsMatch(txtRobotIP.Text, @"^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"))
+            {
+                IPValid = false;
+                txtRobotIP.Background = Brushes.LightSalmon;
+                return;
+            }
             if (!IPAddress.TryParse(txtRobotIP.Text, out IPAddress ip))
             {
+                IPValid = false;
                 txtRobotIP.Background = Brushes.LightSalmon;
                 return;
             }
 
+            IPValid = true;
             App.Settings.RobotIP = ip.ToString();
 
             txtRobotIP.Background = new SolidColorBrush(Color.FromArgb(255, 0, 255, 255));
@@ -64,6 +82,10 @@ namespace TM_Comms_WPF
             switch ((TMflowVersions)CmbSystemVersions.SelectedItem)
             {
                 case TMflowVersions.V1_68_xxxx:
+                    btnPort8080Window.IsEnabled = true;
+                    btnEthernetSlaveWindow.IsEnabled = false;
+                    break;
+                case TMflowVersions.V1_72_xxxx:
                     btnPort8080Window.IsEnabled = true;
                     btnEthernetSlaveWindow.IsEnabled = false;
                     break;
@@ -102,6 +124,10 @@ namespace TM_Comms_WPF
         private ListenNodeWindow ListenNodeWindow { get; set; } = null;
         private void BtnListenNodeWindow_Click(object sender, RoutedEventArgs e)
         {
+            if (!IPValid)
+            {
+                return;
+            }
             if (ListenNodeWindow == null)
             {
                 ListenNodeWindow = new ListenNodeWindow();
@@ -121,6 +147,10 @@ namespace TM_Comms_WPF
         private EthernetSlaveWindow EthernetSlaveWindow { get; set; } = null;
         private void BtnEthernetSlaveWindow_Click(object sender, RoutedEventArgs e)
         {
+            if (!IPValid)
+            {
+                return;
+            }
             if (EthernetSlaveWindow == null)
             {
                 EthernetSlaveWindow = new EthernetSlaveWindow();
@@ -140,6 +170,10 @@ namespace TM_Comms_WPF
         private Port8080Window Port8080Window { get; set; } = null;
         private void BtnPort8080Window_Click(object sender, RoutedEventArgs e)
         {
+            if (!IPValid)
+            {
+                return;
+            }
             if (Port8080Window == null)
             {
                 Port8080Window = new Port8080Window();
@@ -159,6 +193,10 @@ namespace TM_Comms_WPF
         private ModbusWindow ModbusWindow { get; set; } = null;
         private void BtnModbusWindow_Click(object sender, RoutedEventArgs e)
         {
+            if (!IPValid)
+            {
+                return;
+            }
             if (ModbusWindow == null)
             {
                 ModbusWindow = new ModbusWindow();
@@ -191,8 +229,8 @@ namespace TM_Comms_WPF
             EthernetSlaveWindow?.Close();
             ModbusWindow?.Close();
             ListenNodeWindow?.Close();
-
-            ApplicationSettings_Serializer.Save("appsettings.xml", App.Settings);
         }
+
+
     }
 }

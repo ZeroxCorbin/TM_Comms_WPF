@@ -4,6 +4,7 @@ using SocketManagerNS;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -17,38 +18,68 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace TM_Comms_WPF
 {
     public partial class EthernetSlaveWindow : Window
     {
-
         private EthernetSlave EthernetSlave { get; set; }
 
         private bool IsLoading { get; set; } = true;
-        public EthernetSlaveWindow()
+        public EthernetSlaveWindow() => InitializeComponent();
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            InitializeComponent();
+            string xmlPath = null;
+            if (App.Settings.Version == TMflowVersions.V1_76_xxxx)
+                xmlPath = "Support\\EthernetSlave_V1.76.xxxx.xml";
+            if (App.Settings.Version == TMflowVersions.V1_80_xxxx)
+                xmlPath = "Support\\EthernetSlave_V1.80.xxxx.xml";
+
+            if (xmlPath != null)
+            {
+                EthernetSlaveXMLData.File data = null;
+                XmlSerializer serializer = new XmlSerializer(typeof(EthernetSlaveXMLData.File));
+                using (StreamReader sr = new StreamReader(xmlPath))
+                {
+                    data = (EthernetSlaveXMLData.File)serializer.Deserialize(sr);
+                }
+                if (data != null)
+                {
+                    foreach(EthernetSlaveXMLData.FileSetting setting in data.CodeTable)
+                    {
+                        if (setting.Accessibility == "R/W")
+                            LsvWritableValues.Items.Add(setting.Item);
+                    }
+
+                }
+            }
+
 
             if (Keyboard.IsKeyDown(Key.LeftShift))
                 App.Settings.EthernetSlaveWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+
+            if (double.IsNaN(App.Settings.EthernetSlaveWindow.Left))
+            {
+                App.Settings.EthernetSlaveWindow.Left = Owner.Left;
+                App.Settings.EthernetSlaveWindow.Top = Owner.Top + Owner.Height;
+            }
 
             this.Left = App.Settings.EthernetSlaveWindow.Left;
             this.Top = App.Settings.EthernetSlaveWindow.Top;
 
             if (!CheckOnScreen.IsOnScreen(this))
             {
-                App.Settings.EthernetSlaveWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+                App.Settings.EthernetSlaveWindow.Left = Owner.Left;
+                App.Settings.EthernetSlaveWindow.Top = Owner.Top + Owner.Height;
 
                 this.Left = App.Settings.EthernetSlaveWindow.Left;
                 this.Top = App.Settings.EthernetSlaveWindow.Top;
             }
 
-            EthernetSlave = GetESNode();
-
             IsLoading = false;
         }
-
         private EthernetSlave GetESNode()
         {
             EthernetSlave.HEADERS h;
@@ -76,8 +107,6 @@ namespace TM_Comms_WPF
         }
         private void BtnSend_Click(object sender, RoutedEventArgs e)
         {
-            RectCommandHasResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
-
             EthernetSlave = GetESNode();
             //Socket.Flush();
             Socket?.Write(EthernetSlave.Message);
@@ -148,8 +177,6 @@ namespace TM_Comms_WPF
                 Dispatcher.BeginInvoke(DispatcherPriority.Normal,
                         (Action)(() =>
                         {
-                            RectCommandHasResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
-
                             BtnConnect.Content = "Connect";
                             BtnConnect.Tag = null;
                         }));
@@ -172,8 +199,6 @@ namespace TM_Comms_WPF
                 Dispatcher.BeginInvoke(DispatcherPriority.Normal,
                         (Action)(() =>
                         {
-                            RectCommandHasResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
-
                             BtnConnect.Content = "Connect";
                             BtnConnect.Tag = null;
                         }));
@@ -224,13 +249,18 @@ namespace TM_Comms_WPF
             if (!PackRate.IsFull)
                 updateRate = (int)(SliderValue / time);
             else
+            {
                 updateRate = (int)(SliderValue / PackRate.Average);
 
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                    (Action)(() =>
-                    {
-                        TxtAverageMessage.Text = PackRate.Average.ToString("# ms");
-                    }));
+                Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                (Action)(() =>
+                {
+                    TxtAverageMessage.Text = (1.0 / (PackRate.Average / 1000.0)).ToString("# Hz");
+                }));
+            }
+
+
+
 
             if (PackRate.Count < updateRate && Regex.IsMatch(message, @"^[$]\w*,\w*,[0-9]"))
                 return;
@@ -242,7 +272,6 @@ namespace TM_Comms_WPF
                     {
                         if (!Regex.IsMatch(message, @"^[$]\w*,\w*,[0-9],"))
                         {
-                            RectCommandHasResponse.Fill = new SolidColorBrush(Color.FromRgb(0, 255, 0));
                             TxtCommandResponse.Text += message + "\r\n";
                             TxtCommandResponse.ScrollToEnd();
                         }

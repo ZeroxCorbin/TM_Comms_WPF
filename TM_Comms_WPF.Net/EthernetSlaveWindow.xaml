@@ -5,77 +5,168 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF"
         mc:Ignorable="d"
-        Title="Ethernet Slave" ResizeMode="NoResize" WindowStartupLocation="Manual" SizeToContent="WidthAndHeight" Closing="Window_Closing" LocationChanged="Window_LocationChanged" Icon="Support/favicon.ico">
+        Title="Ethernet Slave" ResizeMode="CanResizeWithGrip" WindowStartupLocation="Manual" Closing="Window_Closing" LocationChanged="Window_LocationChanged" Icon="Support/favicon.ico" Loaded="Window_Loaded" Height="768" Width="1024">
 
     <Grid>
-        <StackPanel>
-            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="520"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
 
-                    <Button x:Name="BtnConnect" Content="Connect" Width="86" Click="BtnConnect_Click" BorderBrush="{x:Null}"/>
-                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="3" VerticalAlignment="Top">
-                        <StackPanel Orientation="Horizontal">
-                            <StackPanel>
-                                <Label Content="Display Rate" Padding="0" HorizontalContentAlignment="Center" Margin="3,0"/>
-                                <TextBox x:Name="TxtDisplayRate" Width="64" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="3,0" BorderBrush="{x:Null}"/>
-                            </StackPanel>
-                            <Slider x:Name="SldUpdateFreq" Maximum="1000" Minimum="10" SmallChange="10" TickFrequency="10" LargeChange="100" MinWidth="180" Panel.ZIndex="-7" TickPlacement="TopLeft" Value="500" ValueChanged="SldUpdateFreq_ValueChanged"/>
-                            <StackPanel>
-                                <Label Content="Avg./Message" Padding="0" HorizontalContentAlignment="Center" Margin="3,0"/>
-                                <TextBox x:Name="TxtAverageMessage" MinWidth="64" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="3,0" BorderBrush="{x:Null}"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
-            </Border>
-            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,3" >
-                        <StackPanel>
-                            <Label Content="Message Type" Padding="0" HorizontalContentAlignment="Center" Margin="3,0"/>
-                            <ComboBox x:Name="cmbESDataType" IsReadOnly="True" SelectedIndex="0" SelectionChanged="CmbESDataType_SelectionChanged_1" Margin="3,0">
-                                <ComboBoxItem Content="TMSVR (Read/Write)" Tag="0"/>
-                                <ComboBoxItem Content="CPERR (Error)" Tag="1"/>
-                            </ComboBox>
-                        </StackPanel>
-                        <StackPanel>
-                            <Label Content="Trans. ID" Padding="0" HorizontalContentAlignment="Center" Margin="3,0"/>
-                            <TextBox x:Name="txtESTransactionID" Height="22" Text="local" MinWidth="68" TextChanged="TxtESScriptData_TextChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" LostFocus="TxtESTransactionID_LostFocus" Margin="3,0"/>
-                        </StackPanel>
-                        <StackPanel>
-                            <Label Content="Data Packet Format" Padding="0" HorizontalContentAlignment="Center" Margin="3,0"/>
-                            <ComboBox x:Name="cmbESDataMode" Width="120" IsReadOnly="True" SelectedIndex="0" SelectionChanged="CmbESDataMode_SelectionChanged" Margin="3,0">
-                                <ComboBoxItem Content="String" Tag="0"/>
-                                <ComboBoxItem Content="JSON" Tag="1"/>
-                                <ComboBoxItem Content="String_Response" Tag="2"/>
-                            </ComboBox>
-                        </StackPanel>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBox x:Name="TxtCommandData" Text="Stick_PlayPause=1" TextChanged="TxtESScriptData_TextChanged" Height="72" Width="840" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="3,0"/>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
-                <StackPanel Orientation="Horizontal">
-                    <TextBox x:Name="TxtCommand" IsReadOnly="True" Height="72" Width="367" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="3,0"/>
-                    <Button x:Name="BtnSend" Content="Send" Height="48" Width="86" Click="BtnSend_Click" Margin="3,0" BorderBrush="{x:Null}"/>
-                    <Rectangle x:Name="RectCommandHasResponse" Fill="Yellow"  Stroke="Black" Width="7" Margin="3,0,0,0"/>
-                    <TextBox x:Name="TxtCommandResponse" IsReadOnly="True" Height="72" Width="367" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,0,3,0" />
-                </StackPanel>
-            </Border>
-            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
-                <StackPanel Orientation="Horizontal">
-                    <TextBox x:Name="TxtSocketResponse" IsReadOnly="True" Width="840" MaxHeight="512" TextWrapping="WrapWithOverflow" VerticalScrollBarVisibility="Auto" Margin="3,0" />
-                </StackPanel>
-            </Border>
-        </StackPanel>
+        <Border Grid.Row="0" Grid.Column="0" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="34"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Content="Ethernet Slave" FontSize="18" HorizontalContentAlignment="Center">
+                    <Label.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF4c88d6" Offset="0"/>
+                            <GradientStop Color="White" Offset="0.3"/>
+                        </LinearGradientBrush>
+                    </Label.Background>
+                </Label>
 
+                    <Button Grid.Row="1" x:Name="BtnConnect" Content="Connect" Click="BtnConnect_Click" Width="90" BorderBrush="{x:Null}" />
 
+            
+            </Grid>
+        </Border>
 
+        <Border Grid.Row="1" Grid.Column="0" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="34"/>
+                    <RowDefinition Height="46"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Content="Message Builder" FontSize="18" HorizontalContentAlignment="Center">
+                    <Label.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF4c88d6" Offset="0"/>
+                            <GradientStop Color="White" Offset="0.3"/>
+                        </LinearGradientBrush>
+                    </Label.Background>
+                </Label>
+                <Grid Grid.Row="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Grid.Column="1" Content="Message Type" Padding="5,3"  HorizontalContentAlignment="Center"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1" x:Name="cmbESDataType" IsReadOnly="True" SelectedIndex="0" SelectionChanged="CmbESDataType_SelectionChanged_1">
+                            <ComboBoxItem Content="TMSVR" Tag="0"/>
+                            <ComboBoxItem Content="CPERR" Tag="1"/>
+                        </ComboBox>
+                        <Label Grid.Row="0" Grid.Column="2" Content="Trans. ID" Padding="5,3"  HorizontalContentAlignment="Center" />
+                        <TextBox Grid.Row="1" Grid.Column="2" x:Name="txtESTransactionID" Text="local" TextChanged="TxtESScriptData_TextChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" LostFocus="TxtESTransactionID_LostFocus" Background="#19FFFF00"/>
+                        <Label Grid.Row="0" Grid.Column="3" Content="Message Format" Padding="5,3"  HorizontalContentAlignment="Center"/>
+                        <ComboBox Grid.Row="1" Grid.Column="3" x:Name="cmbESDataMode" IsReadOnly="True" SelectedIndex="0" SelectionChanged="CmbESDataMode_SelectionChanged">
+                            <ComboBoxItem Content="String" Tag="0"/>
+                            <ComboBoxItem Content="JSON" Tag="1"/>
+                            <ComboBoxItem Content="String_Response" Tag="2"/>
+                        </ComboBox>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="22"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="22"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" Content="Writable Items" Padding="5,3" HorizontalContentAlignment="Center"/>
+                    <ListView Grid.Row="1" Grid.Column="0" Grid.RowSpan="4" x:Name="LsvWritableValues" />
+                    <Label Grid.Row="0" Grid.Column="1" Content="List of Items to Write ( Item=Value )" Padding="5,3" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtCommandData" Text="Stick_PlayPause=1" TextChanged="TxtESScriptData_TextChanged" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#19FFFF00"/>
+                    <Label Grid.Row="2" Grid.Column="1" Content="Message to Send" Padding="5,3" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtCommand" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#19000000"/>
+                    <Button Grid.Row="4" Grid.Column="1" x:Name="BtnSend" Content="Send Message" Width="90" Height="26" Click="BtnSend_Click" Margin="3,0" BorderBrush="{x:Null}"/>
+                </Grid>
+            </Grid>
+        </Border>
+     
+        <Border Grid.Row="2" Grid.Column="0" BorderThickness="1" BorderBrush="Black" CornerRadius="3" Padding="3" Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="34"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Content="Response Messages" FontSize="18" HorizontalContentAlignment="Center">
+                    <Label.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF4c88d6" Offset="0"/>
+                            <GradientStop Color="White" Offset="0.3"/>
+                        </LinearGradientBrush>
+                    </Label.Background>
+                </Label>
+                <TextBox Grid.Row="1" x:Name="TxtCommandResponse" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="#19000000"/>
+            </Grid>
+        </Border>
+       
+        <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
+            <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="34"/>
+                <RowDefinition Height="64"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+                <Label Grid.Row="0" Content="Data Table Items and Values (125 Hz)" FontSize="18" HorizontalContentAlignment="Center">
+                    <Label.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF4c88d6" Offset="0"/>
+                            <GradientStop Color="White" Offset="0.3"/>
+                        </LinearGradientBrush>
+                    </Label.Background>
+                </Label>
+                <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="3">
 
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
 
+                        <Label Grid.Row="0" Grid.Column="0" Content="Display Rate" Padding="5,3" HorizontalContentAlignment="Center" />
+                        <TextBox Grid.Row="1" Grid.Column="0" x:Name="TxtDisplayRate" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" BorderBrush="{x:Null}"/>
 
+                        <Slider Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="SldUpdateFreq" Maximum="1000" Minimum="1" SmallChange="10" TickFrequency="100" LargeChange="100" Panel.ZIndex="-7" TickPlacement="TopLeft" Value="500" ValueChanged="SldUpdateFreq_ValueChanged"/>
+
+                        <Label Grid.Row="0" Grid.Column="2" Content="Message Frquency" Padding="5,3" HorizontalContentAlignment="Center" />
+                        <TextBox Grid.Row="1" Grid.Column="2" x:Name="TxtAverageMessage" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="3,0" BorderBrush="{x:Null}"/>
+
+                    </Grid>
+                </Border>
+                <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="3">
+
+                    <TextBox x:Name="TxtSocketResponse" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Background="#19000000" TextWrapping="Wrap" />
+                </Border>
+            </Grid>
+        </Border>
 
     </Grid>
 
