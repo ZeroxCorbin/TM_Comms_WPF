@@ -48,18 +48,26 @@ namespace TM_Comms_WPF
             {
                 App.Settings.ListenNodeWindow.Left = Owner.Left;
                 App.Settings.ListenNodeWindow.Top = Owner.Top + Owner.Height;
+                App.Settings.ListenNodeWindow.Height = 768;
+                App.Settings.ListenNodeWindow.Width = 1024;
             }
 
             this.Left = App.Settings.ListenNodeWindow.Left;
             this.Top = App.Settings.ListenNodeWindow.Top;
+            this.Height = App.Settings.ListenNodeWindow.Height;
+            this.Width = App.Settings.ListenNodeWindow.Width;
 
             if (!CheckOnScreen.IsOnScreen(this))
             {
                 App.Settings.ListenNodeWindow.Left = Owner.Left;
                 App.Settings.ListenNodeWindow.Top = Owner.Top + Owner.Height;
+                App.Settings.ListenNodeWindow.Height = 768;
+                App.Settings.ListenNodeWindow.Width = 1024;
 
                 this.Left = App.Settings.ListenNodeWindow.Left;
                 this.Top = App.Settings.ListenNodeWindow.Top;
+                this.Height = App.Settings.ListenNodeWindow.Height;
+                this.Width = App.Settings.ListenNodeWindow.Width;
             }
 
             IsLoading = false;

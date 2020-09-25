@@ -50,7 +50,15 @@ namespace TM_Comms_WPF
                     foreach(EthernetSlaveXMLData.FileSetting setting in data.CodeTable)
                     {
                         if (setting.Accessibility == "R/W")
-                            LsvWritableValues.Items.Add(setting.Item);
+                        {
+                            ListViewItem lvi = new ListViewItem()
+                            {
+                                Content = setting.Item
+                            };
+                            lvi.MouseDoubleClick += Lvi_MouseDoubleClick;
+                            LsvWritableValues.Items.Add(lvi);
+                        }
+                           
                     }
 
                 }
@@ -64,22 +72,56 @@ namespace TM_Comms_WPF
             {
                 App.Settings.EthernetSlaveWindow.Left = Owner.Left;
                 App.Settings.EthernetSlaveWindow.Top = Owner.Top + Owner.Height;
+                App.Settings.EthernetSlaveWindow.Height = 768;
+                App.Settings.EthernetSlaveWindow.Width = 1024;
             }
 
             this.Left = App.Settings.EthernetSlaveWindow.Left;
             this.Top = App.Settings.EthernetSlaveWindow.Top;
+            this.Height = App.Settings.EthernetSlaveWindow.Height;
+            this.Width = App.Settings.EthernetSlaveWindow.Width;
 
             if (!CheckOnScreen.IsOnScreen(this))
             {
                 App.Settings.EthernetSlaveWindow.Left = Owner.Left;
                 App.Settings.EthernetSlaveWindow.Top = Owner.Top + Owner.Height;
+                App.Settings.EthernetSlaveWindow.Height = 768;
+                App.Settings.EthernetSlaveWindow.Width = 1024;
 
                 this.Left = App.Settings.EthernetSlaveWindow.Left;
                 this.Top = App.Settings.EthernetSlaveWindow.Top;
+                this.Height = App.Settings.EthernetSlaveWindow.Height;
+                this.Width = App.Settings.EthernetSlaveWindow.Width;
             }
-
             IsLoading = false;
         }
+
+        private void Lvi_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ListViewItem tvi = (ListViewItem)sender;
+            string insert = "";
+
+            if (TxtScript.SelectionStart == TxtScript.Text.Length)
+            {
+                if (TxtScript.SelectionStart != 0)
+                    if (TxtScript.Text[TxtScript.SelectionStart - 1] != '\n')
+                        insert += "\r\n";
+            }
+            else if (TxtScript.Text[TxtScript.SelectionStart] == '\r')
+            {
+                if (TxtScript.SelectionStart != 0)
+                    if (TxtScript.Text[TxtScript.SelectionStart - 1] != '\n')
+                        insert += "\r\n";
+            }
+
+
+            insert += (string)tvi.Content;
+            int start = TxtScript.SelectionStart;
+            TxtScript.Text = TxtScript.Text.Insert(TxtScript.SelectionStart, insert);
+
+            TxtScript.SelectionStart = start + insert.Length;
+        }
+
         private EthernetSlave GetESNode()
         {
             EthernetSlave.HEADERS h;
@@ -99,12 +141,13 @@ namespace TM_Comms_WPF
             else
                 m = EthernetSlave.MODES.STRING;
 
-            EthernetSlave node = new EthernetSlave(TxtCommandData.Text, h, txtESTransactionID.Text, m);
+            EthernetSlave node = new EthernetSlave(TxtScript.Text, h, TxtTransactionID.Text, m);
 
             TxtCommand.Text = node.Message;
 
             return node;
         }
+
         private void BtnSend_Click(object sender, RoutedEventArgs e)
         {
             EthernetSlave = GetESNode();
@@ -115,16 +158,16 @@ namespace TM_Comms_WPF
         {
             EthernetSlave = GetESNode();
         }
-        private void TxtESScriptData_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtScript_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (IsLoading) return;
             EthernetSlave = GetESNode();
         }
-        private void TxtESTransactionID_LostFocus(object sender, RoutedEventArgs e)
+        private void TxtTransactionID_LostFocus(object sender, RoutedEventArgs e)
         {
             if (IsLoading) return;
-            if (!Regex.IsMatch(txtESTransactionID.Text, @"^[a-zA-Z0-9_]+$"))
-                txtESTransactionID.Text = "local";
+            if (!Regex.IsMatch(TxtTransactionID.Text, @"^[a-zA-Z0-9_]+$"))
+                TxtTransactionID.Text = "local";
 
             EthernetSlave = GetESNode();
         }
@@ -296,6 +339,15 @@ namespace TM_Comms_WPF
             App.Settings.EthernetSlaveWindow.Top = Top;
             App.Settings.EthernetSlaveWindow.Left = Left;
         }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => CleanSock();
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (IsLoading) return;
+
+            App.Settings.EthernetSlaveWindow.Width = Width;
+            App.Settings.EthernetSlaveWindow.Height = Height;
+        }
     }
 }

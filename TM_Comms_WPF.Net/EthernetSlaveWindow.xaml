@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF"
         mc:Ignorable="d"
-        Title="Ethernet Slave" ResizeMode="CanResizeWithGrip" WindowStartupLocation="Manual" Closing="Window_Closing" LocationChanged="Window_LocationChanged" Icon="Support/favicon.ico" Loaded="Window_Loaded" Height="768" Width="1024">
+        Title="Ethernet Slave" ResizeMode="CanResizeWithGrip" WindowStartupLocation="Manual" Closing="Window_Closing" LocationChanged="Window_LocationChanged" Icon="Support/favicon.ico" Loaded="Window_Loaded" Height="768" Width="1024" SizeChanged="Window_SizeChanged">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -32,10 +32,7 @@
                         </LinearGradientBrush>
                     </Label.Background>
                 </Label>
-
-                    <Button Grid.Row="1" x:Name="BtnConnect" Content="Connect" Click="BtnConnect_Click" Width="90" BorderBrush="{x:Null}" />
-
-            
+                <Button Grid.Row="1" x:Name="BtnConnect" Content="Connect" Click="BtnConnect_Click" Width="90" BorderBrush="{x:Null}" />
             </Grid>
         </Border>
 
@@ -73,7 +70,7 @@
                             <ComboBoxItem Content="CPERR" Tag="1"/>
                         </ComboBox>
                         <Label Grid.Row="0" Grid.Column="2" Content="Trans. ID" Padding="5,3"  HorizontalContentAlignment="Center" />
-                        <TextBox Grid.Row="1" Grid.Column="2" x:Name="txtESTransactionID" Text="local" TextChanged="TxtESScriptData_TextChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" LostFocus="TxtESTransactionID_LostFocus" Background="#19FFFF00"/>
+                        <TextBox Grid.Row="1" Grid.Column="2" x:Name="TxtTransactionID" Text="local" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" LostFocus="TxtTransactionID_LostFocus" Background="#19FFFF00"/>
                         <Label Grid.Row="0" Grid.Column="3" Content="Message Format" Padding="5,3"  HorizontalContentAlignment="Center"/>
                         <ComboBox Grid.Row="1" Grid.Column="3" x:Name="cmbESDataMode" IsReadOnly="True" SelectedIndex="0" SelectionChanged="CmbESDataMode_SelectionChanged">
                             <ComboBoxItem Content="String" Tag="0"/>
@@ -97,14 +94,14 @@
                     <Label Grid.Row="0" Grid.Column="0" Content="Writable Items" Padding="5,3" HorizontalContentAlignment="Center"/>
                     <ListView Grid.Row="1" Grid.Column="0" Grid.RowSpan="4" x:Name="LsvWritableValues" />
                     <Label Grid.Row="0" Grid.Column="1" Content="List of Items to Write ( Item=Value )" Padding="5,3" HorizontalAlignment="Left"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtCommandData" Text="Stick_PlayPause=1" TextChanged="TxtESScriptData_TextChanged" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#19FFFF00"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtScript" Text="Stick_PlayPause=1" TextChanged="TxtScript_TextChanged" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#19FFFF00"/>
                     <Label Grid.Row="2" Grid.Column="1" Content="Message to Send" Padding="5,3" HorizontalAlignment="Left"/>
                     <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtCommand" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#19000000"/>
                     <Button Grid.Row="4" Grid.Column="1" x:Name="BtnSend" Content="Send Message" Width="90" Height="26" Click="BtnSend_Click" Margin="3,0" BorderBrush="{x:Null}"/>
                 </Grid>
             </Grid>
         </Border>
-     
+
         <Border Grid.Row="2" Grid.Column="0" BorderThickness="1" BorderBrush="Black" CornerRadius="3" Padding="3" Margin="5">
             <Grid>
                 <Grid.RowDefinitions>
@@ -122,14 +119,14 @@
                 <TextBox Grid.Row="1" x:Name="TxtCommandResponse" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="#19000000"/>
             </Grid>
         </Border>
-       
+
         <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
             <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="34"/>
-                <RowDefinition Height="64"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="34"/>
+                    <RowDefinition Height="64"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
                 <Label Grid.Row="0" Content="Data Table Items and Values (125 Hz)" FontSize="18" HorizontalContentAlignment="Center">
                     <Label.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
