@@ -101,24 +101,27 @@ namespace TM_Comms_WPF
             ListViewItem tvi = (ListViewItem)sender;
             string insert = "";
 
-            if (TxtScript.SelectionStart == TxtScript.Text.Length)
-            {
-                if (TxtScript.SelectionStart != 0)
-                    if (TxtScript.Text[TxtScript.SelectionStart - 1] != '\n')
-                        insert += "\r\n";
-            }
-            else if (TxtScript.Text[TxtScript.SelectionStart] == '\r')
-            {
-                if (TxtScript.SelectionStart != 0)
-                    if (TxtScript.Text[TxtScript.SelectionStart - 1] != '\n')
-                        insert += "\r\n";
-            }
-
-
-            insert += (string)tvi.Content;
             int start = TxtScript.SelectionStart;
-            TxtScript.Text = TxtScript.Text.Insert(TxtScript.SelectionStart, insert);
 
+            if (start == TxtScript.Text.Length)
+            {
+                if (start != 0)
+                    if (TxtScript.Text[start - 1] != '\n')
+                        insert += "\r\n";
+            }
+            else if (TxtScript.Text[start] == '\r')
+            {
+                if (start != 0)
+                    if (TxtScript.Text[start - 1] != '\n')
+                        insert += "\r\n";
+            }
+
+
+            insert += $"{tvi.Content}=";
+            
+            TxtScript.Text = TxtScript.Text.Insert(start, insert);
+
+            TxtScript.Focus();
             TxtScript.SelectionStart = start + insert.Length;
         }
 

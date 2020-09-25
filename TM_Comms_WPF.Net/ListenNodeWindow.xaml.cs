@@ -114,24 +114,26 @@ namespace TM_Comms_WPF
             TreeViewItem tvi = (TreeViewItem)sender;
             string insert = "";
 
-            if (TxtScript.SelectionStart == TxtScript.Text.Length)
+            int start = TxtScript.SelectionStart;
+
+            if (start == TxtScript.Text.Length)
             {
-                if (TxtScript.SelectionStart != 0)
-                    if (TxtScript.Text[TxtScript.SelectionStart - 1] != '\n')
+                if (start != 0)
+                    if (TxtScript.Text[start - 1] != '\n')
                         insert += "\r\n";
             }
-            else if (TxtScript.Text[TxtScript.SelectionStart] == '\r')
+            else if (TxtScript.Text[start] == '\r')
             {
-                if(TxtScript.SelectionStart != 0)
-                    if(TxtScript.Text[TxtScript.SelectionStart-1] != '\n')
+                if(start != 0)
+                    if(TxtScript.Text[start-1] != '\n')
                     insert += "\r\n";
             }
                 
 
             insert += (string)tvi.Header;
-            TxtScript.Text = TxtScript.Text.Insert(TxtScript.SelectionStart, insert);
+            TxtScript.Text = TxtScript.Text.Insert(start, insert);
 
-            TxtScript.SelectionStart = TxtScript.SelectionStart + insert.Length;
+            TxtScript.SelectionStart = start + insert.Length;
         }
 
         //Private
@@ -394,25 +396,26 @@ namespace TM_Comms_WPF
             sb.Append((string)((ComboBoxItem)CmbLNMoveBlend.SelectedItem).Tag);
 
             string insert = "";
-            if (TxtMoveList.SelectionStart == TxtMoveList.Text.Length)
+            int start = TxtMoveList.SelectionStart;
+
+            if (start == TxtMoveList.Text.Length)
             {
-                if (TxtMoveList.SelectionStart != 0)
-                    if (TxtMoveList.Text[TxtMoveList.SelectionStart - 1] != '\n')
+                if (start != 0)
+                    if (TxtMoveList.Text[start - 1] != '\n')
                         insert += "\r\n";
             }
-            else if (TxtMoveList.Text[TxtMoveList.SelectionStart] == '\r')
+            else if (TxtMoveList.Text[start] == '\r')
             {
-                if (TxtMoveList.SelectionStart != 0)
-                    if (TxtMoveList.Text[TxtMoveList.SelectionStart - 1] != '\n')
+                if (start != 0)
+                    if (TxtMoveList.Text[start - 1] != '\n')
                         insert += "\r\n";
             }
 
 
             insert += sb.ToString();
-            TxtMoveList.Text = TxtMoveList.Text.Insert(TxtMoveList.SelectionStart, insert);
+            TxtMoveList.Text = TxtMoveList.Text.Insert(start, insert);
 
-            TxtMoveList.SelectionStart = TxtMoveList.SelectionStart + insert.Length;
-
+            TxtMoveList.SelectionStart = start + insert.Length;
         }
 
         private void BtnLNValidateMoves_Click(object sender, RoutedEventArgs e)
@@ -453,12 +456,5 @@ namespace TM_Comms_WPF
             ListenNode = GetLNNode();
         }
 
-        private void TxtMoveList_SelectionChanged(object sender, RoutedEventArgs e)
-        {
-            if (TxtMoveList.IsSelectionActive)
-                btnLNInsertMove.IsEnabled = true;
-            else
-                btnLNInsertMove.IsEnabled = false;
-        }
-    }
+   }
 }
