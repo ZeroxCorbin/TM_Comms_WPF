@@ -13,8 +13,16 @@ jobs:
     runs-on: windows-2019
     steps:
       - name: checkout
+        uses: actions/checkout@master
+        with:
+          repository: ZeroxCorbin/SocketManager
+      - name: checkout
+        uses: actions/checkout@master
+        with:
+          repository: ZeroxCorbin/SimpleModbus
+      - name: checkout
         uses: actions/checkout@v1
-      - name: Build DotNET35
+      - name: Build DotNET
         run: |
            cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
            .\MSBuild.exe $Env:GITHUB_WORKSPACE\TM_Comms_WPF.sln
