@@ -16,4 +16,4 @@ jobs:
       - name: Build DotNET47
         run: |
            cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
-           .\MSBuild.exe $Env:TM_Comms_WPF\TM_Comms_WPF.sln
+           .\MSBuild.exe $Env:TM_Comms_WPF/TM_Comms_WPF.sln
