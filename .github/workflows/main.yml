@@ -17,11 +17,15 @@ jobs:
         with:
           path: SocketManager
           repository: ZeroxCorbin/SocketManager
+      - name: Restore NuGet
+        run: nuget restore $Env:GITHUB_WORKSPACE\SocketManager\SocketManager.sln
       - name: Checkout SimpleModbus
         uses: actions/checkout@master
         with:
           path: SimpleModbus
           repository: ZeroxCorbin/SimpleModbus
+      - name: Restore NuGet
+        run: nuget restore $Env:GITHUB_WORKSPACE\SimpleModbus\SimpleModbus.sln
       - name: Checkout TM_Comms_WPF
         uses: actions/checkout@master
         with:
