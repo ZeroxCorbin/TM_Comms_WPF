@@ -20,4 +20,4 @@ jobs:
 
     - name: MSBuild
       working-directory: src
-      run: msbuild "D:/a/TM_Comms_WPF/TM_Comms_WPF/TM_Comms_WPF.sln"
+      run: msbuild Env:TM_Comms_WPF/TM_Comms_WPF/
