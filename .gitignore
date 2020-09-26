@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+#ignore setup projects
+TM_Comms_WPF_Uninstall/
+TM_Comms_WPF_Setup/
+
 # User-specific files
 *.rsuser
 *.suo
