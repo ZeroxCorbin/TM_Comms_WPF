@@ -7,13 +7,17 @@ name: CI
 on:
   push:
     branches: [ master ]
+    
 jobs:
   build:
-    runs-on: windows-2019
+    runs-on: windows-latest
+
     steps:
-      - name: checkout
-        uses: actions/checkout@v1
-      - name: Build DotNET47
-        run: |
-           cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
-           .\MSBuild.exe $Env:TM_Comms_WPF.sln
+    - uses: actions/checkout@master
+
+    - name: Setup MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+
+    - name: MSBuild
+      working-directory: src
+      run: msbuild TM_Comms_WPF.sln
