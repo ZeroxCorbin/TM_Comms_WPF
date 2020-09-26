@@ -36,33 +36,3 @@ jobs:
         run: |
            cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
            .\MSBuild.exe $Env:GITHUB_WORKSPACE\TM_Comms_WPF\TM_Comms_WPF.sln /p:Configuration=Release
-           
-      - name: Install 7Zip PowerShell Module
-        shell: powershell
-        run: Install-Module 7Zip4PowerShell -Force -Verbose
-      - name: Compress Artifact
-        shell: cmd
-        run: powershell Compress-7Zip "Release" -ArchiveFileName "TM_Comms_WPF.zip" -Format Zip
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Automated Release by GitHub Action CI
-          draft: false
-          prerelease: true
-
-      - name: Upload Release Asset (x86)
-        id: upload-release-asset-x86
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./TM_Comms_WPF.ZIP
-          asset_name: TM_Comms_WPF.ZIP
-          asset_content_type: application/zip
