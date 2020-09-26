@@ -20,4 +20,4 @@ jobs:
 
     - name: MSBuild
       working-directory: src
-      run: msbuild "/home/runner/work/TM_Comms_WFP/TM_Comms_WPF.sln"
+      run: msbuild "D:/a/TM_Comms_WPF/TM_Comms_WPF/.git/TM_Comms_WPF.sln"
