@@ -187,7 +187,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="34"/>
-                    <RowDefinition Height="48"/>
+                    <RowDefinition Height="78"/>
                     <RowDefinition Height="48"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
@@ -202,20 +202,51 @@
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="90"/>
-                        <ColumnDefinition Width="90"/>
                         <ColumnDefinition Width="*"/>
+
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Content="Read Position&#xA;   from Robot"  HorizontalContentAlignment="Right" />
-                    <ComboBox Grid.Column="1" Grid.Row="0" x:Name="CmdPositionType" IsReadOnly="True" SelectedIndex="0" Margin="1">
+                    <ComboBox Grid.Column="0" Grid.Row="1" x:Name="CmdPositionType" IsReadOnly="True" SelectedIndex="0" Margin="1">
                         <ComboBoxItem Content="Pose" Tag="0"/>
                         <ComboBoxItem Content="Joint" Tag="1"/>
                     </ComboBox>
-                    <Button Grid.Column="1" Grid.Row="1" x:Name="btnLNNewReadPosition" Content="Read" Click="BtnLNNewReadPosition_Click" BorderBrush="{x:Null}" HorizontalAlignment="Right" Width="90"/>
-                    <TextBox Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" x:Name="txtLNNewPosition" Text="430,0,320,-180.0,0,90.0" Background="#19FFFF00"/>
+                    <Button Grid.Column="0" Grid.Row="2" x:Name="btnLNNewReadPosition" Content="Read" Click="BtnLNNewReadPosition_Click" BorderBrush="{x:Null}" HorizontalAlignment="Right" Width="90"/>
+
+                    <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Column="0" Content="X" HorizontalContentAlignment="Center"/>
+                        <Label Grid.Column="1" Content="Y" HorizontalContentAlignment="Center"/>
+                        <Label Grid.Column="2" Content="Z" HorizontalContentAlignment="Center"/>
+                        <Label Grid.Column="3" Content="RX" HorizontalContentAlignment="Center"/>
+                        <Label Grid.Column="4" Content="RY" HorizontalContentAlignment="Center"/>
+                        <Label Grid.Column="5" Content="RZ" HorizontalContentAlignment="Center"/>
+
+                        <TextBox Grid.Column="0" Grid.Row="1" x:Name="TxtPositionX" Background="#19FFFF00" TextChanged="TxtPosition_TextChanged" VerticalContentAlignment="Center"/>
+                        <TextBox Grid.Column="1" Grid.Row="1" x:Name="TxtPositionY" Background="#19FFFF00" TextChanged="TxtPosition_TextChanged" VerticalContentAlignment="Center"/>
+                        <TextBox Grid.Column="2" Grid.Row="1" x:Name="TxtPositionZ" Background="#19FFFF00" TextChanged="TxtPosition_TextChanged" VerticalContentAlignment="Center"/>
+                        <TextBox Grid.Column="3" Grid.Row="1" x:Name="TxtPositionRX" Background="#19FFFF00" TextChanged="TxtPosition_TextChanged" VerticalContentAlignment="Center"/>
+                        <TextBox Grid.Column="4" Grid.Row="1" x:Name="TxtPositionRY" Background="#19FFFF00" TextChanged="TxtPosition_TextChanged" VerticalContentAlignment="Center"/>
+                        <TextBox Grid.Column="5" Grid.Row="1" x:Name="TxtPositionRZ" Background="#19FFFF00" TextChanged="TxtPosition_TextChanged" VerticalContentAlignment="Center"/>
+
+                    </Grid>
+
+                    <TextBox Grid.Column="1" Grid.Row="3" x:Name="TxtNewPosition" Text="430,0,320,-180.0,0,90.0" Background="#19FFFF00" TextChanged="TxtNewPosition_TextChanged" VerticalContentAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
@@ -291,13 +322,26 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="32"/>
                     </Grid.RowDefinitions>
-                    <Button Grid.Row="0" Grid.Column="1" x:Name="btnLNInsertMove" Content="Insert" Width="90" Click="BtnLNInsertMove_Click" Margin="2" Height="26" BorderBrush="{x:Null}"/>
-                    <Label Grid.Row="0" Grid.Column="0" Content="List of Positions" Padding="5,3" VerticalAlignment="Bottom"/>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="List of Moves" Padding="5,3" VerticalAlignment="Bottom"/>
+                    <Button Grid.Row="0" Grid.Column="1" x:Name="BtnInsertMove" Content="Insert" Width="90" Click="BtnInsertMove_Click" Margin="2" Height="26" BorderBrush="{x:Null}"/>
                     <TextBox Grid.Row="1" Grid.ColumnSpan="3" x:Name="TxtMoveList" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="2" Background="#19FFFF00"/>
-                    <Button Grid.Row="2" Grid.Column="1" x:Name="btnLNValidateMoves" Content="Generate Message" Click="BtnLNValidateMoves_Click" Width="120" Margin="2" Height="26" BorderBrush="{x:Null}"/>
+
                     <Label Grid.Row="2" Grid.Column="0" Content="Message to Send" Padding="5,3" VerticalAlignment="Bottom"/>
-                    <TextBox Grid.Row="3" Grid.ColumnSpan="3" x:Name="txtLNMovesCode" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="2" Background="#19000000"/>
-                    <Button Grid.Row="4" Grid.Column="1" x:Name="btnLNSendMoves" Content="Send Message" Click="BtnLNSendMoves_Click" Width="90" Margin="2" Height="26" BorderBrush="{x:Null}"/>
+                    <Button Grid.Row="2" Grid.Column="1" x:Name="BtnGenerateMessage" Content="Generate Message" Click="BtnGenerateMessage_Click" Width="120" Margin="2" Height="26" BorderBrush="{x:Null}"/>
+
+                    <Grid Grid.Row="2" Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                      <CheckBox Grid.Row="0" Grid.Column="2" x:Name="ChkAddScriptExit" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Add ScriptExit()" IsChecked="True"/>
+                       
+                     <CheckBox Grid.Row="1" Grid.Column="2" x:Name="ChkInitializeVariables" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Initialize Variables" IsChecked="True"/>
+                                          </Grid>
+                   <TextBox Grid.Row="3" Grid.ColumnSpan="3" x:Name="TxtMoveMessage" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="2" Background="#19000000"/>
+
+                    <Button Grid.Row="4" Grid.Column="1" x:Name="BtnSendMoveMessage" Content="Send Message" Click="BtnSendMoveMessage_Click" Width="90" Margin="2" Height="26" BorderBrush="{x:Null}"/>
                 </Grid>
             </Grid>
         </Border>

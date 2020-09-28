@@ -10,7 +10,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -211,10 +210,10 @@ namespace TM_Comms_WPF
 
             BtnConnect.Background = new RadialGradientBrush(new GradientStopCollection(gsc));
 
-            btnLNSendMoves.IsEnabled = true;
+            BtnSend.IsEnabled = true;
+            BtnSendMoveMessage.IsEnabled = true;
             btnLNNewReadPosition.IsEnabled = true;
 
-            BtnSend.IsEnabled = true;
             BtnSendBadChecksum.IsEnabled = true;
             BtnSendBadHeader.IsEnabled = true;
             BtnSendBadPacket.IsEnabled = true;
@@ -237,10 +236,10 @@ namespace TM_Comms_WPF
 
             BtnConnect.Background = new RadialGradientBrush(new GradientStopCollection(gsc));
 
-            btnLNSendMoves.IsEnabled = false;
+            BtnSend.IsEnabled = false;
+            BtnSendMoveMessage.IsEnabled = false;
             btnLNNewReadPosition.IsEnabled = false;
 
-            BtnSend.IsEnabled = false;
             BtnSendBadChecksum.IsEnabled = false;
             BtnSendBadHeader.IsEnabled = false;
             BtnSendBadPacket.IsEnabled = false;
@@ -328,7 +327,7 @@ namespace TM_Comms_WPF
                                 ConnectionInActive();
                                 CleanSock();
                             }
-                               
+
                         }));
 
 
@@ -366,7 +365,7 @@ namespace TM_Comms_WPF
                     Dispatcher.BeginInvoke(DispatcherPriority.Normal,
                             (Action)(() =>
                             {
-                                txtLNNewPosition.Text = pos;
+                                TxtNewPosition.Text = pos;
                             }));
 
                 }
@@ -424,7 +423,7 @@ namespace TM_Comms_WPF
             }
 
         }
-        private void BtnLNInsertMove_Click(object sender, RoutedEventArgs e)
+        private void BtnInsertMove_Click(object sender, RoutedEventArgs e)
         {
             string delim = ",";
 
@@ -442,7 +441,7 @@ namespace TM_Comms_WPF
                 sb.Append("Joint");
             sb.Append(delim);
 
-            sb.Append(txtLNNewPosition.Text);
+            sb.Append(TxtNewPosition.Text);
             sb.Append(delim);
 
             sb.Append((string)((ComboBoxItem)CmbLNMoveVelocity.SelectedItem).Tag);
@@ -476,7 +475,7 @@ namespace TM_Comms_WPF
             TxtMoveList.SelectionStart = start + insert.Length;
         }
 
-        private void BtnLNValidateMoves_Click(object sender, RoutedEventArgs e)
+        private void BtnGenerateMessage_Click(object sender, RoutedEventArgs e)
         {
             string[] spl = TxtMoveList.Text.Split('\n');
 
@@ -493,10 +492,10 @@ namespace TM_Comms_WPF
             }
 
             MotionScriptBuilder = new MotionScriptBuilder(moves);
-            ListenNode ln = MotionScriptBuilder.BuildScriptData();
-            txtLNMovesCode.Text = ln.Message;
+            ListenNode ln = MotionScriptBuilder.BuildScriptData((bool)ChkAddScriptExit.IsChecked, (bool)ChkInitializeVariables.IsChecked);
+            TxtMoveMessage.Text = ln.Message;
         }
-        private void BtnLNSendMoves_Click(object sender, RoutedEventArgs e) => Socket?.Write(txtLNMovesCode.Text);
+        private void BtnSendMoveMessage_Click(object sender, RoutedEventArgs e) => Socket?.Write(TxtMoveMessage.Text);
 
         private void TxtScript_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -539,12 +538,12 @@ namespace TM_Comms_WPF
         }
 
         private void BtnSendScriptExit_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSCT,17,diag,ScriptExit(),*5E\r\n");
+        private void BtnSendBadCode_Click(object sender, RoutedEventArgs e) => Socket?.Write("$TMSCT,21,diag,int i=0\r\nint i=0,*52\r\n");
 
         private void BtnSendBadChecksum_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSCT,25,1,ChangeBase(\"RobotBase\"),*09\r\n");
         private void BtnSendBadHeader_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMsct,25,1,ChangeBase(\"RobotBase\"),*28\r\n");
         private void BtnSendBadPacket_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSCT,-100,1,ChangeBase(\"RobotBase\"),*13\r\n");
         private void BtnSendBadPacketData_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSTA,4,XXXX,*47\r\n");
-        private void BtnSendBadCode_Click(object sender, RoutedEventArgs e) => Socket?.Write("$TMSCT,21,diag,int i=0\r\nint i=0,*52\r\n");
 
         private void TxtScriptID_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -555,7 +554,92 @@ namespace TM_Comms_WPF
             ListenNode = GetLNNode();
         }
 
+        private List<System.Windows.Controls.TextBox> PositionBoxes { get; set; } = new List<System.Windows.Controls.TextBox>();
 
+        private bool UpdatingPositionString = false;
+        private void UpdatePositionString()
+        {
+            UpdatingPositionString = true;
+
+            StringBuilder sb = new StringBuilder();
+
+            int i = 0;
+            foreach (TextBox txt in PositionBoxes)
+                if (Regex.IsMatch(txt.Text, @"^[-+]?[0-9].*[.]?[0-9]*$"))
+                {
+                    if (i++ < PositionBoxes.Count - 1)
+                        sb.Append($"{txt.Text},");
+                    else
+                        sb.Append($"{txt.Text}");
+                }
+                else
+                {
+                    if (i++ < PositionBoxes.Count - 1)
+                        sb.Append($",");
+                }
+
+            TxtNewPosition.Text = sb.ToString();
+
+            UpdatingPositionString = false;
+        }
+
+        private bool UpdatingPositionBoxes = false;
+        private void UpdatePositionBoxes()
+        {
+            if (PositionBoxes.Count == 0)
+            {
+                PositionBoxes.Add(TxtPositionX);
+                PositionBoxes.Add(TxtPositionY);
+                PositionBoxes.Add(TxtPositionZ);
+                PositionBoxes.Add(TxtPositionRX);
+                PositionBoxes.Add(TxtPositionRY);
+                PositionBoxes.Add(TxtPositionRZ);
+            }
+
+            UpdatingPositionBoxes = true;
+
+            string[] spl = Regex.Split(TxtNewPosition.Text, @",");
+
+            int i = 0;
+            foreach (string val in spl)
+                if (Regex.IsMatch(val, @"^[-+]?[0-9].*[.]?[0-9]*$"))
+                    PositionBoxes[i++].Text = val;
+                else
+                    PositionBoxes[i++].Text = string.Empty;
+
+            for (; i < PositionBoxes.Count; i++)
+                PositionBoxes[i++].Text = string.Empty;
+
+            UpdatingPositionBoxes = false;
+        }
+
+        private void TxtNewPosition_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+
+            if (!Regex.IsMatch(TxtNewPosition.Text, @"^[-+]?[0-9].*[.]?[0-9]*,[-+]?[0-9].*[.]?[0-9]*,[-+]?[0-9].*[.]?[0-9]*,[-+]?[0-9].*[.]?[0-9]*,[-+]?[0-9].*[.]?[0-9]*,[-+]?[0-9].*[.]?[0-9]*$"))
+                TxtNewPosition.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#19FF9900"));
+            else
+                TxtNewPosition.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#19FFFF00"));
+
+            if (!UpdatingPositionString)
+                UpdatePositionBoxes();
+        }
+
+        private void TxtPosition_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+
+            TextBox tb = (TextBox)sender;
+
+            if (!Regex.IsMatch(tb.Text, @"^[-+]?[0-9].*[.]?[0-9]*$"))
+                tb.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#19FF9900"));
+            else
+                tb.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#19FFFF00"));
+
+            if (!UpdatingPositionBoxes)
+                UpdatePositionString();
+        }
 
     }
 }

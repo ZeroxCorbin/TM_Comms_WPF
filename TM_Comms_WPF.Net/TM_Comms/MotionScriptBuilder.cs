@@ -81,7 +81,7 @@ namespace TM_Comms_WPF
             return MotionResult.FAILURE;
         }
 
-        public ListenNode BuildScriptData()
+        public ListenNode BuildScriptData(bool addScriptExit, bool initVariables)
         {
             StringBuilder sb = new StringBuilder();
             int step = 1;
@@ -90,27 +90,31 @@ namespace TM_Comms_WPF
                 if (ms.Move_type == MotionType.LINEAR)
                 {
                     if (ms.Where.Type == Space.MType.EPOSE)
-                        sb.Append(GetPLineCart(ms, step++));
+                        sb.Append(initVariables ? $"float[] {GetPLineCart(ms, step++)}" : GetPLineCart(ms, step++));
 
                     if (ms.Where.Type == Space.MType.JOINTS)
-                        sb.Append(GetPLineJoint(ms, step++));
+                        sb.Append(initVariables ? $"float[] {GetPLineJoint(ms, step++)}" : GetPLineJoint(ms, step++));
                 }
 
                 if (ms.Move_type == MotionType.JOINT)
                 {
                     if (ms.Where.Type == Space.MType.EPOSE)
-                        sb.Append(GetPTPCart(ms, step++));
+                        sb.Append(initVariables ? $"float[] {GetPTPCart(ms, step++)}" : GetPTPCart(ms, step++));
 
                     if (ms.Where.Type == Space.MType.JOINTS)
-                        sb.Append(GetPTPJoint(ms, step++));
+                        sb.Append(initVariables ? $"float[] {GetPTPJoint(ms, step++)}" : GetPTPJoint(ms, step++));
                 }
             }
 
-            sb.Append(GetFinalQueueTag());
+            sb.Append(GetQueueTag(1));
+
+            if(addScriptExit)
+                sb.Append(GetScriptExit());
+
             return new ListenNode(sb.ToString(), ListenNode.Headers.TMSCT);
         }
 
-        private string GetPLineCart(MoveStep ms, int pos) => $"float[] targetP{pos}={{{ms.Where[0]},{ms.Where[1]},{ms.Where[2]},{ms.Where[3]},{ms.Where[4]},{ms.Where[5]}}}\r\n" +
+        private string GetPLineCart(MoveStep ms, int pos) => $"targetP{pos}={{{ms.Where[0]},{ms.Where[1]},{ms.Where[2]},{ms.Where[3]},{ms.Where[4]},{ms.Where[5]}}}\r\n" +
                                                              $"Line(\"CPP\",targetP{pos},{ms.Velocity_pct},{ms.Acceleration_ms},{ms.Blent_pct},true)\r\n";
         private string GetPLineJoint(MoveStep ms, int pos) => $"float[] targetP{pos}={{{ms.Where[0]},{ms.Where[1]},{ms.Where[2]},{ms.Where[3]},{ms.Where[4]},{ms.Where[5]}}}\r\n" +
                                                               $"Line(\"JPP\",targetP{pos},{ms.Velocity_pct},{ms.Acceleration_ms},{ms.Blent_pct},true)\r\n";
@@ -118,7 +122,8 @@ namespace TM_Comms_WPF
                                                            $"PTP(\"CPP\",targetP{pos},{ms.Velocity_pct},{ms.Acceleration_ms},{ms.Blent_pct},true)\r\n";
         private string GetPTPJoint(MoveStep ms, int pos) => $"float[] targetP{pos}={{{ms.Where[0]},{ms.Where[1]},{ms.Where[2]},{ms.Where[3]},{ms.Where[4]},{ms.Where[5]}}}\r\n" +
                                                             $"PTP(\"JPP\",targetP{pos},{ms.Velocity_pct},{ms.Acceleration_ms},{ms.Blent_pct},true)\r\n";
-        private string GetFinalQueueTag() => $"QueueTag(1)\r\nScriptExit()\r\n";
+        private string GetQueueTag(int num) => $"QueueTag({num})\r\n";
+        private string GetScriptExit() => $"ScriptExit()\r\n";
         public virtual AbortCondResult Abort()
         {
             return AbortCondResult.CONTINUE;
