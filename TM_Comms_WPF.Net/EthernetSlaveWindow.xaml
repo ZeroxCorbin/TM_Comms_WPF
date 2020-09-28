@@ -15,6 +15,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
             <RowDefinition Height="2*"/>
+            <RowDefinition Height="136 "/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
@@ -56,7 +57,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="120"/>
                             <ColumnDefinition Width="120"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
@@ -67,15 +68,13 @@
                         <Label Grid.Row="0" Grid.Column="1" Content="Message Type" Padding="5,3"  HorizontalContentAlignment="Center"/>
                         <ComboBox Grid.Row="1" Grid.Column="1" x:Name="cmbESDataType" IsReadOnly="True" SelectedIndex="0" SelectionChanged="CmbESDataType_SelectionChanged_1">
                             <ComboBoxItem Content="TMSVR" Tag="0"/>
-                            <ComboBoxItem Content="CPERR" Tag="1"/>
                         </ComboBox>
-                        <Label Grid.Row="0" Grid.Column="2" Content="Trans. ID" Padding="5,3"  HorizontalContentAlignment="Center" />
+                        <Label Grid.Row="0" Grid.Column="2" Content="Transaction ID" Padding="5,3"  HorizontalContentAlignment="Center" />
                         <TextBox Grid.Row="1" Grid.Column="2" x:Name="TxtTransactionID" Text="local" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" LostFocus="TxtTransactionID_LostFocus" Background="#19FFFF00"/>
                         <Label Grid.Row="0" Grid.Column="3" Content="Message Format" Padding="5,3"  HorizontalContentAlignment="Center"/>
                         <ComboBox Grid.Row="1" Grid.Column="3" x:Name="cmbESDataMode" IsReadOnly="True" SelectedIndex="0" SelectionChanged="CmbESDataMode_SelectionChanged">
-                            <ComboBoxItem Content="String" Tag="0"/>
-                            <ComboBoxItem Content="JSON" Tag="1"/>
-                            <ComboBoxItem Content="String_Response" Tag="2"/>
+                            <ComboBoxItem Content="String" Tag="2"/>
+                            <ComboBoxItem Content="JSON" Tag="3"/>
                         </ComboBox>
                     </Grid>
                 </Grid>
@@ -102,13 +101,72 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="2" Grid.Column="0" BorderThickness="1" BorderBrush="Black" CornerRadius="3" Padding="3" Margin="5">
+        <Border Grid.Column="0" Grid.Row="2" BorderThickness="1" BorderBrush="Black" CornerRadius="3" Padding="3" Margin="5">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="34"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Content="Response Messages" FontSize="18" HorizontalContentAlignment="Center">
+                <Label Grid.Row="0" Content="Disagnostic Tests" FontSize="18" HorizontalContentAlignment="Center">
+                    <Label.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF4c88d6" Offset="0"/>
+                            <GradientStop Color="White" Offset="0.3"/>
+                        </LinearGradientBrush>
+                    </Label.Background>
+                </Label>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="92"/>
+                        <ColumnDefinition Width="92"/>
+                        <ColumnDefinition Width="92"/>
+                        <ColumnDefinition Width="92"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Column="0" Grid.Row="0" Content="CPERR" HorizontalContentAlignment="Right" Margin="0,0,3,0"/>
+                    <Button Grid.Column="3" Grid.Row="0" x:Name="BtnSendBadHeader" Content="Bad Header" Width="90" Height="26" BorderBrush="{x:Null}" Margin="1,1,1,0" Click="BtnSendBadHeader_Click" ToolTip="$TMsct,25,1,ChangeBase(\&quot;RobotBase\&quot;),*28"/>
+                    <Button Grid.Column="2" Grid.Row="0" x:Name="BtnSendBadChecksum" Content="Bad Checksum" Width="90" Height="26" BorderBrush="{x:Null}" Margin="1,1,1,0"  Click="BtnSendBadChecksum_Click" ToolTip="$TMSCT,25,1,ChangeBase(\&quot;RobotBase\&quot;),*09"/>
+                    <Button Grid.Column="1" Grid.Row="0" x:Name="BtnSendBadPacket" Content="Bad Packet" Width="90" Height="26" BorderBrush="{x:Null}" Margin="1,1,1,0"  Click="BtnSendBadPacket_Click" ToolTip="$TMSCT,-100,1,ChangeBase(\&quot;RobotBase\&quot;),*13"/>
+                    <Button Grid.Column="4" Grid.Row="0" x:Name="BtnSendBadPacketData" Content="Bad Data" Width="90" Height="26" BorderBrush="{x:Null}" Margin="1,1,1,0" Click="BtnSendBadPacketData_Click" ToolTip="$TMSTA,4,XXXX,*47" Visibility="Collapsed"/>
+                    
+                    <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="7" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="92"/>
+                            <ColumnDefinition Width="92"/>
+                            <ColumnDefinition Width="92"/>
+                            <ColumnDefinition Width="92"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        
+                        <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Content="TMSVR" HorizontalContentAlignment="Right" Margin="0,0,3,0" VerticalContentAlignment="Center"/>
+                        <Button Grid.Column="1" Grid.Row="0" x:Name="BtnSendNotSupported" Content="Not Supported" Width="90" Height="26" BorderBrush="{x:Null}" Margin="1,1,1,0" Click="BtnSendNotSupported_Click" />
+                        <Button Grid.Column="2" Grid.Row="0" x:Name="BtnSendInvalidData" Content="Invalid Data" Width="90" Height="26" BorderBrush="{x:Null}" Margin="1,1,1,0" Click="BtnSendInvalidData_Click"/>
+                        <Button Grid.Column="3" Grid.Row="0" x:Name="BtnSendNotExist" Content="Not Exists" Width="90" Height="26" BorderBrush="{x:Null}" Margin="1,1,1,0" Click="BtnSendNotExist_Click"/>
+                        <Button Grid.Column="4" Grid.Row="0" x:Name="BtnSendReadOnly" Content="Read Only" Width="90" Height="26" BorderBrush="{x:Null}" Margin="1,1,1,0" Click="BtnSendReadOnly_Click"/>
+                        <Button Grid.Column="1" Grid.Row="1" x:Name="BtnSendValueError" Content="Value Error" Width="90" Height="26" BorderBrush="{x:Null}" Margin="1,1,1,0" Click="BtnSendValueError_Click"/>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+        <Border Grid.Row="3" Grid.Column="0" BorderThickness="1" BorderBrush="Black" CornerRadius="3" Padding="3" Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="34"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Content="Message Responses" FontSize="18" HorizontalContentAlignment="Center">
                     <Label.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FF4c88d6" Offset="0"/>
@@ -120,7 +178,7 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
+        <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="4" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="34"/>
@@ -151,7 +209,7 @@
                         <Label Grid.Row="0" Grid.Column="0" Content="Display Rate" Padding="5,3" HorizontalContentAlignment="Center" />
                         <TextBox Grid.Row="1" Grid.Column="0" x:Name="TxtDisplayRate" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" BorderBrush="{x:Null}"/>
 
-                        <Slider Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="SldUpdateFreq" Maximum="1000" Minimum="1" SmallChange="10" TickFrequency="100" LargeChange="100" Panel.ZIndex="-7" TickPlacement="TopLeft" Value="500" ValueChanged="SldUpdateFreq_ValueChanged"/>
+                        <Slider Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="SldUpdateFreq" Maximum="1000" Minimum="25" SmallChange="10" TickFrequency="100" LargeChange="100" Panel.ZIndex="-7" TickPlacement="TopLeft" Value="500" ValueChanged="SldUpdateFreq_ValueChanged"/>
 
                         <Label Grid.Row="0" Grid.Column="2" Content="Message Frquency" Padding="5,3" HorizontalContentAlignment="Center" />
                         <TextBox Grid.Row="1" Grid.Column="2" x:Name="TxtAverageMessage" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="3,0" BorderBrush="{x:Null}"/>

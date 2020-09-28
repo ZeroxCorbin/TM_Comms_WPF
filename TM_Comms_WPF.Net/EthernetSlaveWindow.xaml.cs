@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,23 +32,18 @@ namespace TM_Comms_WPF
         public EthernetSlaveWindow() => InitializeComponent();
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            string xmlPath = null;
-            if (App.Settings.Version == TMflowVersions.V1_76_xxxx)
-                xmlPath = "Support\\EthernetSlave_V1.76.xxxx.xml";
-            if (App.Settings.Version == TMflowVersions.V1_80_xxxx)
-                xmlPath = "Support\\EthernetSlave_V1.80.xxxx.xml";
 
-            if (xmlPath != null)
+            if (App.Settings.Version == TMflowVersions.V1_76_xxxx || App.Settings.Version == TMflowVersions.V1_80_xxxx)
             {
                 EthernetSlaveXMLData.File data = null;
                 XmlSerializer serializer = new XmlSerializer(typeof(EthernetSlaveXMLData.File));
-                using (StreamReader sr = new StreamReader(xmlPath))
+                using (TextReader sr = new StringReader(EthernetSlave.Commands[App.Settings.Version]))
                 {
                     data = (EthernetSlaveXMLData.File)serializer.Deserialize(sr);
                 }
                 if (data != null)
                 {
-                    foreach(EthernetSlaveXMLData.FileSetting setting in data.CodeTable)
+                    foreach (EthernetSlaveXMLData.FileSetting setting in data.CodeTable)
                     {
                         if (setting.Accessibility == "R/W")
                         {
@@ -58,7 +54,7 @@ namespace TM_Comms_WPF
                             lvi.MouseDoubleClick += Lvi_MouseDoubleClick;
                             LsvWritableValues.Items.Add(lvi);
                         }
-                           
+
                     }
 
                 }
@@ -93,7 +89,12 @@ namespace TM_Comms_WPF
                 this.Height = App.Settings.EthernetSlaveWindow.Height;
                 this.Width = App.Settings.EthernetSlaveWindow.Width;
             }
+
+            EthernetSlave = GetESNode();
+
             IsLoading = false;
+
+            ConnectionInActive();
         }
 
         private void Lvi_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -118,7 +119,7 @@ namespace TM_Comms_WPF
 
 
             insert += $"{tvi.Content}=";
-            
+
             TxtScript.Text = TxtScript.Text.Insert(start, insert);
 
             TxtScript.Focus();
@@ -127,26 +128,16 @@ namespace TM_Comms_WPF
 
         private EthernetSlave GetESNode()
         {
-            EthernetSlave.HEADERS h;
+            EthernetSlave node = new EthernetSlave();
+            if(Enum.TryParse((string)((ComboBoxItem)cmbESDataType.SelectedItem).Tag, out EthernetSlave.Headers header))
+            {
+                if (Enum.TryParse((string)((ComboBoxItem)cmbESDataMode.SelectedItem).Tag, out EthernetSlave.Modes mode))
+                {
+                    node = new EthernetSlave(TxtScript.Text, header, TxtTransactionID.Text, mode);
 
-            if ((string)((ComboBoxItem)cmbESDataType.SelectedItem).Tag == "0")
-                h = EthernetSlave.HEADERS.TMSVR;
-            else
-                h = EthernetSlave.HEADERS.CPERR;
-
-            EthernetSlave.MODES m;
-            if ((string)((ComboBoxItem)cmbESDataMode.SelectedItem).Tag == "0")
-                m = EthernetSlave.MODES.STRING;
-            else if ((string)((ComboBoxItem)cmbESDataMode.SelectedItem).Tag == "1")
-                m = EthernetSlave.MODES.JSON;
-            else if ((string)((ComboBoxItem)cmbESDataMode.SelectedItem).Tag == "2")
-                m = EthernetSlave.MODES.STRING_RESPONSE;
-            else
-                m = EthernetSlave.MODES.STRING;
-
-            EthernetSlave node = new EthernetSlave(TxtScript.Text, h, TxtTransactionID.Text, m);
-
-            TxtCommand.Text = node.Message;
+                    TxtCommand.Text = node.Message;
+                }
+            }
 
             return node;
         }
@@ -185,20 +176,101 @@ namespace TM_Comms_WPF
             EthernetSlave = GetESNode();
         }
 
-        //Connect Socket
+        //CPERR Disgnostics
+        private void BtnSendBadChecksum_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSVR,20,diag,99,Stick_Stop=1,*45\r\n");
+        private void BtnSendBadHeader_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMsvr,20,local,2,Stick_Stop=1,*32\r\n");
+        private void BtnSendBadPacket_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSVR,19,-100,2,Stick_Stop=1,*69\r\n");
+
+        private void BtnSendBadPacketData_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSTA,4,XXXX,*47\r\n");
+
+        private void BtnSendNotSupported_Click(object sender, RoutedEventArgs e) => Socket?.Write("$TMSVR,20,diag,99,Stick_Stop=1,*46\r\n");
+        private void BtnSendInvalidData_Click(object sender, RoutedEventArgs e)=> Socket?.Write("$TMSVR,11,diag,1,[{}],*58\r\n");
+        private void BtnSendNotExist_Click(object sender, RoutedEventArgs e)=> Socket?.Write("$TMSVR,18,diag,2,Ctrl_DO16=1,*24\r\n");
+        private void BtnSendReadOnly_Click(object sender, RoutedEventArgs e)=> Socket?.Write("$TMSVR,19,diag,2,Robot_Link=1,*64\r\n");
+        private void BtnSendValueError_Click(object sender, RoutedEventArgs e)=> Socket?.Write("$TMSVR,24,diag,2,Stick_Plus=\"diag\",*48\r\n");
+
+        private void ConnectionActive()
+        {
+            BtnConnect.Content = "Close";
+            BtnConnect.Tag = 2;
+
+            List<GradientStop> gsc = new List<GradientStop>
+            {
+                new GradientStop((Color)ColorConverter.ConvertFromString("#FFDDDDDD"), 1),
+                new GradientStop((Color)ColorConverter.ConvertFromString("#AA4c88d6"), 1)
+            };
+
+            BtnConnect.Background = new RadialGradientBrush(new GradientStopCollection(gsc));
+
+            BtnSend.IsEnabled = true;
+            BtnSendBadChecksum.IsEnabled = true;
+            BtnSendBadHeader.IsEnabled = true;
+            BtnSendBadPacket.IsEnabled = true;
+            BtnSendBadPacketData.IsEnabled = true;
+            BtnSendInvalidData.IsEnabled = true;
+            BtnSendNotExist.IsEnabled = true;
+            BtnSendNotSupported.IsEnabled = true;
+            BtnSendReadOnly.IsEnabled = true;
+            BtnSendValueError.IsEnabled = true;
+        }
+        private void ConnectionInActive()
+        {
+            BtnConnect.Content = "Connect";
+            BtnConnect.Tag = 0;
+
+            List<GradientStop> gsc = new List<GradientStop>
+            {
+                new GradientStop((Color)ColorConverter.ConvertFromString("#FFDDDDDD"), 1),
+                new GradientStop((Color)ColorConverter.ConvertFromString("#AA880000"), 1)
+            };
+
+            BtnConnect.Background = new RadialGradientBrush(new GradientStopCollection(gsc));
+
+            BtnSend.IsEnabled = false;
+            BtnSendBadChecksum.IsEnabled = false;
+            BtnSendBadHeader.IsEnabled = false;
+            BtnSendBadPacket.IsEnabled = false;
+            BtnSendBadPacketData.IsEnabled = false;
+            BtnSendInvalidData.IsEnabled = false;
+            BtnSendNotExist.IsEnabled = false;
+            BtnSendNotSupported.IsEnabled = false;
+            BtnSendReadOnly.IsEnabled = false;
+            BtnSendValueError.IsEnabled = false;
+        }
+        private void ConnectionWaiting()
+        {
+            BtnConnect.Content = "Trying";
+            BtnConnect.Tag = 1;
+
+            List<GradientStop> gsc = new List<GradientStop>
+            {
+                new GradientStop((Color)ColorConverter.ConvertFromString("#FFDDDDDD"), 1),
+                new GradientStop((Color)ColorConverter.ConvertFromString("#AA888800"), 1)
+            };
+
+            BtnConnect.Background = new RadialGradientBrush(new GradientStopCollection(gsc));
+
+        }
+
+
+
         private SocketManager Socket { get; set; }
         private void BtnConnect_Click(object sender, RoutedEventArgs e)
         {
-            if (BtnConnect.Tag == null)
+            if ((int)BtnConnect.Tag == 0)
             {
-                if (Connect())
-                {
-                    BtnConnect.Content = "Close";
-                    BtnConnect.Tag = 1;
-                    return;
-                }
+                ConnectionWaiting();
+                ThreadPool.QueueUserWorkItem(new WaitCallback(ConnectThread));
+                return;
             }
+            else if ((int)BtnConnect.Tag == 1)
+                return;
+
             CleanSock();
+        }
+        private void ConnectThread(object sender)
+        {
+            Connect();
         }
         private bool Connect()
         {
@@ -211,20 +283,16 @@ namespace TM_Comms_WPF
             if (Socket.Connect())
                 return true;
             else
-            {
-                CleanSock();
                 return false;
-            }
         }
         private void CleanSock()
         {
             if (Socket != null)
             {
-                Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                Dispatcher.BeginInvoke(DispatcherPriority.Render,
                         (Action)(() =>
                         {
-                            BtnConnect.Content = "Connect";
-                            BtnConnect.Tag = null;
+                            ConnectionInActive();
                         }));
 
                 Socket.MessageReceived -= Socket_MessageReceived;
@@ -239,20 +307,16 @@ namespace TM_Comms_WPF
         private void Socket_ConnectState(object sender, bool data)
         {
             if (!data)
-            {
                 CleanSock();
-
-                Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                        (Action)(() =>
-                        {
-                            BtnConnect.Content = "Connect";
-                            BtnConnect.Tag = null;
-                        }));
-            }
             else
             {
-                Socket.MessageReceived += Socket_MessageReceived;
+                Dispatcher.BeginInvoke(DispatcherPriority.Render,
+                        (Action)(() =>
+                        {
+                            ConnectionActive();
+                        }));
 
+                Socket.MessageReceived += Socket_MessageReceived;
                 Socket.StartReceiveMessages(@"[$]", @"[*][A-Z0-9][A-Z0-9]");
 
                 DataReceiveStopWatch.Restart();
@@ -305,27 +369,35 @@ namespace TM_Comms_WPF
                 }));
             }
 
-
-
-
-            if (PackRate.Count < updateRate && Regex.IsMatch(message, @"^[$]\w*,\w*,[0-9]"))
+            if (PackRate.Count < updateRate && Regex.IsMatch(message, @"^[$]TMSVR,\w*,[0-9]"))
                 return;
 
             PackRate.Count = 0;
 
-            Dispatcher.BeginInvoke(DispatcherPriority.Render,
-                    (Action)(() =>
-                    {
-                        if (!Regex.IsMatch(message, @"^[$]\w*,\w*,[0-9],"))
+            EthernetSlave es = new EthernetSlave();
+
+            if (!es.ParseMessage(message))
+            {
+                Dispatcher.BeginInvoke(DispatcherPriority.Render,
+                        (Action)(() =>
                         {
-                            TxtCommandResponse.Text += message + "\r\n";
-                            TxtCommandResponse.ScrollToEnd();
-                        }
-                        else
                             TxtSocketResponse.Text = message;
-                    }));
-
-
+                        }));
+            }
+            else
+            {
+                Dispatcher.BeginInvoke(DispatcherPriority.Render,
+                        (Action)(() =>
+                        {
+                            if (es.Header == EthernetSlave.Headers.TMSVR && es.TransactionID_Int >= 0 && es.TransactionID_Int <= 9)
+                                TxtSocketResponse.Text = message;
+                            else
+                            {
+                                TxtCommandResponse.Text += es.Message;
+                                TxtCommandResponse.ScrollToEnd();
+                            }
+                        }));
+            }
         }
         //Receive Rate Control
         private double SliderValue { get; set; }
@@ -352,5 +424,7 @@ namespace TM_Comms_WPF
             App.Settings.EthernetSlaveWindow.Width = Width;
             App.Settings.EthernetSlaveWindow.Height = Height;
         }
+
+
     }
 }

@@ -107,7 +107,7 @@ namespace TM_Comms_WPF
             }
 
             sb.Append(GetFinalQueueTag());
-            return new ListenNode(ListenNode.HEADERS.TMSCT, sb.ToString());
+            return new ListenNode(sb.ToString(), ListenNode.Headers.TMSCT);
         }
 
         private string GetPLineCart(MoveStep ms, int pos) => $"float[] targetP{pos}={{{ms.Where[0]},{ms.Where[1]},{ms.Where[2]},{ms.Where[3]},{ms.Where[4]},{ms.Where[5]}}}\r\n" +

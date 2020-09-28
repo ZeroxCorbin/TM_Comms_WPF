@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -76,7 +77,6 @@ namespace TM_Comms_WPF
         }
         private void LoadCommandTreeView()
         {
-            int i = -1;
             TreeViewItem tviParent = null;
             foreach (string cmd in ListenNode.Commands[App.Settings.Version])
             {
@@ -124,53 +124,25 @@ namespace TM_Comms_WPF
             }
             else if (TxtScript.Text[start] == '\r')
             {
-                if(start != 0)
-                    if(TxtScript.Text[start-1] != '\n')
-                    insert += "\r\n";
+                if (start != 0)
+                    if (TxtScript.Text[start - 1] != '\n')
+                        insert += "\r\n";
             }
-                
+
 
             insert += (string)tvi.Header;
             TxtScript.Text = TxtScript.Text.Insert(start, insert);
 
             TxtScript.SelectionStart = start + insert.Length;
         }
-
-        //Private
-        private void ConnectionActive()
-        {
-            btnLNSend.IsEnabled = true;
-            btnLNSendMoves.IsEnabled = true;
-            btnLNNewReadPosition.IsEnabled = true;
-        }
-        private void ConnectionInActive()
-        {
-            //RectCommandHasResponse.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
-
-            BtnConnect.Content = "Connect";
-            BtnConnect.Tag = null;
-
-            btnLNSend.IsEnabled = false;
-            btnLNSendMoves.IsEnabled = false;
-            btnLNNewReadPosition.IsEnabled = false;
-        }
         private ListenNode GetLNNode()
         {
-            ListenNode node = new ListenNode();
-            if (cmbLNDataType.SelectedIndex == 0)
-            {
-                node.Header = ListenNode.HEADERS.TMSCT;
+            ListenNode node;
+            if (CmbMessageHeader.SelectedIndex == 0)
 
-                txtLNScriptID.Text = node.ScriptID.ToString();
-            }
+                node = new ListenNode(TxtScript.Text, ListenNode.Headers.TMSCT, TxtScriptID.Text);
             else
-            {
-                node.Header = ListenNode.HEADERS.TMSTA;
-                txtLNScriptID.Text = "";
-            }
-
-
-            node.Data = TxtScript.Text;
+                node = new ListenNode((string)((ComboBoxItem)CmbMessageSubCommands.SelectedItem).Tag, ListenNode.Headers.TMSTA);
 
             TxtMessage.Text = node.Message;
 
@@ -225,19 +197,91 @@ namespace TM_Comms_WPF
 
         }
 
+        //Private
+        private void ConnectionActive()
+        {
+            BtnConnect.Content = "Close";
+            BtnConnect.Tag = 2;
+
+            List<GradientStop> gsc = new List<GradientStop>
+            {
+                new GradientStop((Color)ColorConverter.ConvertFromString("#FFDDDDDD"), 1),
+                new GradientStop((Color)ColorConverter.ConvertFromString("#AA4c88d6"), 1)
+            };
+
+            BtnConnect.Background = new RadialGradientBrush(new GradientStopCollection(gsc));
+
+            btnLNSendMoves.IsEnabled = true;
+            btnLNNewReadPosition.IsEnabled = true;
+
+            BtnSend.IsEnabled = true;
+            BtnSendBadChecksum.IsEnabled = true;
+            BtnSendBadHeader.IsEnabled = true;
+            BtnSendBadPacket.IsEnabled = true;
+            BtnSendBadPacketData.IsEnabled = true;
+
+            BtnSendScriptExit.IsEnabled = true;
+            BtnSendBadCode.IsEnabled = true;
+
+        }
+        private void ConnectionInActive()
+        {
+            BtnConnect.Content = "Connect";
+            BtnConnect.Tag = 0;
+
+            List<GradientStop> gsc = new List<GradientStop>
+            {
+                new GradientStop((Color)ColorConverter.ConvertFromString("#FFDDDDDD"), 1),
+                new GradientStop((Color)ColorConverter.ConvertFromString("#AA880000"), 1)
+            };
+
+            BtnConnect.Background = new RadialGradientBrush(new GradientStopCollection(gsc));
+
+            btnLNSendMoves.IsEnabled = false;
+            btnLNNewReadPosition.IsEnabled = false;
+
+            BtnSend.IsEnabled = false;
+            BtnSendBadChecksum.IsEnabled = false;
+            BtnSendBadHeader.IsEnabled = false;
+            BtnSendBadPacket.IsEnabled = false;
+            BtnSendBadPacketData.IsEnabled = false;
+
+            BtnSendScriptExit.IsEnabled = false;
+            BtnSendBadCode.IsEnabled = false;
+        }
+        private void ConnectionWaiting()
+        {
+            BtnConnect.Content = "Trying";
+            BtnConnect.Tag = 1;
+
+            List<GradientStop> gsc = new List<GradientStop>
+            {
+                new GradientStop((Color)ColorConverter.ConvertFromString("#FFDDDDDD"), 1),
+                new GradientStop((Color)ColorConverter.ConvertFromString("#AA888800"), 1)
+            };
+
+            BtnConnect.Background = new RadialGradientBrush(new GradientStopCollection(gsc));
+
+        }
+
         private SocketManager Socket { get; set; }
         private void BtnConnect_Click(object sender, RoutedEventArgs e)
         {
-            if (BtnConnect.Tag == null)
+            if ((int)BtnConnect.Tag == 0)
             {
-                if (Connect())
-                {
-                    BtnConnect.Content = "Close";
-                    BtnConnect.Tag = 1;
-                    return;
-                }
+                ConnectionWaiting();
+                ThreadPool.QueueUserWorkItem(new WaitCallback(ConnectThread));
+                return;
             }
+            else if ((int)BtnConnect.Tag == 1)
+                return;
+
+            ConnectionInActive();
             CleanSock();
+        }
+        private void ConnectThread(object sender)
+        {
+            Connect();
         }
         private bool Connect()
         {
@@ -250,21 +294,12 @@ namespace TM_Comms_WPF
             if (Socket.Connect())
                 return true;
             else
-            {
-                CleanSock();
                 return false;
-            }
         }
         private void CleanSock()
         {
             if (Socket != null)
             {
-                Dispatcher.BeginInvoke(DispatcherPriority.Render,
-                        (Action)(() =>
-                        {
-                            ConnectionInActive();
-                        }));
-
                 Socket.MessageReceived -= Socket_MessageReceived;
                 Socket.ConnectState -= Socket_ConnectState;
 
@@ -278,8 +313,27 @@ namespace TM_Comms_WPF
         {
             if (!data)
             {
-                CleanSock();
+                Dispatcher.BeginInvoke(DispatcherPriority.Render,
+                        (Action)(() =>
+                        {
+                            ConnectionInActive();
+
+                            if ((bool)ChkAutoReconnect.IsChecked)
+                            {
+                                ConnectionWaiting();
+                                ThreadPool.QueueUserWorkItem(new WaitCallback(ConnectThread));
+                            }
+                            else
+                            {
+                                ConnectionInActive();
+                                CleanSock();
+                            }
+                               
+                        }));
+
+
             }
+
             else
             {
                 Dispatcher.BeginInvoke(DispatcherPriority.Render,
@@ -289,13 +343,17 @@ namespace TM_Comms_WPF
                         }));
 
                 Socket.MessageReceived += Socket_MessageReceived;
-
                 Socket.StartReceiveMessages(@"[$]", @"[*][A-Z0-9][A-Z0-9]");
             }
         }
         //Receive Data
         private void Socket_MessageReceived(object sender, string message, string pattern)
         {
+            ListenNode ln = new ListenNode();
+
+            if (!ln.ParseMessage(message))
+                return;
+
             if (PositionRequest != null)
             {
                 if (Regex.IsMatch(message, @"^[$]TMSTA,\w*,90,"))
@@ -331,7 +389,7 @@ namespace TM_Comms_WPF
             App.Settings.ListenNodeWindow.Top = Top;
             App.Settings.ListenNodeWindow.Left = Left;
         }
-        private void window_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (IsLoading) return;
 
@@ -348,19 +406,19 @@ namespace TM_Comms_WPF
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => CleanSock();
 
 
-        private void BtnLNSend_Click(object sender, RoutedEventArgs e) => Socket?.Write(ListenNode.Message);
+        private void BtnSend_Click(object sender, RoutedEventArgs e) => Socket?.Write(ListenNode.Message);
 
         private void BtnLNNewReadPosition_Click(object sender, RoutedEventArgs e)
         {
             if (((string)((ComboBoxItem)CmdPositionType.SelectedItem).Tag) == "0")
             {
-                ListenNode ln = new ListenNode(ListenNode.HEADERS.TMSCT, "ListenSend(90, GetString(Robot[1].CoordRobot, 10, 3))");
+                ListenNode ln = new ListenNode("ListenSend(90, GetString(Robot[1].CoordRobot, 10, 3))");
                 PositionRequest = ln.ScriptID.ToString();
                 Socket?.Write(ln.Message);
             }
             else
             {
-                ListenNode ln = new ListenNode(ListenNode.HEADERS.TMSCT, "ListenSend(90, GetString(Robot[1].Joint, 10, 3))");
+                ListenNode ln = new ListenNode("ListenSend(90, GetString(Robot[1].Joint, 10, 3))");
                 PositionRequest = ln.ScriptID.ToString();
                 Socket?.Write(ln.Message);
             }
@@ -444,17 +502,60 @@ namespace TM_Comms_WPF
         {
             if (ListenNode != null)
             {
-                ListenNode.Data = TxtScript.Text;
+                ListenNode.Script = TxtScript.Text;
                 TxtMessage.Text = ListenNode.Message;
             }
         }
 
-        private void CmbLNDataType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CmbMessageHeader_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CmbMessageHeader.SelectedIndex == 0)
+            {
+                LblMessageType.Content = "Scritp ID";
+                CmbMessageSubCommands.Visibility = Visibility.Collapsed;
+                TxtScriptID.Visibility = Visibility.Visible;
+
+                LstCommandList.IsEnabled = true;
+                TxtScript.IsEnabled = true;
+            }
+            else
+            {
+                LblMessageType.Content = "Sub Command";
+                CmbMessageSubCommands.Visibility = Visibility.Visible;
+                TxtScriptID.Visibility = Visibility.Collapsed;
+
+                LstCommandList.IsEnabled = false;
+                TxtScript.IsEnabled = false;
+            }
+            if (IsLoading) return;
+
+            ListenNode = GetLNNode();
+        }
+        private void CmbMessageSubCommands_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoading) return;
 
             ListenNode = GetLNNode();
         }
 
-   }
+        private void BtnSendScriptExit_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSCT,17,diag,ScriptExit(),*5E\r\n");
+
+        private void BtnSendBadChecksum_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSCT,25,1,ChangeBase(\"RobotBase\"),*09\r\n");
+        private void BtnSendBadHeader_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMsct,25,1,ChangeBase(\"RobotBase\"),*28\r\n");
+        private void BtnSendBadPacket_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSCT,-100,1,ChangeBase(\"RobotBase\"),*13\r\n");
+        private void BtnSendBadPacketData_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSTA,4,XXXX,*47\r\n");
+        private void BtnSendBadCode_Click(object sender, RoutedEventArgs e) => Socket?.Write("$TMSCT,21,diag,int i=0\r\nint i=0,*52\r\n");
+
+        private void TxtScriptID_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (IsLoading) return;
+            if (!Regex.IsMatch(TxtScriptID.Text, @"^[a-zA-Z0-9_]+$"))
+                TxtScriptID.Text = "local";
+
+            ListenNode = GetLNNode();
+        }
+
+
+
+    }
 }
