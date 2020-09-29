@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleModbus", "..\SimpleMo
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "TM_Comms_WPF_Setup", "TM_Comms_WPF_Setup\TM_Comms_WPF_Setup.vdproj", "{24CABDE6-A06D-46B7-A19A-0120080A33EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TM_Comms_WPF_Uninstall", "TM_Comms_WPF_Uninstall\TM_Comms_WPF_Uninstall.csproj", "{866128AE-852F-4458-8533-1A4D9908D8DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TM_Comms_WPF_Setup_Support", "TM_Comms_WPF_Setup_Support\TM_Comms_WPF_Setup_Support.csproj", "{866128AE-852F-4458-8533-1A4D9908D8DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
