@@ -95,7 +95,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RingBuffer.cs" />
+    <Compile Include="Support\RingBuffer.cs" />
     <Compile Include="TM_Comms\PingCommand.cs" />
     <Compile Include="Support\ConvertEuler.cs" />
     <Compile Include="EthernetSlaveWindow.xaml.cs">
