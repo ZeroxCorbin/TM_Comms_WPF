@@ -114,7 +114,7 @@ namespace TM_Comms_WPF
 #else        
         public static string SettingsFileRootDir { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 #endif
-        public static string SettingsFileAppDir { get; set; } = "\\Nexus\\TM_Comms_WPF\\";
+        public static string SettingsFileAppDir { get; set; } = "\\42Nexus\\TM_Comms_WPF\\";
         public static string SettingsFileName { get; set; } = "appsettings.xml";
         public static string SettingsFilePath { get; set; } = SettingsFileRootDir + SettingsFileAppDir + SettingsFileName;
 
