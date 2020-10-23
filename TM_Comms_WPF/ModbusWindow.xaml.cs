@@ -705,7 +705,7 @@ namespace TM_Comms_WPF
             if (IsLoading) return;
             if (this.WindowState == WindowState.Minimized) return;
 
-            App.Settings.ListenNodeWindow.WindowState = this.WindowState;
+            App.Settings.ModbusWindow.WindowState = this.WindowState;
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {

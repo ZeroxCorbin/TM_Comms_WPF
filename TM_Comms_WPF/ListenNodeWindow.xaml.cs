@@ -409,7 +409,7 @@ namespace TM_Comms_WPF
 
         private void BtnLNNewReadPosition_Click(object sender, RoutedEventArgs e)
         {
-            if (((string)((ComboBoxItem)CmdPositionType.SelectedItem).Tag) == "0")
+            if (((string)((ComboBoxItem)CmbPositionType.SelectedItem).Tag) == "0")
             {
                 ListenNode ln = new ListenNode("ListenSend(90, GetString(Robot[1].CoordRobot, 10, 3))");
                 PositionRequest = ln.ScriptID.ToString();
@@ -435,7 +435,7 @@ namespace TM_Comms_WPF
                 sb.Append("Joint");
             sb.Append(delim);
 
-            if (((string)((ComboBoxItem)CmdPositionType.SelectedItem).Tag) == "0")
+            if (((string)((ComboBoxItem)CmbPositionType.SelectedItem).Tag) == "0")
                 sb.Append("Pose");
             else
                 sb.Append("Joint");
@@ -641,5 +641,28 @@ namespace TM_Comms_WPF
                 UpdatePositionString();
         }
 
+        private void CmbPositionType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(!IsLoaded) return;
+
+            if (CmbPositionType.SelectedIndex == 0)
+            {
+                LblMB1.Content = "X";
+                LblMB2.Content = "Y";
+                LblMB3.Content = "Z";
+                LblMB4.Content = "Rx";
+                LblMB5.Content = "Ry";
+                LblMB6.Content = "Rz";
+            }
+            else
+            {
+                LblMB1.Content = "J1";
+                LblMB2.Content = "J2";
+                LblMB3.Content = "J3";
+                LblMB4.Content = "J4";
+                LblMB5.Content = "J5";
+                LblMB6.Content = "J6";
+            }
+        }
     }
 }
