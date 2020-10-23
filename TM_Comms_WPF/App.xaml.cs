@@ -62,11 +62,11 @@ namespace TM_Comms_WPF
 
     public partial class App : Application
     {
-        public class GetData
+        public class GetListenNodeData
         {
 
             public List<string> Commands { get; private set; } = new List<string>();
-            public GetData()
+            public GetListenNodeData()
             {
                 using (StreamReader file = new StreamReader("ListenNodeCommands_Raw_1.68.6800.txt"))
                 {

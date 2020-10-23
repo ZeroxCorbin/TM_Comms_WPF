@@ -116,11 +116,11 @@ namespace TM_Comms_WPF
 
         private string GetPLineCart(MoveStep ms, int pos) => $"targetP{pos}={{{ms.Where[0]},{ms.Where[1]},{ms.Where[2]},{ms.Where[3]},{ms.Where[4]},{ms.Where[5]}}}\r\n" +
                                                              $"Line(\"CPP\",targetP{pos},{ms.Velocity_pct},{ms.Acceleration_ms},{ms.Blent_pct},true)\r\n";
-        private string GetPLineJoint(MoveStep ms, int pos) => $"float[] targetP{pos}={{{ms.Where[0]},{ms.Where[1]},{ms.Where[2]},{ms.Where[3]},{ms.Where[4]},{ms.Where[5]}}}\r\n" +
+        private string GetPLineJoint(MoveStep ms, int pos) => $"targetP{pos}={{{ms.Where[0]},{ms.Where[1]},{ms.Where[2]},{ms.Where[3]},{ms.Where[4]},{ms.Where[5]}}}\r\n" +
                                                               $"Line(\"JPP\",targetP{pos},{ms.Velocity_pct},{ms.Acceleration_ms},{ms.Blent_pct},true)\r\n";
-        private string GetPTPCart(MoveStep ms, int pos) => $"float[] targetP{pos}={{{ms.Where[0]},{ms.Where[1]},{ms.Where[2]},{ms.Where[3]},{ms.Where[4]},{ms.Where[5]}}}\r\n" +
+        private string GetPTPCart(MoveStep ms, int pos) => $"targetP{pos}={{{ms.Where[0]},{ms.Where[1]},{ms.Where[2]},{ms.Where[3]},{ms.Where[4]},{ms.Where[5]}}}\r\n" +
                                                            $"PTP(\"CPP\",targetP{pos},{ms.Velocity_pct},{ms.Acceleration_ms},{ms.Blent_pct},true)\r\n";
-        private string GetPTPJoint(MoveStep ms, int pos) => $"float[] targetP{pos}={{{ms.Where[0]},{ms.Where[1]},{ms.Where[2]},{ms.Where[3]},{ms.Where[4]},{ms.Where[5]}}}\r\n" +
+        private string GetPTPJoint(MoveStep ms, int pos) => $"targetP{pos}={{{ms.Where[0]},{ms.Where[1]},{ms.Where[2]},{ms.Where[3]},{ms.Where[4]},{ms.Where[5]}}}\r\n" +
                                                             $"PTP(\"JPP\",targetP{pos},{ms.Velocity_pct},{ms.Acceleration_ms},{ms.Blent_pct},true)\r\n";
         private string GetQueueTag(int num) => $"QueueTag({num})\r\n";
         private string GetScriptExit() => $"ScriptExit()\r\n";
