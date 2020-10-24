@@ -13,7 +13,6 @@ namespace TM_Comms_WPF
 {
     public partial class MainWindow : Window
     {
-        private bool IsLoading { get; set; } = true;
         public MainWindow()
         {
             InitializeComponent();
@@ -50,11 +49,17 @@ namespace TM_Comms_WPF
             if (WindowStartupLocation == WindowStartupLocation.CenterScreen)
             {
                 WindowStartupLocation = WindowStartupLocation.Manual;
-                IsLoading = false;
                 this.Top /= 2;
             }
-            IsLoading = false;
+         }
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            if(!IsLoaded) return;
+
+            App.Settings.MainWindow.Top = Top;
+            App.Settings.MainWindow.Left = Left;
         }
+
         private bool IPValid { get; set; } = false;
         private void TxtRobotIP_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -99,7 +104,7 @@ namespace TM_Comms_WPF
                     break;
             }
 
-            if (IsLoading) return;
+            if (!IsLoaded) return;
 
             App.Settings.Version = (TMflowVersions)CmbSystemVersions.SelectedItem;
         }
@@ -130,10 +135,9 @@ namespace TM_Comms_WPF
             }
             if (ListenNodeWindow == null)
             {
-                ListenNodeWindow = new ListenNodeWindow();
+                ListenNodeWindow = new ListenNodeWindow(this);
                 ListenNodeWindow.Closed += ListenNodeWindow_Closed;
                 ListenNodeWindow.Activated += AnyWindow_Activated;
-                ListenNodeWindow.Owner = this;
                 ListenNodeWindow.Show();
 
                 WindowShow();
@@ -153,10 +157,9 @@ namespace TM_Comms_WPF
             }
             if (EthernetSlaveWindow == null)
             {
-                EthernetSlaveWindow = new EthernetSlaveWindow();
+                EthernetSlaveWindow = new EthernetSlaveWindow(this);
                 EthernetSlaveWindow.Closed += EthernetSlaveWindow_Closed;
                 EthernetSlaveWindow.Activated += AnyWindow_Activated;
-                EthernetSlaveWindow.Owner = this;
                 EthernetSlaveWindow.Show();
 
                 WindowShow();
@@ -199,10 +202,9 @@ namespace TM_Comms_WPF
             }
             if (ModbusWindow == null)
             {
-                ModbusWindow = new ModbusWindow();
+                ModbusWindow = new ModbusWindow(this);
                 ModbusWindow.Closed += ModbusWindow_Closed;
                 ModbusWindow.Activated += AnyWindow_Activated;
-                ModbusWindow.Owner = this;
                 ModbusWindow.Show();
 
                 WindowShow();
@@ -216,13 +218,7 @@ namespace TM_Comms_WPF
 
         private void AnyWindow_Activated(object sender, EventArgs e) => MoveToForeground.DoOnProcess("TM_Comms_WPF");
 
-        private void Window_LocationChanged(object sender, EventArgs e)
-        {
-            if (IsLoading) return;
 
-            App.Settings.MainWindow.Top = Top;
-            App.Settings.MainWindow.Left = Left;
-        }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Port8080Window?.Close();
