@@ -20,8 +20,7 @@ namespace TM_Comms_WPF
 {
     public partial class ListenNodeWindow : Window
     {
-        //Private
-        private bool IsLoading { get; set; } = true;
+
         private ListenNode ListenNode { get; set; }
 
         private MotionScriptBuilder MotionScriptBuilder { get; set; }
@@ -29,22 +28,24 @@ namespace TM_Comms_WPF
         private string PositionRequest { get; set; } = null;
 
         //Public
-        public ListenNodeWindow()
+        public ListenNodeWindow(Window owner)
         {
+            Owner = owner;
+
             InitializeComponent();
+
+            Window_LoadSettings();
 
             ListenNode = GetLNNode();
 
             LoadCommandTreeView();
-
-
         }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_LoadSettings()
         {
-            if (Keyboard.IsKeyDown(Key.LeftShift))
+            if(Keyboard.IsKeyDown(Key.LeftShift))
                 App.Settings.ListenNodeWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
 
-            if (double.IsNaN(App.Settings.ListenNodeWindow.Left))
+            if(double.IsNaN(App.Settings.ListenNodeWindow.Left))
             {
                 App.Settings.ListenNodeWindow.Left = Owner.Left;
                 App.Settings.ListenNodeWindow.Top = Owner.Top + Owner.Height;
@@ -57,7 +58,7 @@ namespace TM_Comms_WPF
             this.Height = App.Settings.ListenNodeWindow.Height;
             this.Width = App.Settings.ListenNodeWindow.Width;
 
-            if (!CheckOnScreen.IsOnScreen(this))
+            if(!CheckOnScreen.IsOnScreen(this))
             {
                 App.Settings.ListenNodeWindow.Left = Owner.Left;
                 App.Settings.ListenNodeWindow.Top = Owner.Top + Owner.Height;
@@ -70,10 +71,49 @@ namespace TM_Comms_WPF
                 this.Width = App.Settings.ListenNodeWindow.Width;
             }
 
-            IsLoading = false;
+        }
+        //Window Changes
+        private double TopLast;
+        private double TopLeft;
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            if(!IsLoaded) return;
 
+            TopLast = App.Settings.ListenNodeWindow.Top;
+            TopLeft = App.Settings.ListenNodeWindow.Left;
+
+            App.Settings.ListenNodeWindow.Top = Top;
+            App.Settings.ListenNodeWindow.Left = Left;
+        }
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if(!IsLoaded) return;
+            if(WindowState != WindowState.Normal) return;
+
+            App.Settings.ListenNodeWindow.Height = Height;
+            App.Settings.ListenNodeWindow.Width = Width;
+        }
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if(!IsLoaded) return;
+
+            if(this.WindowState != WindowState.Normal)
+            {
+                App.Settings.ListenNodeWindow.Top = TopLast;
+                App.Settings.ListenNodeWindow.Left = TopLeft;
+            }
+            if(this.WindowState == WindowState.Minimized) return;
+
+            App.Settings.ListenNodeWindow.WindowState = this.WindowState;
+        }  
+        
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
             ConnectionInActive();
         }
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => CleanSock();
+
+
         private void LoadCommandTreeView()
         {
             TreeViewItem tviParent = null;
@@ -380,36 +420,14 @@ namespace TM_Comms_WPF
                     }));
 
         }
-        //Window Changes
-        private void Window_LocationChanged(object sender, EventArgs e)
-        {
-            if (IsLoading) return;
 
-            App.Settings.ListenNodeWindow.Top = Top;
-            App.Settings.ListenNodeWindow.Left = Left;
-        }
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (IsLoading) return;
-
-            App.Settings.ListenNodeWindow.Width = Width;
-            App.Settings.ListenNodeWindow.Height = Height;
-        }
-        private void Window_StateChanged(object sender, EventArgs e)
-        {
-            if (IsLoading) return;
-            if (this.WindowState == WindowState.Minimized) return;
-
-            App.Settings.ListenNodeWindow.WindowState = this.WindowState;
-        }
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => CleanSock();
 
 
         private void BtnSend_Click(object sender, RoutedEventArgs e) => Socket?.Write(ListenNode.Message);
 
         private void BtnLNNewReadPosition_Click(object sender, RoutedEventArgs e)
         {
-            if (((string)((ComboBoxItem)CmdPositionType.SelectedItem).Tag) == "0")
+            if (((string)((ComboBoxItem)CmbPositionType.SelectedItem).Tag) == "0")
             {
                 ListenNode ln = new ListenNode("ListenSend(90, GetString(Robot[1].CoordRobot, 10, 3))");
                 PositionRequest = ln.ScriptID.ToString();
@@ -435,7 +453,7 @@ namespace TM_Comms_WPF
                 sb.Append("Joint");
             sb.Append(delim);
 
-            if (((string)((ComboBoxItem)CmdPositionType.SelectedItem).Tag) == "0")
+            if (((string)((ComboBoxItem)CmbPositionType.SelectedItem).Tag) == "0")
                 sb.Append("Pose");
             else
                 sb.Append("Joint");
@@ -526,13 +544,13 @@ namespace TM_Comms_WPF
                 LstCommandList.IsEnabled = false;
                 TxtScript.IsEnabled = false;
             }
-            if (IsLoading) return;
+            if (!IsLoaded) return;
 
             ListenNode = GetLNNode();
         }
         private void CmbMessageSubCommands_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (IsLoading) return;
+            if(!IsLoaded) return;
 
             ListenNode = GetLNNode();
         }
@@ -547,7 +565,7 @@ namespace TM_Comms_WPF
 
         private void TxtScriptID_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (IsLoading) return;
+            if(!IsLoaded) return;
             if (!Regex.IsMatch(TxtScriptID.Text, @"^[a-zA-Z0-9_]+$"))
                 TxtScriptID.Text = "local";
 
@@ -641,5 +659,28 @@ namespace TM_Comms_WPF
                 UpdatePositionString();
         }
 
+        private void CmbPositionType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(!IsLoaded) return;
+
+            if (CmbPositionType.SelectedIndex == 0)
+            {
+                LblMB1.Content = "X";
+                LblMB2.Content = "Y";
+                LblMB3.Content = "Z";
+                LblMB4.Content = "Rx";
+                LblMB5.Content = "Ry";
+                LblMB6.Content = "Rz";
+            }
+            else
+            {
+                LblMB1.Content = "J1";
+                LblMB2.Content = "J2";
+                LblMB3.Content = "J3";
+                LblMB4.Content = "J4";
+                LblMB5.Content = "J5";
+                LblMB6.Content = "J6";
+            }
+        }
     }
 }

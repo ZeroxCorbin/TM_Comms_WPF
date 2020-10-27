@@ -29,7 +29,80 @@ namespace TM_Comms_WPF
         private EthernetSlave EthernetSlave { get; set; }
 
         private bool IsLoading { get; set; } = true;
-        public EthernetSlaveWindow() => InitializeComponent();
+        public EthernetSlaveWindow(Window owner)
+        {
+            Owner = owner;
+
+            InitializeComponent();
+
+            Window_LoadSettings();
+        }
+        private void Window_LoadSettings()
+        {
+            if(Keyboard.IsKeyDown(Key.LeftShift))
+                App.Settings.EthernetSlaveWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+
+            if(double.IsNaN(App.Settings.EthernetSlaveWindow.Left))
+            {
+                App.Settings.EthernetSlaveWindow.Left = Owner.Left;
+                App.Settings.EthernetSlaveWindow.Top = Owner.Top + Owner.Height;
+                App.Settings.EthernetSlaveWindow.Height = 768;
+                App.Settings.EthernetSlaveWindow.Width = 1024;
+            }
+
+            this.Left = App.Settings.EthernetSlaveWindow.Left;
+            this.Top = App.Settings.EthernetSlaveWindow.Top;
+            this.Height = App.Settings.EthernetSlaveWindow.Height;
+            this.Width = App.Settings.EthernetSlaveWindow.Width;
+
+            if(!CheckOnScreen.IsOnScreen(this))
+            {
+                App.Settings.EthernetSlaveWindow.Left = Owner.Left;
+                App.Settings.EthernetSlaveWindow.Top = Owner.Top + Owner.Height;
+                App.Settings.EthernetSlaveWindow.Height = 768;
+                App.Settings.EthernetSlaveWindow.Width = 1024;
+
+                this.Left = App.Settings.EthernetSlaveWindow.Left;
+                this.Top = App.Settings.EthernetSlaveWindow.Top;
+                this.Height = App.Settings.EthernetSlaveWindow.Height;
+                this.Width = App.Settings.EthernetSlaveWindow.Width;
+            }
+
+        }
+        //Window Changes
+        private double TopLast;
+        private double TopLeft;
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            if(!IsLoaded) return;
+
+            TopLast = App.Settings.EthernetSlaveWindow.Top;
+            TopLeft = App.Settings.EthernetSlaveWindow.Left;
+
+            App.Settings.EthernetSlaveWindow.Top = Top;
+            App.Settings.EthernetSlaveWindow.Left = Left;
+        }
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if(!IsLoaded) return;
+            if(WindowState != WindowState.Normal) return;
+
+            App.Settings.EthernetSlaveWindow.Height = Height;
+            App.Settings.EthernetSlaveWindow.Width = Width;
+        }
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if(!IsLoaded) return;
+
+            if(this.WindowState != WindowState.Normal)
+            {
+                App.Settings.EthernetSlaveWindow.Top = TopLast;
+                App.Settings.EthernetSlaveWindow.Left = TopLeft;
+            }
+            if(this.WindowState == WindowState.Minimized) return;
+
+            App.Settings.EthernetSlaveWindow.WindowState = this.WindowState;
+        }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
@@ -58,36 +131,6 @@ namespace TM_Comms_WPF
                     }
 
                 }
-            }
-
-
-            if (Keyboard.IsKeyDown(Key.LeftShift))
-                App.Settings.EthernetSlaveWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
-
-            if (double.IsNaN(App.Settings.EthernetSlaveWindow.Left))
-            {
-                App.Settings.EthernetSlaveWindow.Left = Owner.Left;
-                App.Settings.EthernetSlaveWindow.Top = Owner.Top + Owner.Height;
-                App.Settings.EthernetSlaveWindow.Height = 768;
-                App.Settings.EthernetSlaveWindow.Width = 1024;
-            }
-
-            this.Left = App.Settings.EthernetSlaveWindow.Left;
-            this.Top = App.Settings.EthernetSlaveWindow.Top;
-            this.Height = App.Settings.EthernetSlaveWindow.Height;
-            this.Width = App.Settings.EthernetSlaveWindow.Width;
-
-            if (!CheckOnScreen.IsOnScreen(this))
-            {
-                App.Settings.EthernetSlaveWindow.Left = Owner.Left;
-                App.Settings.EthernetSlaveWindow.Top = Owner.Top + Owner.Height;
-                App.Settings.EthernetSlaveWindow.Height = 768;
-                App.Settings.EthernetSlaveWindow.Width = 1024;
-
-                this.Left = App.Settings.EthernetSlaveWindow.Left;
-                this.Top = App.Settings.EthernetSlaveWindow.Top;
-                this.Height = App.Settings.EthernetSlaveWindow.Height;
-                this.Width = App.Settings.EthernetSlaveWindow.Width;
             }
 
             EthernetSlave = GetESNode();
@@ -406,24 +449,13 @@ namespace TM_Comms_WPF
             SliderValue = SldUpdateFreq.Value;
             TxtDisplayRate.Text = (SliderValue / 1000).ToString("0.00 sec");
         }
-        //Window Changes
-        private void Window_LocationChanged(object sender, EventArgs e)
-        {
-            if (IsLoading) return;
 
-            App.Settings.EthernetSlaveWindow.Top = Top;
-            App.Settings.EthernetSlaveWindow.Left = Left;
-        }
+
+
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => CleanSock();
 
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (IsLoading) return;
 
-            App.Settings.EthernetSlaveWindow.Width = Width;
-            App.Settings.EthernetSlaveWindow.Height = Height;
-        }
 
 
     }
