@@ -126,6 +126,39 @@ namespace TM_Comms_WPF
             }
         }
 
+        private ModbusWindow ModbusWindow { get; set; } = null;
+        private void BtnModbusWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if(!IPValid)
+            {
+                return;
+            }
+            if(ModbusWindow == null)
+            {
+                ModbusWindow = new ModbusWindow(this);
+                ModbusWindow.Closed += ModbusWindow_Closed;
+                ModbusWindow.Activated += AnyWindow_Activated;
+                ModbusWindow.Show();
+
+                ModbusWindow.Owner = null;
+
+                WindowShow();
+            }
+            else if(ModbusWindow.WindowState == WindowState.Minimized)
+            {
+                ModbusWindow.WindowState = App.Settings.ModbusWindow.WindowState;
+            }
+            else
+            {
+                ModbusWindow.Focus();
+            }
+        }
+        private void ModbusWindow_Closed(object sender, EventArgs e)
+        {
+            ModbusWindow = null;
+            WindowClose();
+        }
+
         private ListenNodeWindow ListenNodeWindow { get; set; } = null;
         private void BtnListenNodeWindow_Click(object sender, RoutedEventArgs e)
         {
@@ -140,7 +173,17 @@ namespace TM_Comms_WPF
                 ListenNodeWindow.Activated += AnyWindow_Activated;
                 ListenNodeWindow.Show();
 
+                ListenNodeWindow.Owner = null;
+
                 WindowShow();
+            }
+            else if(ListenNodeWindow.WindowState == WindowState.Minimized)
+            {
+                ListenNodeWindow.WindowState = App.Settings.ListenNodeWindow.WindowState;
+            }
+            else
+            {
+                ListenNodeWindow.Focus();
             }
         }
         private void ListenNodeWindow_Closed(object sender, EventArgs e)
@@ -148,6 +191,7 @@ namespace TM_Comms_WPF
             ListenNodeWindow = null;
             WindowClose();
         }
+
         private EthernetSlaveWindow EthernetSlaveWindow { get; set; } = null;
         private void BtnEthernetSlaveWindow_Click(object sender, RoutedEventArgs e)
         {
@@ -162,14 +206,26 @@ namespace TM_Comms_WPF
                 EthernetSlaveWindow.Activated += AnyWindow_Activated;
                 EthernetSlaveWindow.Show();
 
+                EthernetSlaveWindow.Owner = null;
+
                 WindowShow();
             }
+            else if(EthernetSlaveWindow.WindowState == WindowState.Minimized)
+            {
+                EthernetSlaveWindow.WindowState = App.Settings.EthernetSlaveWindow.WindowState;
+            }
+            else
+            {
+                EthernetSlaveWindow.Focus();
+            }
+
         }
         private void EthernetSlaveWindow_Closed(object sender, EventArgs e)
         {
             EthernetSlaveWindow = null;
             WindowClose();
         }
+
         private Port8080Window Port8080Window { get; set; } = null;
         private void BtnPort8080Window_Click(object sender, RoutedEventArgs e)
         {
@@ -185,7 +241,17 @@ namespace TM_Comms_WPF
                 Port8080Window.Owner = this;
                 Port8080Window.Show();
 
+                Port8080Window.Owner = null;
+
                 WindowShow();
+            }
+            else if(Port8080Window.WindowState == WindowState.Minimized)
+            {
+                Port8080Window.WindowState = App.Settings.Port8080Window.WindowState;
+            }
+            else
+            {
+                Port8080Window.Focus();
             }
         }
         private void Port8080Window_Closed(object sender, EventArgs e)
@@ -193,28 +259,7 @@ namespace TM_Comms_WPF
             Port8080Window = null;
             WindowClose();
         }
-        private ModbusWindow ModbusWindow { get; set; } = null;
-        private void BtnModbusWindow_Click(object sender, RoutedEventArgs e)
-        {
-            if (!IPValid)
-            {
-                return;
-            }
-            if (ModbusWindow == null)
-            {
-                ModbusWindow = new ModbusWindow(this);
-                ModbusWindow.Closed += ModbusWindow_Closed;
-                ModbusWindow.Activated += AnyWindow_Activated;
-                ModbusWindow.Show();
 
-                WindowShow();
-            }
-        }
-        private void ModbusWindow_Closed(object sender, EventArgs e)
-        {
-            ModbusWindow = null;
-            WindowClose();
-        }
 
         private void AnyWindow_Activated(object sender, EventArgs e) => MoveToForeground.DoOnProcess("TM_Comms_WPF");
 
