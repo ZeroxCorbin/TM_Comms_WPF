@@ -30,16 +30,18 @@ namespace TM_Comms_WPF
         private int NumModbusRegisters { get; set; } = 15;
         private int NumModbusUserRegisters { get; set; } = 15;
 
-        private bool IsLoading { get; set; } = true;
-        public ModbusWindow()
+        public ModbusWindow(Window owner)
         {
+            Owner = owner;
+
             InitializeComponent();
+
+            Window_LoadSettings();
 
             ResetModbusRegisterList();
             ResetModbusUserRegisterList();
 
             RecalcUserRegisters();
-            IsLoading = true;
 
             if (App.Settings.Version == TMflowVersions.V1_80_xxxx)
             {
@@ -54,30 +56,77 @@ namespace TM_Comms_WPF
 
 
         }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+
+        private void Window_LoadSettings()
         {
-            if (Keyboard.IsKeyDown(Key.LeftShift))
+            if(Keyboard.IsKeyDown(Key.LeftShift))
                 App.Settings.ModbusWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
 
-            if (double.IsNaN(App.Settings.ModbusWindow.Left))
+            if(double.IsNaN(App.Settings.ModbusWindow.Left))
             {
                 App.Settings.ModbusWindow.Left = Owner.Left;
                 App.Settings.ModbusWindow.Top = Owner.Top + Owner.Height;
+                App.Settings.ModbusWindow.Height = 768;
+                App.Settings.ModbusWindow.Width = 1024;
             }
 
             this.Left = App.Settings.ModbusWindow.Left;
             this.Top = App.Settings.ModbusWindow.Top;
+            this.Height = App.Settings.ModbusWindow.Height;
+            this.Width = App.Settings.ModbusWindow.Width;
 
-            if (!CheckOnScreen.IsOnScreen(this))
+            if(!CheckOnScreen.IsOnScreen(this))
             {
                 App.Settings.ModbusWindow.Left = Owner.Left;
                 App.Settings.ModbusWindow.Top = Owner.Top + Owner.Height;
+                App.Settings.ModbusWindow.Height = 768;
+                App.Settings.ModbusWindow.Width = 1024;
 
                 this.Left = App.Settings.ModbusWindow.Left;
                 this.Top = App.Settings.ModbusWindow.Top;
+                this.Height = App.Settings.ModbusWindow.Height;
+                this.Width = App.Settings.ModbusWindow.Width;
             }
 
-            IsLoading = false;
+        }
+        //Window Changes
+        private double TopLast;
+        private double TopLeft;
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            if(!IsLoaded) return;
+
+            TopLast = App.Settings.ModbusWindow.Top;
+            TopLeft = App.Settings.ModbusWindow.Left;
+
+            App.Settings.ModbusWindow.Top = Top;
+            App.Settings.ModbusWindow.Left = Left;
+        }
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if(!IsLoaded) return;
+            if(WindowState != WindowState.Normal) return;
+
+            App.Settings.ModbusWindow.Height = Height;
+            App.Settings.ModbusWindow.Width = Width;
+        }
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if(!IsLoaded) return;
+
+            if(this.WindowState != WindowState.Normal)
+            {
+                App.Settings.ModbusWindow.Top = TopLast;
+                App.Settings.ModbusWindow.Left = TopLeft;
+            }
+            if(this.WindowState == WindowState.Minimized) return;
+
+            App.Settings.ModbusWindow.WindowState = this.WindowState;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void ModbusTCP_Message(string message)
@@ -254,8 +303,6 @@ namespace TM_Comms_WPF
         //Modbus Registers
         private void ResetModbusRegisterList()
         {
-            IsLoading = true;
-
             Button btn;
 
             stackModbusComboBox.Children.Clear();
@@ -295,8 +342,6 @@ namespace TM_Comms_WPF
                 //btn.Content = "Write";
                 //stackModbusWriteButton.Children.Add(btn);
             }
-
-            IsLoading = false;
 
             int ii = 1;
             foreach (string str in App.Settings.ModbusComboBoxIndices)
@@ -404,8 +449,6 @@ namespace TM_Comms_WPF
         //Mobus User Registers
         private void ResetModbusUserRegisterList()
         {
-            IsLoading = true;
-
             Button btn;
 
             stackModbusUserComboBox.Children.Clear();
@@ -450,8 +493,6 @@ namespace TM_Comms_WPF
                 stackModbusUserWriteButton.Children.Add(btn);
             }
 
-            IsLoading = false;
-
             int ii = 1;
             foreach (string str in App.Settings.ModbusUserComboBoxIndices)
                 if (ii <= NumModbusUserRegisters)
@@ -464,7 +505,7 @@ namespace TM_Comms_WPF
             ComboBox cmb = ((ComboBox)sender);
             cmb.Tag = Enum.Parse(typeof(ModbusDictionary.MobusValue.DataTypes), (string)cmb.SelectedValue);
 
-            if (!IsLoading) RecalcUserRegisters();
+            if (IsLoaded) RecalcUserRegisters();
         }
         private void RecalcUserRegisters()
         {
@@ -693,20 +734,6 @@ namespace TM_Comms_WPF
         }
 
         //Window Changes
-        private void Window_LocationChanged(object sender, EventArgs e)
-        {
-            if (IsLoading) return;
-
-            App.Settings.ModbusWindow.Top = Top;
-            App.Settings.ModbusWindow.Left = Left;
-        }
-        private void Window_StateChanged(object sender, EventArgs e)
-        {
-            if (IsLoading) return;
-            if (this.WindowState == WindowState.Minimized) return;
-
-            App.Settings.ModbusWindow.WindowState = this.WindowState;
-        }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             App.Settings.ModbusComboBoxIndices = new string[NumModbusRegisters];
