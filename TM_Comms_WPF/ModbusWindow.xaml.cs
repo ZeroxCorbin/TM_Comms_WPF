@@ -32,6 +32,7 @@ namespace TM_Comms_WPF
 
         public ModbusWindow(Window owner)
         {
+            DataContext = App.Settings;
             Owner = owner;
 
             InitializeComponent();
@@ -59,69 +60,16 @@ namespace TM_Comms_WPF
 
         private void Window_LoadSettings()
         {
-            if(Keyboard.IsKeyDown(Key.LeftShift))
-                App.Settings.ModbusWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
-
-            if(double.IsNaN(App.Settings.ModbusWindow.Left))
+            if(double.IsNaN(App.Settings.ModbusWindow.Left)
+                || !CheckOnScreen.IsOnScreen(this)
+                || Keyboard.IsKeyDown(Key.LeftShift))
             {
-                App.Settings.ModbusWindow.Left = Owner.Left;
-                App.Settings.ModbusWindow.Top = Owner.Top + Owner.Height;
-                App.Settings.ModbusWindow.Height = 768;
-                App.Settings.ModbusWindow.Width = 1024;
+                Left = Owner.Left;
+                Top = Owner.Top + Owner.Height;
+                Height = 768;
+                Width = 1024;
             }
 
-            this.Left = App.Settings.ModbusWindow.Left;
-            this.Top = App.Settings.ModbusWindow.Top;
-            this.Height = App.Settings.ModbusWindow.Height;
-            this.Width = App.Settings.ModbusWindow.Width;
-
-            if(!CheckOnScreen.IsOnScreen(this))
-            {
-                App.Settings.ModbusWindow.Left = Owner.Left;
-                App.Settings.ModbusWindow.Top = Owner.Top + Owner.Height;
-                App.Settings.ModbusWindow.Height = 768;
-                App.Settings.ModbusWindow.Width = 1024;
-
-                this.Left = App.Settings.ModbusWindow.Left;
-                this.Top = App.Settings.ModbusWindow.Top;
-                this.Height = App.Settings.ModbusWindow.Height;
-                this.Width = App.Settings.ModbusWindow.Width;
-            }
-
-        }
-        //Window Changes
-        private double TopLast;
-        private double TopLeft;
-        private void Window_LocationChanged(object sender, EventArgs e)
-        {
-            if(!IsLoaded) return;
-
-            TopLast = App.Settings.ModbusWindow.Top;
-            TopLeft = App.Settings.ModbusWindow.Left;
-
-            App.Settings.ModbusWindow.Top = Top;
-            App.Settings.ModbusWindow.Left = Left;
-        }
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if(!IsLoaded) return;
-            if(WindowState != WindowState.Normal) return;
-
-            App.Settings.ModbusWindow.Height = Height;
-            App.Settings.ModbusWindow.Width = Width;
-        }
-        private void Window_StateChanged(object sender, EventArgs e)
-        {
-            if(!IsLoaded) return;
-
-            if(this.WindowState != WindowState.Normal)
-            {
-                App.Settings.ModbusWindow.Top = TopLast;
-                App.Settings.ModbusWindow.Left = TopLeft;
-            }
-            if(this.WindowState == WindowState.Minimized) return;
-
-            App.Settings.ModbusWindow.WindowState = this.WindowState;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

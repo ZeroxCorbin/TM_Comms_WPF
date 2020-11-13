@@ -5,7 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF"
         mc:Ignorable="d"
-        Title="Listen Node" Closing="Window_Closing" WindowStartupLocation="Manual" LocationChanged="Window_LocationChanged" StateChanged="Window_StateChanged" ResizeMode="CanResizeWithGrip" Icon="Support/favicon.ico" SizeChanged="Window_SizeChanged" Height="768" Width="1024" Loaded="Window_Loaded">
+        Title="Listen Node"
+        Icon="Support/favicon.ico"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing"
+        MinHeight="768"
+        MinWidth="1024"
+        Width="{Binding ListenNodeWindow.Width, Mode=TwoWay}"
+        Height="{Binding ListenNodeWindow.Height, Mode=TwoWay}"
+        Left="{Binding ListenNodeWindow.Left, Mode=TwoWay}"
+        Top="{Binding ListenNodeWindow.Top, Mode=TwoWay}"
+        WindowState="{Binding ListenNodeWindow.WindowState, Mode=TwoWay}">
+
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" MinWidth="500"/>
