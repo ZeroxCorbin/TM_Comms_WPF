@@ -21,6 +21,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Serialization;
+using TM_Comms;
 
 namespace TM_Comms_WPF
 {

@@ -59,7 +59,6 @@ namespace TM_Comms_WPF
 
     }
 
-
     public partial class App : Application
     {
         public class GetListenNodeData

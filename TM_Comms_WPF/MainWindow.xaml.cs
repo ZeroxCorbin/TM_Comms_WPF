@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using ApplicationSettingsNS;
+using TM_Comms;
 
 namespace TM_Comms_WPF
 {
@@ -28,6 +29,7 @@ namespace TM_Comms_WPF
                 App.Settings.ModbusWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
                 App.Settings.ListenNodeWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
                 App.Settings.EthernetSlaveWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
+                App.Settings.ExternalVisionWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
                 App.Settings.Port8080Window = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
             }
 
@@ -89,18 +91,22 @@ namespace TM_Comms_WPF
                 case TMflowVersions.V1_68_xxxx:
                     btnPort8080Window.IsEnabled = true;
                     btnEthernetSlaveWindow.IsEnabled = false;
+                    btnExternalVisionWindow.IsEnabled = false;
                     break;
                 case TMflowVersions.V1_72_xxxx:
                     btnPort8080Window.IsEnabled = true;
                     btnEthernetSlaveWindow.IsEnabled = false;
+                    btnExternalVisionWindow.IsEnabled = false;
                     break;
                 case TMflowVersions.V1_76_xxxx:
                     btnPort8080Window.IsEnabled = true;
                     btnEthernetSlaveWindow.IsEnabled = true;
+                    btnExternalVisionWindow.IsEnabled = false;
                     break;
                 case TMflowVersions.V1_80_xxxx:
                     btnPort8080Window.IsEnabled = false;
                     btnEthernetSlaveWindow.IsEnabled = true;
+                    btnExternalVisionWindow.IsEnabled = true;
                     break;
             }
 
@@ -119,6 +125,7 @@ namespace TM_Comms_WPF
             if (ListenNodeWindow == null &&
                 Port8080Window == null &&
                 EthernetSlaveWindow == null &&
+                ExternalVisionWindow == null &&
                 ModbusWindow == null)
             {
                 CmbSystemVersions.IsEnabled = true;
@@ -260,6 +267,39 @@ namespace TM_Comms_WPF
             WindowClose();
         }
 
+        private ExternalVisionWindow ExternalVisionWindow { get; set; } = null;
+        private void BtnExternalVisionWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if(!IPValid)
+            {
+                return;
+            }
+            if(ExternalVisionWindow == null)
+            {
+                ExternalVisionWindow = new ExternalVisionWindow(this);
+                ExternalVisionWindow.Closed += ExternalVisionWindow_Closed;
+                ExternalVisionWindow.Activated += AnyWindow_Activated;
+                ExternalVisionWindow.Show();
+
+                ExternalVisionWindow.Owner = null;
+
+                WindowShow();
+            }
+            else if(ExternalVisionWindow.WindowState == WindowState.Minimized)
+            {
+                ExternalVisionWindow.WindowState = App.Settings.ExternalVisionWindow.WindowState;
+            }
+            else
+            {
+                ExternalVisionWindow.Focus();
+            }
+
+        }
+        private void ExternalVisionWindow_Closed(object sender, EventArgs e)
+        {
+            ExternalVisionWindow = null;
+            WindowClose();
+        }
 
         private void AnyWindow_Activated(object sender, EventArgs e) => MoveToForeground.DoOnProcess("TM_Comms_WPF");
 
@@ -270,8 +310,8 @@ namespace TM_Comms_WPF
             EthernetSlaveWindow?.Close();
             ModbusWindow?.Close();
             ListenNodeWindow?.Close();
+            ExternalVisionWindow?.Close();
         }
-
 
     }
 }

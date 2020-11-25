@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TM_Comms_WPF
+namespace TM_Comms
 {
     public enum TMflowVersions
     {

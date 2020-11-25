@@ -10,6 +10,7 @@ using System.Windows.Threading;
 using ApplicationSettingsNS;
 using RingBuffer;
 using SocketManagerNS;
+using TM_Comms;
 
 namespace TM_Comms_WPF
 {

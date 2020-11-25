@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TM_Comms_WPF
+namespace TM_Comms
 {
     public partial class ListenNode
     {

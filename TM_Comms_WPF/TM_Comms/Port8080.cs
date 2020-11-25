@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace TM_Comms_WPF
+namespace TM_Comms
 {
     public class Port8080
     {

@@ -5,7 +5,7 @@ using System.IO;
 using System.Transactions;
 using System.Windows;
 using System.Xml.Serialization;
-using TM_Comms_WPF;
+using TM_Comms;
 
 namespace ApplicationSettingsNS
 {
@@ -73,11 +73,15 @@ namespace ApplicationSettingsNS
                 "Int16",
                 "Int16"};
 
+            public string ExternalVisionWindow_ListenAddress { get; set; } = "*";
+            public int ExternalVisionWindow_ListenPort { get; set; } = 8080;
+
             public WindowSettings MainWindow { get; set; } = new WindowSettings();
             public WindowSettings ModbusWindow { get; set; } = new WindowSettings();
             public WindowSettings ListenNodeWindow { get; set; } = new WindowSettings();
             public WindowSettings EthernetSlaveWindow { get; set; } = new WindowSettings();
             public WindowSettings Port8080Window { get; set; } = new WindowSettings();
+            public WindowSettings ExternalVisionWindow { get; set; } = new WindowSettings();
 
             public class WindowSettings : INotifyPropertyChanged
             {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using static TM_Comms_WPF.MotionScriptBuilder;
+using static TM_Comms.MotionScriptBuilder;
 
 namespace TM_Comms_WPF
 {

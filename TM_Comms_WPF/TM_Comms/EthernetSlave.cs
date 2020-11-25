@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace TM_Comms_WPF
+namespace TM_Comms
 {
     public partial class EthernetSlave
     {
@@ -21,6 +18,7 @@ namespace TM_Comms_WPF
             NOT_SUPPORTED,
             WRITE_PERMISSION,
             INVALID_DATA,
+
             NOT_EXIST,
             READ_ONLY,
             MODE_ERROR,

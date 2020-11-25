@@ -10,11 +10,12 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-
-using static TM_Comms_WPF.MotionScriptBuilder;
+using TM_Comms;
+using static TM_Comms.MotionScriptBuilder;
 
 namespace TM_Comms_WPF
 {
