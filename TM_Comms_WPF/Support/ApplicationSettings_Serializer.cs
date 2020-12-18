@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Transactions;
 using System.Windows;
 using System.Xml.Serialization;
-using TM_Comms_WPF;
+using TM_Comms;
 
 namespace ApplicationSettingsNS
 {
@@ -72,19 +73,53 @@ namespace ApplicationSettingsNS
                 "Int16",
                 "Int16"};
 
+            public string ExternalVisionWindow_ListenAddress { get; set; } = "*";
+            public int ExternalVisionWindow_ListenPort { get; set; } = 8080;
+
             public WindowSettings MainWindow { get; set; } = new WindowSettings();
             public WindowSettings ModbusWindow { get; set; } = new WindowSettings();
             public WindowSettings ListenNodeWindow { get; set; } = new WindowSettings();
             public WindowSettings EthernetSlaveWindow { get; set; } = new WindowSettings();
             public WindowSettings Port8080Window { get; set; } = new WindowSettings();
+            public WindowSettings ExternalVisionWindow { get; set; } = new WindowSettings();
 
-            public class WindowSettings
+            public class WindowSettings : INotifyPropertyChanged
             {
-                public double Left { get; set; } = double.NaN;
-                public double Top { get; set; } = double.NaN;
-                public double Width { get; set; } = double.NaN;
-                public double Height { get; set; } = double.NaN;
-                public WindowState WindowState { get; set; } = WindowState.Normal;
+                private double _left = double.NaN;
+                private double _top = double.NaN;
+                private double _width = double.NaN;
+                private double _height = double.NaN;
+                private WindowState windowState = WindowState.Normal;
+
+                public double Left
+                {
+                    get { return _left; }
+                    set { if(windowState == WindowState.Normal) _left = value; RaisePropertyChanged("Left"); }
+                }
+                public double Top
+                {
+                    get { return _top; }
+                    set { if(windowState == WindowState.Normal) _top = value; RaisePropertyChanged("Top"); }
+                }
+                public double Width
+                {
+                    get { return _width; }
+                    set { if(windowState == WindowState.Normal) _width = value; RaisePropertyChanged("Width"); }
+                }
+                public double Height
+                {
+                    get { return _height; }
+                    set { if(windowState == WindowState.Normal) _height = value; RaisePropertyChanged("Height"); }
+                }
+                public WindowState WindowState
+                {
+                    get { return windowState; }
+                    set { if(value != WindowState.Minimized) windowState = value; RaisePropertyChanged("WindowState"); }
+                }
+
+                public event PropertyChangedEventHandler PropertyChanged;
+                private void RaisePropertyChanged(string propertyName) =>
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }

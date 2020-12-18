@@ -21,6 +21,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Serialization;
+using TM_Comms;
 
 namespace TM_Comms_WPF
 {
@@ -31,6 +32,8 @@ namespace TM_Comms_WPF
         private bool IsLoading { get; set; } = true;
         public EthernetSlaveWindow(Window owner)
         {
+            DataContext = App.Settings;
+
             Owner = owner;
 
             InitializeComponent();
@@ -39,97 +42,34 @@ namespace TM_Comms_WPF
         }
         private void Window_LoadSettings()
         {
-            if(Keyboard.IsKeyDown(Key.LeftShift))
-                App.Settings.EthernetSlaveWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
-
-            if(double.IsNaN(App.Settings.EthernetSlaveWindow.Left))
+            if (double.IsNaN(App.Settings.EthernetSlaveWindow.Left)
+                || !CheckOnScreen.IsOnScreen(this)
+                || Keyboard.IsKeyDown(Key.LeftShift))
             {
-                App.Settings.EthernetSlaveWindow.Left = Owner.Left;
-                App.Settings.EthernetSlaveWindow.Top = Owner.Top + Owner.Height;
-                App.Settings.EthernetSlaveWindow.Height = 768;
-                App.Settings.EthernetSlaveWindow.Width = 1024;
-            }
-
-            this.Left = App.Settings.EthernetSlaveWindow.Left;
-            this.Top = App.Settings.EthernetSlaveWindow.Top;
-            this.Height = App.Settings.EthernetSlaveWindow.Height;
-            this.Width = App.Settings.EthernetSlaveWindow.Width;
-
-            if(!CheckOnScreen.IsOnScreen(this))
-            {
-                App.Settings.EthernetSlaveWindow.Left = Owner.Left;
-                App.Settings.EthernetSlaveWindow.Top = Owner.Top + Owner.Height;
-                App.Settings.EthernetSlaveWindow.Height = 768;
-                App.Settings.EthernetSlaveWindow.Width = 1024;
-
-                this.Left = App.Settings.EthernetSlaveWindow.Left;
-                this.Top = App.Settings.EthernetSlaveWindow.Top;
-                this.Height = App.Settings.EthernetSlaveWindow.Height;
-                this.Width = App.Settings.EthernetSlaveWindow.Width;
+                Left = Owner.Left;
+                Top = Owner.Top + Owner.Height;
+                Height = 768;
+                Width = 1024;
             }
 
         }
-        //Window Changes
-        private double TopLast;
-        private double TopLeft;
-        private void Window_LocationChanged(object sender, EventArgs e)
-        {
-            if(!IsLoaded) return;
 
-            TopLast = App.Settings.EthernetSlaveWindow.Top;
-            TopLeft = App.Settings.EthernetSlaveWindow.Left;
-
-            App.Settings.EthernetSlaveWindow.Top = Top;
-            App.Settings.EthernetSlaveWindow.Left = Left;
-        }
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if(!IsLoaded) return;
-            if(WindowState != WindowState.Normal) return;
-
-            App.Settings.EthernetSlaveWindow.Height = Height;
-            App.Settings.EthernetSlaveWindow.Width = Width;
-        }
-        private void Window_StateChanged(object sender, EventArgs e)
-        {
-            if(!IsLoaded) return;
-
-            if(this.WindowState != WindowState.Normal)
-            {
-                App.Settings.EthernetSlaveWindow.Top = TopLast;
-                App.Settings.EthernetSlaveWindow.Left = TopLeft;
-            }
-            if(this.WindowState == WindowState.Minimized) return;
-
-            App.Settings.EthernetSlaveWindow.WindowState = this.WindowState;
-        }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
-            if (App.Settings.Version == TMflowVersions.V1_76_xxxx || App.Settings.Version == TMflowVersions.V1_80_xxxx)
+            EthernetSlaveXMLData.File data = EthernetSlave.GetXMLCommands(App.Settings.Version);
+            if (data != null)
             {
-                EthernetSlaveXMLData.File data = null;
-                XmlSerializer serializer = new XmlSerializer(typeof(EthernetSlaveXMLData.File));
-                using (TextReader sr = new StringReader(EthernetSlave.Commands[App.Settings.Version]))
+                foreach (EthernetSlaveXMLData.FileSetting setting in data.CodeTable)
                 {
-                    data = (EthernetSlaveXMLData.File)serializer.Deserialize(sr);
-                }
-                if (data != null)
-                {
-                    foreach (EthernetSlaveXMLData.FileSetting setting in data.CodeTable)
+                    if (setting.Accessibility == "R/W")
                     {
-                        if (setting.Accessibility == "R/W")
+                        ListViewItem lvi = new ListViewItem()
                         {
-                            ListViewItem lvi = new ListViewItem()
-                            {
-                                Content = setting.Item
-                            };
-                            lvi.MouseDoubleClick += Lvi_MouseDoubleClick;
-                            LsvWritableValues.Items.Add(lvi);
-                        }
-
+                            Content = setting.Item
+                        };
+                        lvi.MouseDoubleClick += Lvi_MouseDoubleClick;
+                        LsvWritableValues.Items.Add(lvi);
                     }
-
                 }
             }
 
@@ -172,7 +112,7 @@ namespace TM_Comms_WPF
         private EthernetSlave GetESNode()
         {
             EthernetSlave node = new EthernetSlave();
-            if(Enum.TryParse((string)((ComboBoxItem)cmbESDataType.SelectedItem).Tag, out EthernetSlave.Headers header))
+            if (Enum.TryParse((string)((ComboBoxItem)cmbESDataType.SelectedItem).Tag, out EthernetSlave.Headers header))
             {
                 if (Enum.TryParse((string)((ComboBoxItem)cmbESDataMode.SelectedItem).Tag, out EthernetSlave.Modes mode))
                 {
@@ -227,10 +167,10 @@ namespace TM_Comms_WPF
         private void BtnSendBadPacketData_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSTA,4,XXXX,*47\r\n");
 
         private void BtnSendNotSupported_Click(object sender, RoutedEventArgs e) => Socket?.Write("$TMSVR,20,diag,99,Stick_Stop=1,*46\r\n");
-        private void BtnSendInvalidData_Click(object sender, RoutedEventArgs e)=> Socket?.Write("$TMSVR,11,diag,1,[{}],*58\r\n");
-        private void BtnSendNotExist_Click(object sender, RoutedEventArgs e)=> Socket?.Write("$TMSVR,18,diag,2,Ctrl_DO16=1,*24\r\n");
-        private void BtnSendReadOnly_Click(object sender, RoutedEventArgs e)=> Socket?.Write("$TMSVR,19,diag,2,Robot_Link=1,*64\r\n");
-        private void BtnSendValueError_Click(object sender, RoutedEventArgs e)=> Socket?.Write("$TMSVR,24,diag,2,Stick_Plus=\"diag\",*48\r\n");
+        private void BtnSendInvalidData_Click(object sender, RoutedEventArgs e) => Socket?.Write("$TMSVR,11,diag,1,[{}],*58\r\n");
+        private void BtnSendNotExist_Click(object sender, RoutedEventArgs e) => Socket?.Write("$TMSVR,18,diag,2,Ctrl_DO16=1,*24\r\n");
+        private void BtnSendReadOnly_Click(object sender, RoutedEventArgs e) => Socket?.Write("$TMSVR,19,diag,2,Robot_Link=1,*64\r\n");
+        private void BtnSendValueError_Click(object sender, RoutedEventArgs e) => Socket?.Write("$TMSVR,24,diag,2,Stick_Plus=\"diag\",*48\r\n");
 
         private void ConnectionActive()
         {

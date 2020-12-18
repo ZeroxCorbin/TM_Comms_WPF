@@ -10,11 +10,12 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-
-using static TM_Comms_WPF.MotionScriptBuilder;
+using TM_Comms;
+using static TM_Comms.MotionScriptBuilder;
 
 namespace TM_Comms_WPF
 {
@@ -30,6 +31,7 @@ namespace TM_Comms_WPF
         //Public
         public ListenNodeWindow(Window owner)
         {
+            DataContext = App.Settings;
             Owner = owner;
 
             InitializeComponent();
@@ -42,70 +44,17 @@ namespace TM_Comms_WPF
         }
         private void Window_LoadSettings()
         {
-            if(Keyboard.IsKeyDown(Key.LeftShift))
-                App.Settings.ListenNodeWindow = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
-
-            if(double.IsNaN(App.Settings.ListenNodeWindow.Left))
+            if(double.IsNaN(App.Settings.ListenNodeWindow.Left)
+                || !CheckOnScreen.IsOnScreen(this)
+                || Keyboard.IsKeyDown(Key.LeftShift))
             {
-                App.Settings.ListenNodeWindow.Left = Owner.Left;
-                App.Settings.ListenNodeWindow.Top = Owner.Top + Owner.Height;
-                App.Settings.ListenNodeWindow.Height = 768;
-                App.Settings.ListenNodeWindow.Width = 1024;
-            }
-
-            this.Left = App.Settings.ListenNodeWindow.Left;
-            this.Top = App.Settings.ListenNodeWindow.Top;
-            this.Height = App.Settings.ListenNodeWindow.Height;
-            this.Width = App.Settings.ListenNodeWindow.Width;
-
-            if(!CheckOnScreen.IsOnScreen(this))
-            {
-                App.Settings.ListenNodeWindow.Left = Owner.Left;
-                App.Settings.ListenNodeWindow.Top = Owner.Top + Owner.Height;
-                App.Settings.ListenNodeWindow.Height = 768;
-                App.Settings.ListenNodeWindow.Width = 1024;
-
-                this.Left = App.Settings.ListenNodeWindow.Left;
-                this.Top = App.Settings.ListenNodeWindow.Top;
-                this.Height = App.Settings.ListenNodeWindow.Height;
-                this.Width = App.Settings.ListenNodeWindow.Width;
+                Left = Owner.Left;
+                Top = Owner.Top + Owner.Height;
+                Height = 768;
+                Width = 1024;
             }
 
         }
-        //Window Changes
-        private double TopLast;
-        private double TopLeft;
-        private void Window_LocationChanged(object sender, EventArgs e)
-        {
-            if(!IsLoaded) return;
-
-            TopLast = App.Settings.ListenNodeWindow.Top;
-            TopLeft = App.Settings.ListenNodeWindow.Left;
-
-            App.Settings.ListenNodeWindow.Top = Top;
-            App.Settings.ListenNodeWindow.Left = Left;
-        }
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if(!IsLoaded) return;
-            if(WindowState != WindowState.Normal) return;
-
-            App.Settings.ListenNodeWindow.Height = Height;
-            App.Settings.ListenNodeWindow.Width = Width;
-        }
-        private void Window_StateChanged(object sender, EventArgs e)
-        {
-            if(!IsLoaded) return;
-
-            if(this.WindowState != WindowState.Normal)
-            {
-                App.Settings.ListenNodeWindow.Top = TopLast;
-                App.Settings.ListenNodeWindow.Left = TopLeft;
-            }
-            if(this.WindowState == WindowState.Minimized) return;
-
-            App.Settings.ListenNodeWindow.WindowState = this.WindowState;
-        }  
         
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {

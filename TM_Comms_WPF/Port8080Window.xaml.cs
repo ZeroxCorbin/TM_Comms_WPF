@@ -10,6 +10,7 @@ using System.Windows.Threading;
 using ApplicationSettingsNS;
 using RingBuffer;
 using SocketManagerNS;
+using TM_Comms;
 
 namespace TM_Comms_WPF
 {
@@ -25,35 +26,23 @@ namespace TM_Comms_WPF
             set { _data = value; }
         }
 
-        private bool IsLoading = true;
         public Port8080Window()
         {
+            DataContext = App.Settings;
+
             InitializeComponent();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (Keyboard.IsKeyDown(Key.LeftShift))
-                App.Settings.Port8080Window = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
-
-            if (double.IsNaN(App.Settings.Port8080Window.Left))
+            if(double.IsNaN(App.Settings.Port8080Window.Left)
+                || !CheckOnScreen.IsOnScreen(this)
+                || Keyboard.IsKeyDown(Key.LeftShift))
             {
-                App.Settings.Port8080Window.Left = Owner.Left;
-                App.Settings.Port8080Window.Top = Owner.Top + Owner.Height;
+                Left = Owner.Left;
+                Top = Owner.Top + Owner.Height;
+                Height = 768;
+                Width = 1024;
             }
-
-            this.Left = App.Settings.Port8080Window.Left;
-            this.Top = App.Settings.Port8080Window.Top;
-
-            if (!CheckOnScreen.IsOnScreen(this))
-            {
-                App.Settings.Port8080Window.Left = Owner.Left;
-                App.Settings.Port8080Window.Top = Owner.Top + Owner.Height;
-
-                this.Left = App.Settings.Port8080Window.Left;
-                this.Top = App.Settings.Port8080Window.Top;
-            }
-
-            IsLoading = false;
         }
         private string CleanMessage(string msg)
         {
@@ -219,14 +208,7 @@ namespace TM_Comms_WPF
             SliderValue = SldUpdateFreq.Value;
             TxtDisplayRate.Text = (SliderValue / 1000).ToString("0.00 sec");
         }
-        //Window Changes
-        private void Window_LocationChanged(object sender, EventArgs e)
-        {
-            if (IsLoading) return;
 
-            App.Settings.EthernetSlaveWindow.Top = Top;
-            App.Settings.EthernetSlaveWindow.Left = Left;
-        }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => CleanSock();
 
 

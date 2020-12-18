@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="TM_Comms_WPF.ExternalVisionResultControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TM_Comms_WPF"
+             mc:Ignorable="d">
+    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="0,0,0,3" Margin="5">
+        <StackPanel x:Name="StkMain">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Label"/>
+                <TextBox Text="{Binding label, Mode=TwoWay}" MinWidth="80" BorderBrush="{x:Null}" VerticalContentAlignment="Center" Background="#1AFFFF00"/>
+
+                <Label Content="Rotation"/>
+                <TextBox Text="{Binding rotation, Mode=TwoWay}" MinWidth="40" BorderBrush="{x:Null}" VerticalContentAlignment="Center" Background="#1AFFFF00"/>
+
+                <Label Content="Score (0.0 - 1.0)"/>
+                <TextBox Text="{Binding score, Mode=TwoWay}" MinWidth="40" BorderBrush="{x:Null}" VerticalContentAlignment="Center" Background="#1AFFFF00"/>
+            </StackPanel>
+            <StackPanel  Orientation="Horizontal">
+                <Label Content="Box Corner X"/>
+                <TextBox Text="{Binding box_cx, Mode=TwoWay}" MinWidth="40" BorderBrush="{x:Null}" VerticalContentAlignment="Center" Background="#1AFFFF00"/>
+
+                <Label Content="Box Corner Y"/>
+                <TextBox Text="{Binding box_cy, Mode=TwoWay}" MinWidth="40" BorderBrush="{x:Null}" VerticalContentAlignment="Center" Background="#1AFFFF00"/>
+
+                <Label Content="Box Height"/>
+                <TextBox Text="{Binding box_h, Mode=TwoWay}" MinWidth="40" BorderBrush="{x:Null}" VerticalContentAlignment="Center" Background="#1AFFFF00"/>
+
+                <Label Content="Box Width"/>
+                <TextBox Text="{Binding box_w, Mode=TwoWay}" MinWidth="40" BorderBrush="{x:Null}" VerticalContentAlignment="Center" Background="#1AFFFF00"/>
+
+            </StackPanel>
+        </StackPanel>
+    </Border>
+
+</UserControl>
