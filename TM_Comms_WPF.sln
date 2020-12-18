@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocketManager", "..\SocketM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleModbus", "..\SimpleModbus\SimpleModbus.csproj", "{0DDFAF2B-426E-4C19-A547-18E266F5DFDF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TM_Comms", "..\TM_Comms\TM_Comms\TM_Comms.csproj", "{CBC5FE71-44CD-42E8-A1CE-198967599C1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{0DDFAF2B-426E-4C19-A547-18E266F5DFDF}.Release|x64.Build.0 = Release|Any CPU
 		{0DDFAF2B-426E-4C19-A547-18E266F5DFDF}.Release|x86.ActiveCfg = Release|Any CPU
 		{0DDFAF2B-426E-4C19-A547-18E266F5DFDF}.Release|x86.Build.0 = Release|Any CPU
+		{CBC5FE71-44CD-42E8-A1CE-198967599C1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBC5FE71-44CD-42E8-A1CE-198967599C1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBC5FE71-44CD-42E8-A1CE-198967599C1B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CBC5FE71-44CD-42E8-A1CE-198967599C1B}.Debug|x64.Build.0 = Debug|Any CPU
+		{CBC5FE71-44CD-42E8-A1CE-198967599C1B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CBC5FE71-44CD-42E8-A1CE-198967599C1B}.Debug|x86.Build.0 = Debug|Any CPU
+		{CBC5FE71-44CD-42E8-A1CE-198967599C1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBC5FE71-44CD-42E8-A1CE-198967599C1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBC5FE71-44CD-42E8-A1CE-198967599C1B}.Release|x64.ActiveCfg = Release|Any CPU
+		{CBC5FE71-44CD-42E8-A1CE-198967599C1B}.Release|x64.Build.0 = Release|Any CPU
+		{CBC5FE71-44CD-42E8-A1CE-198967599C1B}.Release|x86.ActiveCfg = Release|Any CPU
+		{CBC5FE71-44CD-42E8-A1CE-198967599C1B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

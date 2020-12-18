@@ -42,7 +42,7 @@ namespace TM_Comms_WPF
         }
         private void Window_LoadSettings()
         {
-            if(double.IsNaN(App.Settings.EthernetSlaveWindow.Left)
+            if (double.IsNaN(App.Settings.EthernetSlaveWindow.Left)
                 || !CheckOnScreen.IsOnScreen(this)
                 || Keyboard.IsKeyDown(Key.LeftShift))
             {
@@ -56,31 +56,20 @@ namespace TM_Comms_WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
-            if (App.Settings.Version == TMflowVersions.V1_76_xxxx || App.Settings.Version == TMflowVersions.V1_80_xxxx)
+            EthernetSlaveXMLData.File data = EthernetSlave.GetXMLCommands(App.Settings.Version);
+            if (data != null)
             {
-                EthernetSlaveXMLData.File data = null;
-                XmlSerializer serializer = new XmlSerializer(typeof(EthernetSlaveXMLData.File));
-                using (TextReader sr = new StringReader(EthernetSlave.Commands[App.Settings.Version]))
+                foreach (EthernetSlaveXMLData.FileSetting setting in data.CodeTable)
                 {
-                    data = (EthernetSlaveXMLData.File)serializer.Deserialize(sr);
-                }
-                if (data != null)
-                {
-                    foreach (EthernetSlaveXMLData.FileSetting setting in data.CodeTable)
+                    if (setting.Accessibility == "R/W")
                     {
-                        if (setting.Accessibility == "R/W")
+                        ListViewItem lvi = new ListViewItem()
                         {
-                            ListViewItem lvi = new ListViewItem()
-                            {
-                                Content = setting.Item
-                            };
-                            lvi.MouseDoubleClick += Lvi_MouseDoubleClick;
-                            LsvWritableValues.Items.Add(lvi);
-                        }
-
+                            Content = setting.Item
+                        };
+                        lvi.MouseDoubleClick += Lvi_MouseDoubleClick;
+                        LsvWritableValues.Items.Add(lvi);
                     }
-
                 }
             }
 
@@ -123,7 +112,7 @@ namespace TM_Comms_WPF
         private EthernetSlave GetESNode()
         {
             EthernetSlave node = new EthernetSlave();
-            if(Enum.TryParse((string)((ComboBoxItem)cmbESDataType.SelectedItem).Tag, out EthernetSlave.Headers header))
+            if (Enum.TryParse((string)((ComboBoxItem)cmbESDataType.SelectedItem).Tag, out EthernetSlave.Headers header))
             {
                 if (Enum.TryParse((string)((ComboBoxItem)cmbESDataMode.SelectedItem).Tag, out EthernetSlave.Modes mode))
                 {
@@ -178,10 +167,10 @@ namespace TM_Comms_WPF
         private void BtnSendBadPacketData_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSTA,4,XXXX,*47\r\n");
 
         private void BtnSendNotSupported_Click(object sender, RoutedEventArgs e) => Socket?.Write("$TMSVR,20,diag,99,Stick_Stop=1,*46\r\n");
-        private void BtnSendInvalidData_Click(object sender, RoutedEventArgs e)=> Socket?.Write("$TMSVR,11,diag,1,[{}],*58\r\n");
-        private void BtnSendNotExist_Click(object sender, RoutedEventArgs e)=> Socket?.Write("$TMSVR,18,diag,2,Ctrl_DO16=1,*24\r\n");
-        private void BtnSendReadOnly_Click(object sender, RoutedEventArgs e)=> Socket?.Write("$TMSVR,19,diag,2,Robot_Link=1,*64\r\n");
-        private void BtnSendValueError_Click(object sender, RoutedEventArgs e)=> Socket?.Write("$TMSVR,24,diag,2,Stick_Plus=\"diag\",*48\r\n");
+        private void BtnSendInvalidData_Click(object sender, RoutedEventArgs e) => Socket?.Write("$TMSVR,11,diag,1,[{}],*58\r\n");
+        private void BtnSendNotExist_Click(object sender, RoutedEventArgs e) => Socket?.Write("$TMSVR,18,diag,2,Ctrl_DO16=1,*24\r\n");
+        private void BtnSendReadOnly_Click(object sender, RoutedEventArgs e) => Socket?.Write("$TMSVR,19,diag,2,Robot_Link=1,*64\r\n");
+        private void BtnSendValueError_Click(object sender, RoutedEventArgs e) => Socket?.Write("$TMSVR,24,diag,2,Stick_Plus=\"diag\",*48\r\n");
 
         private void ConnectionActive()
         {

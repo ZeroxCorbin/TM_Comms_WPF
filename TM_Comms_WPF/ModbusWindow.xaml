@@ -21,6 +21,7 @@
 
                 </StackPanel>
             </Border>
+            
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Border x:Name="BdrRemoteAuto" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
                     <StackPanel>
@@ -81,6 +82,7 @@
 
                 </Border>
             </StackPanel>
+            
             <StackPanel Orientation="Horizontal">
                 <Border BorderBrush="Black" BorderThickness="1"  CornerRadius="3" Padding="3" HorizontalAlignment="Left" Margin="5">
                     <Grid>

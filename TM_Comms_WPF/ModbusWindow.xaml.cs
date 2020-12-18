@@ -19,7 +19,6 @@ namespace TM_Comms_WPF
     public partial class ModbusWindow : Window
     {
         SimpleModbusTCP ModbusTCP { get; set; }
-        private ModbusDictionary ModbusRegisters { get; } = new ModbusDictionary();
 
         private SolidColorBrush Good { get; } = new SolidColorBrush(Color.FromArgb(255, 0, 255, 255));
         private SolidColorBrush Bad { get; } = new SolidColorBrush(Colors.Red);
@@ -28,7 +27,7 @@ namespace TM_Comms_WPF
 
         bool isRunning { get; set; } = false;
         private object LockObject { get; set; } = new object();
-        private int NumModbusRegisters { get; set; } = 15;
+        private int NumModbusDictionary { get; set; } = 15;
         private int NumModbusUserRegisters { get; set; } = 15;
 
         public ModbusWindow(Window owner)
@@ -102,7 +101,7 @@ namespace TM_Comms_WPF
                     {
                         elpPowerLight.Fill = Good;
 
-                        if (ModbusTCP.GetInt16(ModbusRegisters.ModbusData[App.Settings.Version]["M/A Mode"].Addr) == 1)
+                        if (ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["M/A Mode"].Addr) == 1)
                         {
                             elpAutoLight.Fill = Good;
                             elpManualLight.Fill = Disabled;
@@ -112,24 +111,25 @@ namespace TM_Comms_WPF
                             elpAutoLight.Fill = Disabled;
                             elpManualLight.Fill = Good;
                         }
-                        if (ModbusTCP.GetBool(ModbusRegisters.ModbusData[App.Settings.Version]["EStop"].Addr))
+
+                        if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["EStop"].Addr))
                             elpEstopButton.Fill = Bad;
                         else
                             elpEstopButton.Fill = Disabled;
 
                         if (App.Settings.Version == TMflowVersions.V1_80_xxxx)
                         {
-                            if (ModbusTCP.GetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Get Control"].Addr))
+                            if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Get Control"].Addr))
                                 ElpGetControl.Fill = Good;
                             else
                                 ElpGetControl.Fill = Bad;
 
-                            if (ModbusTCP.GetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Auto Remote Mode Active"].Addr))
+                            if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Auto Remote Mode Active"].Addr))
                                 ElpAutoActive.Fill = Good;
                             else
                                 ElpAutoActive.Fill = Bad;
 
-                            if (ModbusTCP.GetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Auto Remote Mode Enabled"].Addr))
+                            if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Auto Remote Mode Enabled"].Addr))
                                 ElpAutoEnable.Fill = Good;
                             else
                                 ElpAutoEnable.Fill = Bad;
@@ -138,33 +138,33 @@ namespace TM_Comms_WPF
                         btnStop.Background = new SolidColorBrush(Colors.Transparent);
                         btnPlayPause.Background = new SolidColorBrush(Colors.Transparent);
 
-                        if (ModbusTCP.GetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Project Running"].Addr))
+                        if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Project Running"].Addr))
                             btnPlayPause.Background = new RadialGradientBrush(Color.FromArgb(255, 0, 255, 255), Colors.Transparent);
 
-                        else if (ModbusTCP.GetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Project Paused"].Addr))
+                        else if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Project Paused"].Addr))
                             btnPlayPause.Background = new RadialGradientBrush(Colors.Yellow, Colors.Transparent);
 
-                        else if (ModbusTCP.GetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Project Editing"].Addr))
+                        else if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Project Editing"].Addr))
                             btnStop.Background = new RadialGradientBrush(Colors.Yellow, Colors.Transparent);
 
                         else
                             btnStop.Background = new RadialGradientBrush(Colors.Red, Colors.Transparent);
 
-                        if (ModbusTCP.GetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Error"].Addr))
+                        if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Error"].Addr))
                             elpIsError.Fill = Bad;
                         else
                             elpIsError.Fill = Good;
 
 
-                        uint code = (uint)ModbusTCP.GetInt32(ModbusRegisters.ModbusData[App.Settings.Version]["Last Error Code"].Addr);
+                        uint code = (uint)ModbusTCP.GetInt32(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Code"].Addr);
                         if (code != 0)
                         {
-                            string dat = $"{ModbusTCP.GetInt16(ModbusRegisters.ModbusData[App.Settings.Version]["Last Error Time Month"].Addr)}/" +
-                                            $"{ModbusTCP.GetInt16(ModbusRegisters.ModbusData[App.Settings.Version]["Last Error Time Date"].Addr)}/" +
-                                            $"{ModbusTCP.GetInt16(ModbusRegisters.ModbusData[App.Settings.Version]["Last Error Time Year"].Addr)} " +
-                                            $"{ModbusTCP.GetInt16(ModbusRegisters.ModbusData[App.Settings.Version]["Last Error Time Hour"].Addr)}:" +
-                                            $"{ModbusTCP.GetInt16(ModbusRegisters.ModbusData[App.Settings.Version]["Last Error Time Minute"].Addr)}:" +
-                                            $"{ModbusTCP.GetInt16(ModbusRegisters.ModbusData[App.Settings.Version]["Last Error Time Second"].Addr)} ";
+                            string dat = $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Month"].Addr)}/" +
+                                            $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Date"].Addr)}/" +
+                                            $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Year"].Addr)} " +
+                                            $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Hour"].Addr)}:" +
+                                            $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Minute"].Addr)}:" +
+                                            $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Second"].Addr)} ";
                             if (DateTime.TryParse(dat, out DateTime date))
                                 txtxErrorDate.Text = date.ToString();
                         }
@@ -206,7 +206,7 @@ namespace TM_Comms_WPF
 
             lock (LockObject)
             {
-                ModbusTCP.SetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Stop"].Addr, true);
+                ModbusTCP.SetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Stop"].Addr, true);
             }
         }
         private void BtnPlayPause_Click(object sender, RoutedEventArgs e)
@@ -215,7 +215,7 @@ namespace TM_Comms_WPF
 
             lock (LockObject)
             {
-                ModbusTCP.SetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Play/Pause"].Addr, true);
+                ModbusTCP.SetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Play/Pause"].Addr, true);
             }
         }
         private void BtnMinus_Click(object sender, RoutedEventArgs e)
@@ -224,7 +224,7 @@ namespace TM_Comms_WPF
 
             lock (LockObject)
             {
-                ModbusTCP.SetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Stick-"].Addr, true);
+                ModbusTCP.SetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Stick-"].Addr, true);
             }
         }
         private void BtnPlus_Click(object sender, RoutedEventArgs e)
@@ -233,7 +233,7 @@ namespace TM_Comms_WPF
 
             lock (LockObject)
             {
-                ModbusTCP.SetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Stick+"].Addr, true);
+                ModbusTCP.SetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Stick+"].Addr, true);
             }
         }
         private void BtnAutoActive_Click(object sender, RoutedEventArgs e)
@@ -242,10 +242,10 @@ namespace TM_Comms_WPF
 
             lock (LockObject)
             {
-                if (ModbusTCP.GetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Auto Remote Mode Active"].Addr))
-                    ModbusTCP.SetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Auto Remote Mode Active"].Addr, false);
+                if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Auto Remote Mode Active"].Addr))
+                    ModbusTCP.SetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Auto Remote Mode Active"].Addr, false);
                 else
-                    ModbusTCP.SetBool(ModbusRegisters.ModbusData[App.Settings.Version]["Auto Remote Mode Active"].Addr, true);
+                    ModbusTCP.SetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Auto Remote Mode Active"].Addr, true);
             }
         }
 
@@ -268,11 +268,11 @@ namespace TM_Comms_WPF
             stackModbusText.Children.Add(new Label() { Content = "Value", Height = 26, Width = 90, Margin = new Thickness(2), HorizontalContentAlignment = HorizontalAlignment.Center });
             //stackModbusWriteButton.Children.Add(new Label() { Content = "", Height = 26, Width = 60, Margin = new Thickness(2), HorizontalContentAlignment = HorizontalAlignment.Center });
 
-            for (int i = 1; i <= NumModbusRegisters; i++)
+            for (int i = 1; i <= NumModbusDictionary; i++)
             {
                 ComboBox cmb = new ComboBox() { Height = 26, Width = 240, Margin = new Thickness(2) };
                 cmb.Tag = i;
-                cmb.ItemsSource = ModbusRegisters.ModbusData[App.Settings.Version].Keys;
+                cmb.ItemsSource = ModbusDictionary.ModbusData[App.Settings.Version].Keys;
                 cmb.SelectionChanged += CmbModbusRegister_SelectionChanged;
                 stackModbusComboBox.Children.Add(cmb);
 
@@ -294,7 +294,7 @@ namespace TM_Comms_WPF
 
             int ii = 1;
             foreach (string str in App.Settings.ModbusComboBoxIndices)
-                if (ii <= NumModbusRegisters)
+                if (ii <= NumModbusDictionary)
                     ((ComboBox)stackModbusComboBox.Children[ii++]).SelectedValue = str;
                 else
                     break;
@@ -305,9 +305,9 @@ namespace TM_Comms_WPF
             Button rbtn = (Button)stackModbusReadButton.Children[(int)cmb.Tag];
             //Button wbtn = (Button)stackModbusWriteButton.Children[(int)cmb.Tag];
 
-            rbtn.Content = $"{ModbusRegisters.ModbusData[App.Settings.Version][(string)cmb.SelectedValue].Addr} / {ModbusRegisters.ModbusData[App.Settings.Version][(string)cmb.SelectedValue].Addr:X2}";
+            rbtn.Content = $"{ModbusDictionary.ModbusData[App.Settings.Version][(string)cmb.SelectedValue].Addr} / {ModbusDictionary.ModbusData[App.Settings.Version][(string)cmb.SelectedValue].Addr:X2}";
 
-            //if (ModbusRegisters.ModbusData[App.Settings.Version][(string)cmb.SelectedValue].Access == ModbusDictionary.MobusValue.AccessTypes.R)
+            //if (ModbusDictionary.ModbusData[App.Settings.Version][(string)cmb.SelectedValue].Access == ModbusDictionary.MobusValue.AccessTypes.R)
             //{
             //    wbtn.IsEnabled = false;
             //    wbtn.Visibility = Visibility.Hidden;
@@ -328,13 +328,13 @@ namespace TM_Comms_WPF
 
             int i = (int)((Button)sender).Tag;
             string val = (String)((ComboBox)stackModbusComboBox.Children[i]).SelectedValue;
-            int addr = ModbusRegisters.ModbusData[App.Settings.Version][val].Addr;
+            int addr = ModbusDictionary.ModbusData[App.Settings.Version][val].Addr;
 
             if (val == null) return;
 
             if (ModbusTCP != null)
             {
-                switch (ModbusRegisters.ModbusData[App.Settings.Version][val].Type)
+                switch (ModbusDictionary.ModbusData[App.Settings.Version][val].Type)
                 {
                     case ModbusDictionary.MobusValue.DataTypes.Bool:
                         if (bool.TryParse(((TextBox)stackModbusText.Children[i]).Text, out bool b))
@@ -363,11 +363,11 @@ namespace TM_Comms_WPF
                 int i = (int)((Button)sender).Tag;
                 string val = (String)((ComboBox)stackModbusComboBox.Children[i]).SelectedValue;
                 if (val == null) return;
-                int addr = ModbusRegisters.ModbusData[App.Settings.Version][val].Addr;
+                int addr = ModbusDictionary.ModbusData[App.Settings.Version][val].Addr;
 
                 if (val == null) return;
 
-                switch (ModbusRegisters.ModbusData[App.Settings.Version][val].Type)
+                switch (ModbusDictionary.ModbusData[App.Settings.Version][val].Type)
                 {
                     case ModbusDictionary.MobusValue.DataTypes.Bool:
                         ((TextBox)stackModbusText.Children[i]).Text = ModbusTCP.GetBool(addr).ToString();
@@ -391,7 +391,7 @@ namespace TM_Comms_WPF
         {
             if (ModbusTCP == null) return;
 
-            for (int i = 1; i <= NumModbusRegisters; i++)
+            for (int i = 1; i <= NumModbusDictionary; i++)
                 BtnModbusRead_Click(stackModbusReadButton.Children[i], new RoutedEventArgs());
         }
 
@@ -685,8 +685,8 @@ namespace TM_Comms_WPF
         //Window Changes
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            App.Settings.ModbusComboBoxIndices = new string[NumModbusRegisters];
-            for (int i = 1; i <= NumModbusRegisters; i++)
+            App.Settings.ModbusComboBoxIndices = new string[NumModbusDictionary];
+            for (int i = 1; i <= NumModbusDictionary; i++)
                 App.Settings.ModbusComboBoxIndices[i - 1] = ((string)((ComboBox)stackModbusComboBox.Children[i]).SelectedValue);
 
             App.Settings.ModbusUserComboBoxIndices = new string[NumModbusUserRegisters];

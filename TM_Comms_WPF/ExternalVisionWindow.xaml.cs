@@ -90,6 +90,57 @@ namespace TM_Comms_WPF
 
         }
 
+        public static BitmapImage ProcessMessageForImage(Stream message)
+        {
+            MultipartParser parser = new MultipartParser(message);
+            if (parser.Success)
+            {
+                MemoryStream ms = new MemoryStream(parser.FileContents);
+
+                var imageSource = new BitmapImage();
+                imageSource.BeginInit();
+                imageSource.StreamSource = ms;
+                imageSource.EndInit();
+                imageSource.Freeze();
+                return imageSource;
+
+            }
+            else
+                return null;
+
+            //Match boundry = Regex.Match(message, @"(?<=boundary=).*");
+            //string boundaryStart = $"(?<=--{boundry.Value})(?s).*";
+
+            //Match body = Regex.Match(message, boundaryStart);
+
+            //TextReader textReader = new StreamReader(message);
+            //string sLine = textReader.ReadLine();
+            //Regex regex = new Regex("(^-+)|(^content-)|(^submit)", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
+
+            //StringBuilder sb = new StringBuilder();
+
+            //while(sLine != null)
+            //{
+            //    if(!regex.Match(sLine).Success)
+            //    {
+            //        break;
+            //    }
+            //    sLine = textReader.ReadLine();
+            //}
+            //FileStream file = File.OpenWrite("test.jpg");
+            //byte[] ar = Encoding.ASCII.GetBytes(textReader.ReadToEnd());
+            //file.Write(ar,0,ar.Length);
+            //file.Close();
+            ////byte[] imageBytes = Convert.FromBase64String();
+            ////MemoryStream ms = new MemoryStream(imageBytes);
+
+
+
+            //return image;
+            //}
+
+        }
+
         object GetContext_lockobject = new object();
         private void GetContext(IAsyncResult state)
         {
