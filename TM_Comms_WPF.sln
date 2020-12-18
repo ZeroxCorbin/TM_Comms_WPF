@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleModbus", "..\SimpleMo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TM_Comms", "..\TM_Comms\TM_Comms\TM_Comms.csproj", "{CBC5FE71-44CD-42E8-A1CE-198967599C1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TM_Comms_WPF_Setup_Support", "TM_Comms_WPF_Setup_Support\TM_Comms_WPF_Setup_Support.csproj", "{866128AE-852F-4458-8533-1A4D9908D8DA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,13 +69,6 @@ Global
 		{CBC5FE71-44CD-42E8-A1CE-198967599C1B}.Release|x64.Build.0 = Release|Any CPU
 		{CBC5FE71-44CD-42E8-A1CE-198967599C1B}.Release|x86.ActiveCfg = Release|Any CPU
 		{CBC5FE71-44CD-42E8-A1CE-198967599C1B}.Release|x86.Build.0 = Release|Any CPU
-		{866128AE-852F-4458-8533-1A4D9908D8DA}.Debug|Any CPU.ActiveCfg = Release|Any CPU
-		{866128AE-852F-4458-8533-1A4D9908D8DA}.Debug|x64.ActiveCfg = Release|Any CPU
-		{866128AE-852F-4458-8533-1A4D9908D8DA}.Debug|x86.ActiveCfg = Release|Any CPU
-		{866128AE-852F-4458-8533-1A4D9908D8DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{866128AE-852F-4458-8533-1A4D9908D8DA}.Release|x64.ActiveCfg = Release|Any CPU
-		{866128AE-852F-4458-8533-1A4D9908D8DA}.Release|x86.ActiveCfg = Release|Any CPU
-		{866128AE-852F-4458-8533-1A4D9908D8DA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
