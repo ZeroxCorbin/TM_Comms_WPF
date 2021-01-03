@@ -1,6 +1,18 @@
 ﻿<Application x:Class="TM_Comms_WPF.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dialogs="clr-namespace:TM_Comms_WPF.Dialogs" 
              xmlns:local="clr-namespace:TM_Comms_WPF"
              StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <DataTemplate DataType="{x:Type dialogs:DialogYesNoViewModel}">
+            <dialogs:DialogYesNoView></dialogs:DialogYesNoView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type dialogs:DialogEditValueViewModel}">
+            <dialogs:DialogEditValueView></dialogs:DialogEditValueView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type dialogs:DialogOkViewModel}">
+            <dialogs:DialogOkView></dialogs:DialogOkView>
+        </DataTemplate>
+    </Application.Resources>
 </Application>

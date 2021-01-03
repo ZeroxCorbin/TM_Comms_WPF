@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TM_Comms_WPF"
         mc:Ignorable="d"
-        Title="External Vision" Closing="Window_Closing" Icon="Support\favicon.ico"
+        Title="External Vision" Closing="Window_Closing"
         Width="{Binding ExternalVisionWindow.Width, Mode=TwoWay}"
         Height="{Binding ExternalVisionWindow.Height, Mode=TwoWay}"
         Left="{Binding ExternalVisionWindow.Left, Mode=TwoWay}"
         Top="{Binding ExternalVisionWindow.Top, Mode=TwoWay}"
-        WindowState="{Binding ExternalVisionWindow.WindowState, Mode=TwoWay}">
+        WindowState="{Binding ExternalVisionWindow.WindowState, Mode=TwoWay}" Icon="../Support/favicon.ico">
     <Window.Resources>
         <Style x:Key="ButtonFocusVisual" TargetType="{x:Type Button}">
             <Setter Property="Control.Template">
@@ -140,12 +140,12 @@
                     <ToolBar Grid.Row="1" Background="{x:Null}">
                         <Button x:Name="BtnSaveImage" MinWidth="22" MinHeight="22" Click="BtnSaveImage_Click" VerticalAlignment="Bottom" ToolTip="Save Image">
                             <Button.Background>
-                                <ImageBrush ImageSource="Support/save.png" Stretch="Uniform"/>
+                                <ImageBrush ImageSource="../Support/save.png" Stretch="Uniform"/>
                             </Button.Background>
                         </Button>
                         <CheckBox MinWidth="22" MinHeight="22" ToolTip="Auto Save Image" >
                             <CheckBox.Background>
-                                <ImageBrush ImageSource="Support/autosave.png" Stretch="Uniform"/>
+                                <ImageBrush Stretch="Uniform" ImageSource="/TM_Comms_WPF;component/Support/autosave.png"/>
                             </CheckBox.Background>
                         </CheckBox>
                     </ToolBar>
@@ -191,7 +191,7 @@
                                 <ToolBar Grid.Row="1" Background="{x:Null}">
                                     <Button x:Name="BtnAddManualResponse" MinWidth="22" MinHeight="22" VerticalAlignment="Top" Click="BtnAddManualResponse_Click" >
                                         <Button.Background>
-                                            <ImageBrush ImageSource="Support/add.png" Stretch="Uniform"/>
+                                            <ImageBrush Stretch="Uniform" ImageSource="/TM_Comms_WPF;component/Support/add.png"/>
                                         </Button.Background>
                                     </Button>
                                 </ToolBar>

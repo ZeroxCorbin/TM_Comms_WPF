@@ -1,0 +1,9 @@
+﻿<Window x:Class="TM_Comms_WPF.Dialogs.DialogService.DialogWindow"  
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"  
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
+        Height="300" Width="300"
+        SizeToContent="WidthAndHeight"  
+        WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow" ShowInTaskbar="False"
+        Title="{Binding Title}">
+    <ContentPresenter x:Name="ContentPresenter" Content="{Binding}"></ContentPresenter>
+</Window>  
