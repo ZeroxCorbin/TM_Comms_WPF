@@ -1,26 +1,16 @@
-﻿using ApplicationSettingsNS;
-using RingBuffer;
+﻿using RingBuffer;
 using SocketManagerNS;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using System.Xml;
-using System.Xml.Serialization;
 using TM_Comms;
 
 namespace TM_Comms_WPF
@@ -334,6 +324,9 @@ namespace TM_Comms_WPF
         private Stopwatch DataReceiveStopWatch { get; set; } = new Stopwatch();
         private void Socket_MessageReceived(object sender, string message, string pattern)
         {
+            if (CaptureData)
+                outputFile.WriteLine(Regex.Replace(message, @"^[$]TMSVR,\w*,[0-9],[0-2],", "").Replace("\r\n", ","));
+
             long time = DataReceiveStopWatch.ElapsedMilliseconds;
             PackRate.Add(time);
             DataReceiveStopWatch.Restart();
@@ -395,8 +388,30 @@ namespace TM_Comms_WPF
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => CleanSock();
 
+        private bool CaptureData { get; set; }
+
+        private StreamWriter outputFile;
+        private void BtnCapture_Click(object sender, RoutedEventArgs e)
+        {
+            if (!CaptureData)
+            {
+                outputFile = new StreamWriter($"dump_{DateTime.Now.Ticks}.csv");
+                BtnCapture.Content = "Stop Capture";
+
+                CaptureData = true;
+
+            }
+            else
+            {
+                CaptureData = false;
+                Thread.Sleep(10);
+
+                outputFile?.Close();
+                BtnCapture.Content = "Start Capture";
+
+            }
 
 
-
+        }
     }
 }

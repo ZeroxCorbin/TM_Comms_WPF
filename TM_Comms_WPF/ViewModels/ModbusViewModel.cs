@@ -66,11 +66,11 @@ namespace TM_Comms_WPF.ViewModels
         public string ErrorDate { get => errorDate; set => SetProperty(ref errorDate, value); }
 
 
-        private Brush Good { get; } = new SolidColorBrush(Color.FromArgb(255, 0, 255, 255));
+        private Brush Good { get; } = new SolidColorBrush(Colors.Cyan);
         private Brush Bad { get; } = new SolidColorBrush(Colors.Red);
         private Brush Meh { get; } = new SolidColorBrush(Colors.Yellow);
         private Brush Disabled { get; } = new SolidColorBrush(Colors.White);
-        private Brush GoodRadial { get; } = new RadialGradientBrush(Color.FromArgb(255, 0, 255, 255), Colors.Transparent);
+        private Brush GoodRadial { get; } = new RadialGradientBrush(Colors.Cyan, Colors.Transparent);
         private Brush BadRadial { get; } = new RadialGradientBrush(Colors.Red, Colors.Transparent);
         private Brush MehRadial { get; } = new RadialGradientBrush(Colors.Yellow, Colors.Transparent);
         private Brush Transparent { get; } = new SolidColorBrush(Colors.Transparent);
@@ -133,11 +133,11 @@ namespace TM_Comms_WPF.ViewModels
         private void GetItems()
         {
             foreach (var kv in ModbusDictionary.ModbusData[App.Settings.Version])
-                Items.Add(new ModbusItemViewModel(kv.Key, kv.Value, Socket));
+                Items.Add(new ModbusItemViewModel(kv.Key, kv.Value, ModbusTCP));
 
             for (int i = 9000; i < 9041; i += 4)
             {
-                UserItems.Add(new ModbusItemViewModel(i.ToString(), new ModbusDictionary.MobusValue() { Access = ModbusDictionary.MobusValue.AccessTypes.RW, Addr = i, Type = ModbusDictionary.MobusValue.DataTypes.Float }, Socket));
+                UserItems.Add(new ModbusItemViewModel(i.ToString(), new ModbusDictionary.MobusValue() { Access = ModbusDictionary.MobusValue.AccessTypes.RW, Addr = i, Type = ModbusDictionary.MobusValue.DataTypes.Float }, ModbusTCP));
             }
         }
 
@@ -145,6 +145,7 @@ namespace TM_Comms_WPF.ViewModels
         {
             if (Socket.IsConnected)
             {
+
                 Cancel = true;
                 while (isRunning) Thread.Sleep(1);
 
@@ -168,19 +169,19 @@ namespace TM_Comms_WPF.ViewModels
 
         private void StopAction(object parameter)
         {
-            ModbusTCP.SetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Stop"].Addr, true);
+            ModbusTCP.WriteSingleCoil(ModbusDictionary.ModbusData[App.Settings.Version]["Stop"].Addr, true);
         }
         private void PlayPauseAction(object parameter)
         {
-            ModbusTCP.SetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Play/Pause"].Addr, true);
+            ModbusTCP.WriteSingleCoil(ModbusDictionary.ModbusData[App.Settings.Version]["Play/Pause"].Addr, true);
         }
         private void PlusAction(object parameter)
         {
-            ModbusTCP.SetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Stick+"].Addr, true);
+            ModbusTCP.WriteSingleCoil(ModbusDictionary.ModbusData[App.Settings.Version]["Stick+"].Addr, true);
         }
         private void MinusAction(object parameter)
         {
-            ModbusTCP.SetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Stick-"].Addr, true);
+            ModbusTCP.WriteSingleCoil(ModbusDictionary.ModbusData[App.Settings.Version]["Stick-"].Addr, true);
         }
         private void Socket_ConnectState(object sender, bool state)
         {
@@ -265,40 +266,40 @@ namespace TM_Comms_WPF.ViewModels
                 Manual = Good;
             }
 
-            if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["EStop"].Addr))
+            if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["EStop"].Addr))
                 Estop = Bad;
             else
                 Estop = Disabled;
 
             if (App.Settings.Version == TMflowVersions.V1_80_xxxx)
             {
-                if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Get Control"].Addr))
+                if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["Get Control"].Addr))
                     GetControl = Good;
                 else
                     GetControl = Bad;
 
-                if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Auto Remote Mode Active"].Addr))
+                if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["Auto Remote Mode Active"].Addr))
                     AutoActive = Good;
                 else
                     AutoActive = Bad;
 
-                if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Auto Remote Mode Enabled"].Addr))
+                if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["Auto Remote Mode Enabled"].Addr))
                     AutoEnable = Good;
                 else
                     AutoEnable = Bad;
             }
 
-            if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Project Running"].Addr))
+            if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["Project Running"].Addr))
             {
                 Play = GoodRadial;
                 Stop = Transparent;
             }
-            else if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Project Paused"].Addr))
+            else if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["Project Paused"].Addr))
             {
                 Play = MehRadial;
                 Stop = Transparent;
             }
-            else if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Project Editing"].Addr))
+            else if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["Project Editing"].Addr))
             {
                 Play = Transparent;
                 Stop = MehRadial;
@@ -309,7 +310,7 @@ namespace TM_Comms_WPF.ViewModels
                 Stop = BadRadial;
             }
 
-            if (ModbusTCP.GetBool(ModbusDictionary.ModbusData[App.Settings.Version]["Error"].Addr))
+            if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["Error"].Addr))
                 Error = Bad;
             else
                 Error = Disabled;

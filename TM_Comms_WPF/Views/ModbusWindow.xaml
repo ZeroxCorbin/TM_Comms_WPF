@@ -51,6 +51,7 @@
 
                 </StackPanel>
             </Border>
+
             <Grid Height="105" Width="308"  Margin="5">
                 <Grid.Background>
                     <ImageBrush Stretch="UniformToFill" ImageSource="../Support/TMControllerImage.png"/>
@@ -64,6 +65,7 @@
                 <Button Command="{Binding MinusCommand}" HorizontalAlignment="Left" Height="36" Margin="228,57,0,0"  VerticalAlignment="Top" Width="36" Background="#00000000" BorderBrush="{x:Null}" Foreground="{x:Null}"/>
                 <Button Command="{Binding PlusCommand}" HorizontalAlignment="Left" Height="36" Margin="228,11,0,0"  VerticalAlignment="Top" Width="36" Background="#00000000" BorderBrush="{x:Null}" Foreground="{x:Null}"/>
             </Grid>
+
             <Border Height="105" MaxWidth="360" BorderBrush="Black" BorderThickness="1" CornerRadius="30"  Margin="5">
                 <Grid>
                     <StackPanel Orientation="Horizontal" Margin="10,10,10,73">
@@ -78,15 +80,14 @@
 
                     <TextBox Text="{Binding ErrorDescription}" HorizontalAlignment="Left" Height="58" Margin="10,35,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="{x:Null}" BorderThickness="0" IsReadOnly="True"/>
                 </Grid>
-
             </Border>
-            <Border Height="105" MaxWidth="360" BorderBrush="Black" BorderThickness="1" CornerRadius="30"  Margin="5">
+
+            <!--<Border Height="105" MaxWidth="360" BorderBrush="Black" BorderThickness="1" CornerRadius="30"  Margin="5">
                 <Grid>
                     <TextBox Margin="10" x:Name="TxtSocketOutput" IsReadOnly="True" VerticalScrollBarVisibility="Auto" BorderBrush="{x:Null}" HorizontalScrollBarVisibility="Auto"/>
-
                 </Grid>
+            </Border>-->
 
-            </Border>
         </StackPanel>
 
         <Grid Grid.Row="2" Grid.Column="0">
@@ -95,34 +96,34 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
-                    <ListView Grid.Row="2" ItemsSource="{Binding Items}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
+                <ListView Grid.Row="2" ItemsSource="{Binding Items}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
 
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-                                    <Label Grid.Column="0" Grid.Row="0" Content="{Binding Addr}" />
-                                    <Label Grid.Column="1" Grid.Row="0" Content="{Binding Name, Mode=OneWay}" />
-                                    <Label Grid.Column="2" Grid.Row="0" Content="{Binding Value, Mode=OneWay}"/>
+                                <Label Grid.Column="0" Grid.Row="0" Content="{Binding Addr}" />
+                                <Label Grid.Column="1" Grid.Row="0" Content="{Binding Name, Mode=OneWay}" />
+                                <Label Grid.Column="2" Grid.Row="0" Content="{Binding Value, Mode=OneWay}" Background="LightCyan" MinWidth="60"/>
 
-                                    <!--<Button Grid.Column="3" Grid.Row="0" Command="{Binding WriteItemCommand}" Visibility="{Binding IsWritableBool}" Content="Set" />-->
-                                <Button Grid.Column="4" Grid.Row="0" Command="{Binding EditItemCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Visibility="{Binding IsWritable}" Content="Edit" />
-                                </Grid>
+                                <!--<Button Grid.Column="3" Grid.Row="0" Command="{Binding WriteItemCommand}" Visibility="{Binding IsWritableBool}" Content="Set" />-->
+                                <Button Grid.Column="4" Grid.Row="0" Command="{Binding EditItemCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Visibility="{Binding IsWritable}" Content="Edit" Width="40" BorderBrush="{x:Null}" />
+                            </Grid>
 
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </Border>
             <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1"  CornerRadius="3" Padding="3" HorizontalAlignment="Left" Margin="5">
                 <!--<Grid>
@@ -150,15 +151,15 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
- <ComboBox Grid.Column="0" Grid.Row="0" ItemsSource="{Binding TypeList}" SelectedValue="{Binding Type, Mode=TwoWay}"/>
-                               
+                                <ComboBox Grid.Column="0" Grid.Row="0" ItemsSource="{Binding TypeList}" SelectedValue="{Binding Type, Mode=TwoWay}"/>
+
                                 <Label Grid.Column="1" Grid.Row="0" Content="{Binding Addr}" />
                                 <Label Grid.Column="2" Grid.Row="0" Content="{Binding Name, Mode=OneWay}" />
-                                <Label Grid.Column="3" Grid.Row="0" Content="{Binding Value, Mode=OneWay}"/> 
-          
-  
-                                                 <!--<Button Grid.Column="3" Grid.Row="0" Command="{Binding WriteItemCommand}" Visibility="{Binding IsWritableBool}" Content="Set" />-->
-                                <Button Grid.Column="4" Grid.Row="0" Command="{Binding EditItemCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Visibility="{Binding IsWritable}" Content="Edit" />
+                                <Label Grid.Column="3" Grid.Row="0" Content="{Binding Value, Mode=OneWay}"  Background="LightCyan" MinWidth="60"/>
+
+
+                                <!--<Button Grid.Column="3" Grid.Row="0" Command="{Binding WriteItemCommand}" Visibility="{Binding IsWritableBool}" Content="Set" />-->
+                                <Button Grid.Column="4" Grid.Row="0" Command="{Binding EditItemCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Visibility="{Binding IsWritable}" Content="Edit" Width="40" BorderBrush="{x:Null}"/>
                             </Grid>
 
                         </DataTemplate>

@@ -24,10 +24,10 @@ namespace TM_Comms_WPF.ViewModels
             return true;
         }
 
-        private SocketManagerNS.SocketManager Socket { get; }
         private SimpleModbusTCP ModbusTCP { get; }
         private TM_Comms.ModbusDictionary.MobusValue ModbusValue { get; set; }
 
+        public string[] TypeList { get => Enum.GetNames(typeof(TM_Comms.ModbusDictionary.MobusValue.DataTypes)); }
 
         private string _value;
         private string type;
@@ -44,15 +44,14 @@ namespace TM_Comms_WPF.ViewModels
 
         public ModbusItemViewModel Instance => this;
 
-        public ModbusItemViewModel(string name, TM_Comms.ModbusDictionary.MobusValue modbusValue, SocketManagerNS.SocketManager socket)
+        public ModbusItemViewModel(string name, TM_Comms.ModbusDictionary.MobusValue modbusValue, SimpleModbusTCP modbus)
         {
             EditItemCommand = new RelayCommand(EditItemAction, c => true);
 
             Name = name;
             ModbusValue = modbusValue;
-            Socket = socket;
 
-            ModbusTCP = new SimpleModbusTCP(Socket);
+            ModbusTCP = modbus;
 
             Type = ModbusValue.Type.ToString();
             Addr = $"{ModbusValue.Addr} / x{ModbusValue.Addr:X}";
@@ -70,29 +69,59 @@ namespace TM_Comms_WPF.ViewModels
             //DialogService.OkDialog(new DialogParameters() { Message = "Hello cruel world!" }, parameter as Window);
 
             DialogResultData result;
-            if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Bool)
+            if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Coil)
             {
                 if ((result = DialogService.EditValueDialog(new DialogParameters() { Title = "Bool", Value = this.Value }, parameter as Window)).Result == DialogResult.Ok)
-                    ModbusTCP.SetBool(ModbusValue.Addr, bool.Parse(result.Value));
+                {
+                    if (bool.TryParse(result.Value, out bool res))
+                    {
+                        if (!ModbusTCP.WriteSingleCoil(ModbusValue.Addr, res))
+                            DialogService.OkDialog(new DialogParameters() { Title = "Modbus write error!", Message = $"Could not write value: {res} to: {ModbusValue.Addr}" }, parameter as Window);
+                    }
+                    else
+                        DialogService.OkDialog(new DialogParameters() { Title = "Parse error!", Message = $"Could not parse value: {result.Value}" }, parameter as Window);
+                }
             }
             else if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Int16)
             {
                 if ((result = DialogService.EditValueDialog(new DialogParameters() { Title = "Int16", Value = this.Value }, parameter as Window)).Result == DialogResult.Ok)
-                    if(Int16.TryParse(result.Value, out short res))
-                        ModbusTCP.SetInt16(ModbusValue.Addr, new Int16[] { res });
+                {
+                    if (Int16.TryParse(result.Value, out short res))
+                    {
+                        if (!ModbusTCP.SetInt16(ModbusValue.Addr, new Int16[] { res }))
+                            DialogService.OkDialog(new DialogParameters() { Title = "Modbus write error!", Message = $"Could not write value: {res} to: {ModbusValue.Addr}" }, parameter as Window);
+                    }
+                    else
+                        DialogService.OkDialog(new DialogParameters() { Title = "Parse error!", Message = $"Could not parse value: {result.Value}" }, parameter as Window);
+                }
             }
             else if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Int32)
             {
                 if ((result = DialogService.EditValueDialog(new DialogParameters() { Title = "Int32", Value = this.Value }, parameter as Window)).Result == DialogResult.Ok)
+                {
                     if (Int32.TryParse(result.Value, out int res))
-                        ModbusTCP.SetInt32(ModbusValue.Addr, new Int32[] { res });
+                    {
+                        if (!ModbusTCP.SetInt32(ModbusValue.Addr, new Int32[] { res }))
+                            DialogService.OkDialog(new DialogParameters() { Title = "Modbus write error!", Message = $"Could not write value: {res} to: {ModbusValue.Addr}" }, parameter as Window);
+                    }
+                    else
+                        DialogService.OkDialog(new DialogParameters() { Title = "Parse error!", Message = $"Could not parse value: {result.Value}" }, parameter as Window);
+                }
             }
             else if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Float)
             {
                 if ((result = DialogService.EditValueDialog(new DialogParameters() { Title = "Float", Value = this.Value }, parameter as Window)).Result == DialogResult.Ok)
+                {
                     if (float.TryParse(result.Value, out float res))
-                        ModbusTCP.SetFloat(ModbusValue.Addr, new float[] { res });
+                    {
+                        if (!ModbusTCP.SetFloat(ModbusValue.Addr, new float[] { res }))
+                            DialogService.OkDialog(new DialogParameters() { Title = "Modbus write error!", Message = $"Could not write value: {res} to: {ModbusValue.Addr}" }, parameter as Window);
+                    }
+                    else
+                        DialogService.OkDialog(new DialogParameters() { Title = "Parse error!", Message = $"Could not parse value: {result.Value}" }, parameter as Window);
+                }
             }
+
             //else if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.String)
             //{
             //    if ((result = DialogService.EditValueDialog(new DialogParameters() { Title = "String", Value = this.Value }, parameter as Window)).Result == DialogResult.Ok)
@@ -105,10 +134,12 @@ namespace TM_Comms_WPF.ViewModels
 
         public string Read()
         {
-            if (Socket.IsConnected)
+            if (ModbusTCP.Socket.IsConnected)
             {
-                if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Bool)
-                    return Value = ModbusTCP.GetBool(ModbusValue.Addr).ToString();
+                if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Input)
+                    return Value = ModbusTCP.ReadDiscreteInput(ModbusValue.Addr).ToString();
+                if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Coil)
+                    return Value = ModbusTCP.ReadCoils(ModbusValue.Addr).ToString();
                 if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Int16)
                     return Value = ModbusTCP.GetInt16(ModbusValue.Addr).ToString();
                 if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Int32)

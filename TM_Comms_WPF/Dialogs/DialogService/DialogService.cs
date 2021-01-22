@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace TM_Comms_WPF.Dialogs.DialogService
 {
@@ -18,6 +13,10 @@ namespace TM_Comms_WPF.Dialogs.DialogService
             win.ShowDialog();
             DialogResultData result =
                 (win.DataContext as DialogViewModelBase).UserDialogResult;
+
+            if (result == null)
+                result = new DialogResultData() { Result = DialogResult.Undefined, Value = "" };
+
             return result;
         }
 
@@ -30,6 +29,10 @@ namespace TM_Comms_WPF.Dialogs.DialogService
             win.ShowDialog();
             DialogResultData result =
                 (win.DataContext as DialogViewModelBase).UserDialogResult;
+
+            if (result == null)
+                result = new DialogResultData() { Result = DialogResult.Undefined, Value = "" };
+
             return result;
         }
 
@@ -42,6 +45,10 @@ namespace TM_Comms_WPF.Dialogs.DialogService
             win.ShowDialog();
             DialogResultData result =
                 (win.DataContext as DialogViewModelBase).UserDialogResult;
+
+            if (result == null)
+                result = new DialogResultData() { Result = DialogResult.Undefined, Value = "" };
+
             return result;
         }
 
@@ -55,6 +62,10 @@ namespace TM_Comms_WPF.Dialogs.DialogService
             win.ShowDialog();
             DialogResultData result =
                 (win.DataContext as DialogViewModelBase).UserDialogResult;
+
+            if (result == null)
+                result = new DialogResultData() { Result = DialogResult.Undefined, Value = "" };
+
             return result;
         }
     }
