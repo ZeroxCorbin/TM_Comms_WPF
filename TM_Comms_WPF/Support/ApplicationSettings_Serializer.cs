@@ -48,6 +48,7 @@ namespace ApplicationSettingsNS
             public string RobotIP { get; set; } = "Enter a valid IP.";
 
             public TMflowVersions Version { get; set; } = TMflowVersions.V1_76_xxxx;
+            public bool Is18 { get; set; } = false;
 
             public string[] ModbusComboBoxIndices { get; set; } = {
                 "Current Base With Tool X",

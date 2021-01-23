@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:TM_Comms_WPF"
         mc:Ignorable="d"
         Title="Ethernet Slave" 
-        Icon="Support/favicon.ico"
+        Icon="../Support/favicon.ico"
         Loaded="Window_Loaded"
         Closing="Window_Closing"
-        Width="{Binding EthernetSlaveWindow.Width, Mode=TwoWay}"
-        Height="{Binding EthernetSlaveWindow.Height, Mode=TwoWay}"
+        Width="{Binding EthernetSlaveWindow.Width, Mode=TwoWay, FallbackValue=1024}"
+        Height="{Binding EthernetSlaveWindow.Height, Mode=TwoWay, FallbackValue=768}"
         Left="{Binding EthernetSlaveWindow.Left, Mode=TwoWay}"
         Top="{Binding EthernetSlaveWindow.Top, Mode=TwoWay}"
         WindowState="{Binding EthernetSlaveWindow.WindowState, Mode=TwoWay}">
@@ -220,6 +220,7 @@
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -234,6 +235,8 @@
                         <Label Grid.Row="0" Grid.Column="2" Content="Message Frquency" Padding="5,3" HorizontalContentAlignment="Center" />
                         <TextBox Grid.Row="1" Grid.Column="2" x:Name="TxtAverageMessage" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="3,0" BorderBrush="{x:Null}"/>
 
+                        <Button Grid.Row="0" Grid.Column="3"  x:Name="BtnCapture" Content="Start Capture" Width="90" BorderBrush="{x:Null}" Click="BtnCapture_Click" />
+                        
                     </Grid>
                 </Border>
                 <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="3">

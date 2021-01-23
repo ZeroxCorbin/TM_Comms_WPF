@@ -109,13 +109,36 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ExternalVisionResultControl.xaml.cs">
+    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Dialogs\DialogService\DialogParameters.cs" />
+    <Compile Include="Dialogs\Dialogs\DialogEditValueView.xaml.cs">
+      <DependentUpon>DialogEditValueView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Dialogs\DialogEditValueViewModel.cs" />
+    <Compile Include="Dialogs\DialogService\DialogResult.cs" />
+    <Compile Include="Dialogs\DialogService\DialogService.cs" />
+    <Compile Include="Dialogs\DialogService\DialogViewModelBase.cs" />
+    <Compile Include="Dialogs\DialogService\DialogWindow.xaml.cs">
+      <DependentUpon>DialogWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Dialogs\DialogOkView.xaml.cs">
+      <DependentUpon>DialogOkView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Dialogs\DialogYesNoView.xaml.cs">
+      <DependentUpon>DialogYesNoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Dialogs\DialogOkViewModel.cs" />
+    <Compile Include="Dialogs\Dialogs\DialogYesNoViewModel.cs" />
+    <Compile Include="Support\StaticUtils.cs" />
+    <Compile Include="ViewModels\ModbusItemViewModel.cs" />
+    <Compile Include="Views\ExternalVisionResultControl.xaml.cs">
       <DependentUpon>ExternalVisionResultControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ExternalVisionWindow.xaml.cs">
+    <Compile Include="Views\ExternalVisionWindow.xaml.cs">
       <DependentUpon>ExternalVisionWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Robot3DViewer.xaml.cs">
+    <Compile Include="ViewModels\ModbusViewModel.cs" />
+    <Compile Include="Views\Robot3DViewer.xaml.cs">
       <DependentUpon>Robot3DViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Support\ApplicationSettings_Serializer.cs" />
@@ -125,15 +148,31 @@
     <Compile Include="Support\NIC_Adapter\AdapterManager.cs" />
     <Compile Include="Support\NIC_Adapter\AdapterWrapper.cs" />
     <Compile Include="Support\NIC_Adapter\AdapterXMLFile.cs" />
-    <Page Include="EthernetSlaveWindow.xaml">
+    <Page Include="Dialogs\Dialogs\DialogEditValueView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\DialogService\DialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ExternalVisionResultControl.xaml">
+    <Page Include="Dialogs\Dialogs\DialogOkView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\Dialogs\DialogYesNoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ListenNodeWindow.xaml">
+    <Page Include="Views\EthernetSlaveWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExternalVisionResultControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ListenNodeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -148,35 +187,35 @@
     <Compile Include="Support\RingBuffer.cs" />
     <Compile Include="Support\PingCommand.cs" />
     <Compile Include="Support\ConvertEuler.cs" />
-    <Compile Include="EthernetSlaveWindow.xaml.cs">
+    <Compile Include="Views\EthernetSlaveWindow.xaml.cs">
       <DependentUpon>EthernetSlaveWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ListenNodeWindow.xaml.cs">
+    <Compile Include="Views\ListenNodeWindow.xaml.cs">
       <DependentUpon>ListenNodeWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ModbusWindow.xaml.cs">
+    <Compile Include="Views\ModbusWindow.xaml.cs">
       <DependentUpon>ModbusWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Port8080Window.xaml.cs">
+    <Compile Include="Views\Port8080Window.xaml.cs">
       <DependentUpon>Port8080Window.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="ModbusWindow.xaml">
+    <Page Include="Views\ModbusWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Port8080Window.xaml">
+    <Page Include="Views\Port8080Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ExternalVisionWindow.xaml">
+    <Page Include="Views\ExternalVisionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Robot3DViewer.xaml">
+    <Page Include="Views\Robot3DViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -252,6 +291,7 @@
       <Name>TM_Comms</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
