@@ -108,6 +108,11 @@ namespace TM_Comms_WPF
                     btnEthernetSlaveWindow.IsEnabled = true;
                     btnExternalVisionWindow.IsEnabled = true;
                     break;
+                case TMflowVersions.V1_82_xxxx:
+                    btnPort8080Window.IsEnabled = false;
+                    btnEthernetSlaveWindow.IsEnabled = true;
+                    btnExternalVisionWindow.IsEnabled = true;
+                    break;
             }
 
             if (!IsLoaded) return;

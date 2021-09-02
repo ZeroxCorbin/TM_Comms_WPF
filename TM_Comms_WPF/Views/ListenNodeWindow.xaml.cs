@@ -68,7 +68,7 @@ namespace TM_Comms_WPF
             TreeViewItem tviParent = null;
             foreach (string cmd in ListenNode.Commands[App.Settings.Version])
             {
-                if (Regex.IsMatch(cmd, @"^[0-9][.][0-9]"))
+                if (Regex.IsMatch(cmd, @"^[0-9]*[.]\d{1,2}"))
                 {
                     if (tviParent != null)
                     {

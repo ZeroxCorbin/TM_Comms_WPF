@@ -67,7 +67,7 @@ namespace TM_Comms_WPF
             public List<string> Commands { get; private set; } = new List<string>();
             public GetListenNodeData()
             {
-                using (StreamReader file = new StreamReader("ListenNodeCommands_Raw_1.68.6800.txt"))
+                using (StreamReader file = new StreamReader("ListenNodeCommands_Raw_RevC.txt"))
                 {
                     StringBuilder sb = new StringBuilder();
 
@@ -75,7 +75,7 @@ namespace TM_Comms_WPF
                     string ln;
                     while ((ln = file.ReadLine()) != null)
                     {
-                        if (Regex.IsMatch(ln, @"^[0-9][.][0-9]\w*"))
+                        if (Regex.IsMatch(ln, @"^[0-9]*[.]\d{1,2}\w*"))
                         {
                             Commands.Add(ln.Trim(new char[] { '\r', '\n' }));
                             continue;
@@ -142,7 +142,7 @@ namespace TM_Comms_WPF
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            //GetData d = new GetData();
+            //GetListenNodeData d = new GetListenNodeData();
             base.OnStartup(e);
         }
 
