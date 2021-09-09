@@ -186,7 +186,6 @@
     </Compile>
     <Compile Include="Support\RingBuffer.cs" />
     <Compile Include="Support\PingCommand.cs" />
-    <Compile Include="Support\ConvertEuler.cs" />
     <Compile Include="Views\EthernetSlaveWindow.xaml.cs">
       <DependentUpon>EthernetSlaveWindow.xaml</DependentUpon>
     </Compile>
