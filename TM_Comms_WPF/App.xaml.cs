@@ -23,16 +23,25 @@ namespace TM_Comms_WPF
         [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
         public static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int Y, int cx, int cy, int wFlags);
 
-        public static void DoOnProcess(string processName)
+        //public static void DoOnProcess(string processName)
+        //{
+        //    var allProcs = Process.GetProcessesByName(processName);
+        //    if (allProcs.Length > 0)
+        //    {
+        //        Process proc = allProcs[0];
+        //        int hWnd = FindWindow(null, proc.MainWindowTitle.ToString());
+        //        // Change behavior by settings the wFlags params. See http://msdn.microsoft.com/en-us/library/ms633545(VS.85).aspx
+        //        SetWindowPos(new IntPtr(hWnd), 0, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_NOACTIVATE);
+        //    }
+        //}
+        public static void DoOnProcess()
         {
-            var allProcs = Process.GetProcessesByName(processName);
-            if (allProcs.Length > 0)
-            {
-                Process proc = allProcs[0];
-                int hWnd = FindWindow(null, proc.MainWindowTitle.ToString());
-                // Change behavior by settings the wFlags params. See http://msdn.microsoft.com/en-us/library/ms633545(VS.85).aspx
-                SetWindowPos(new IntPtr(hWnd), 0, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_NOACTIVATE);
-            }
+            Process proc = Process.GetCurrentProcess();
+
+            int hWnd = FindWindow(null, "TM Communication");
+            // Change behavior by settings the wFlags params. See http://msdn.microsoft.com/en-us/library/ms633545(VS.85).aspx
+            SetWindowPos(new IntPtr(hWnd), 0, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_NOACTIVATE);
+
         }
     }
 

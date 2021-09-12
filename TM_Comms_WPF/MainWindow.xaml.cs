@@ -6,9 +6,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-
 using ApplicationSettingsNS;
 using TM_Comms;
+using TM_Comms_WPF.Views;
 
 namespace TM_Comms_WPF
 {
@@ -108,6 +108,11 @@ namespace TM_Comms_WPF
                     btnEthernetSlaveWindow.IsEnabled = true;
                     btnExternalVisionWindow.IsEnabled = true;
                     break;
+                case TMflowVersions.V1_82_xxxx:
+                    btnPort8080Window.IsEnabled = false;
+                    btnEthernetSlaveWindow.IsEnabled = true;
+                    btnExternalVisionWindow.IsEnabled = true;
+                    break;
             }
 
             if (!IsLoaded) return;
@@ -134,6 +139,8 @@ namespace TM_Comms_WPF
         }
 
         private ModbusWindow ModbusWindow { get; set; } = null;
+
+
         private void BtnModbusWindow_Click(object sender, RoutedEventArgs e)
         {
             if(!IPValid)
@@ -301,7 +308,7 @@ namespace TM_Comms_WPF
             WindowClose();
         }
 
-        private void AnyWindow_Activated(object sender, EventArgs e) => MoveToForeground.DoOnProcess("TM_Comms_WPF");
+        private void AnyWindow_Activated(object sender, EventArgs e) => MoveToForeground.DoOnProcess();
 
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

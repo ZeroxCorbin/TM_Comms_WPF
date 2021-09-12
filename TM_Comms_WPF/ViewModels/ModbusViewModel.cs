@@ -36,6 +36,8 @@ namespace TM_Comms_WPF.ViewModels
         public double Height { get => App.Settings.ModbusWindow.Height; set { App.Settings.ModbusWindow.Height = value; OnPropertyChanged(); } }
         public WindowState WindowState { get => App.Settings.ModbusWindow.WindowState; set { App.Settings.ModbusWindow.WindowState = value; OnPropertyChanged(); } }
 
+        public PendantControlViewModel Pendant { get; } = new PendantControlViewModel();
+
         private SocketManager Socket { get; set; }
         SimpleModbusTCP ModbusTCP { get; set; }
 
@@ -45,7 +47,6 @@ namespace TM_Comms_WPF.ViewModels
 
         private bool isRunning;
         private bool heartbeat;
-
 
         public string ConnectionString { get => App.Settings.RobotIP; set { App.Settings.RobotIP = value; OnPropertyChanged(); } }
         public string ConnectButtonText { get => connectButtonText; set => SetProperty(ref connectButtonText, value); }
@@ -58,63 +59,28 @@ namespace TM_Comms_WPF.ViewModels
         public System.Windows.Visibility Border18Visible { get => App.Settings.Version >= TMflowVersions.V1_80_xxxx ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; }
 
 
-        private string errorDescription;
-        private string errorCode;
-        private string errorDate;
-        public string ErrorDescription { get => errorDescription; set => SetProperty(ref errorDescription, value); }
-        public string ErrorCode { get => errorCode; set => SetProperty(ref errorCode, value); }
-        public string ErrorDate { get => errorDate; set => SetProperty(ref errorDate, value); }
-
-
-        private Brush Good { get; } = new SolidColorBrush(Colors.Cyan);
-        private Brush Bad { get; } = new SolidColorBrush(Colors.Red);
-        private Brush Meh { get; } = new SolidColorBrush(Colors.Yellow);
-        private Brush Disabled { get; } = new SolidColorBrush(Colors.White);
-        private Brush GoodRadial { get; } = new RadialGradientBrush(Colors.Cyan, Colors.Transparent);
-        private Brush BadRadial { get; } = new RadialGradientBrush(Colors.Red, Colors.Transparent);
-        private Brush MehRadial { get; } = new RadialGradientBrush(Colors.Yellow, Colors.Transparent);
-        private Brush Transparent { get; } = new SolidColorBrush(Colors.Transparent);
-
-        private Brush power = new SolidColorBrush(Colors.Yellow);
-        private Brush manual = new SolidColorBrush(Colors.White);
-        private Brush auto = new SolidColorBrush(Colors.White);
-        private Brush error = new SolidColorBrush(Colors.White);
-        private Brush estop = new SolidColorBrush(Colors.White);
-        private Brush getControl = new SolidColorBrush(Colors.White);
-        private Brush autoActive = new SolidColorBrush(Colors.White);
-        private Brush autoEnable = new SolidColorBrush(Colors.White);
-
-        private Brush stop = new SolidColorBrush(Colors.Transparent);
-        private Brush play = new SolidColorBrush(Colors.Transparent);
-
-        public Brush Power { get => power; set => SetProperty(ref power, value); }
-        public Brush Manual { get => manual; set => SetProperty(ref manual, value); }
-        public Brush Auto { get => auto; set => SetProperty(ref auto, value); }
-        public Brush Error { get => error; set => SetProperty(ref error, value); }
-        public Brush Estop { get => estop; set => SetProperty(ref estop, value); }
-        public Brush GetControl { get => getControl; set => SetProperty(ref getControl, value); }
-        public Brush AutoActive { get => autoActive; set => SetProperty(ref autoActive, value); }
-        public Brush AutoEnable { get => autoEnable; set => SetProperty(ref autoEnable, value); }
-
-        public Brush Stop { get => stop; set => SetProperty(ref stop, value); }
-        public Brush Play { get => play; set => SetProperty(ref play, value); }
-
+        public ICommand ConnectCommand { get; }
+        //public ICommand StopCommand { get; }
+        //public ICommand PlayPauseCommand { get; }
+        //public ICommand PlusCommand { get; }
+        //public ICommand MinusCommand { get; }
         public ObservableCollection<ModbusItemViewModel> Items { get; } = new ObservableCollection<ModbusItemViewModel>();
         public ObservableCollection<ModbusItemViewModel> UserItems { get; } = new ObservableCollection<ModbusItemViewModel>();
 
-        public ICommand ConnectCommand { get; }
-        public ICommand StopCommand { get; }
-        public ICommand PlayPauseCommand { get; }
-        public ICommand PlusCommand { get; }
-        public ICommand MinusCommand { get; }
+
 
         public ModbusViewModel()
         {
-            PlayPauseCommand = new RelayCommand(PlayPauseAction, c => true);
-            PlusCommand = new RelayCommand(PlusAction, c => true);
-            MinusCommand = new RelayCommand(MinusAction, c => true);
-            StopCommand = new RelayCommand(StopAction, c => true);
+            //PlayPauseCommand = new RelayCommand(PlayPauseAction, c => true);
+            //PlusCommand = new RelayCommand(PlusAction, c => true);
+            //MinusCommand = new RelayCommand(MinusAction, c => true);
+            //StopCommand = new RelayCommand(StopAction, c => true);
             ConnectCommand = new RelayCommand(ConnectAction, c => true);
+
+            Pendant.StopEvent += Pendant_StopEvent;
+            Pendant.PlayPauseEvent += Pendant_PlayPauseEvent;
+            Pendant.PlusEvent += Pendant_PlusEvent;
+            Pendant.MinusEvent += Pendant_MinusEvent;
 
             Socket = new SocketManager($"{App.Settings.RobotIP}:502");
             ModbusTCP = new SimpleModbusTCP(Socket);
@@ -129,6 +95,11 @@ namespace TM_Comms_WPF.ViewModels
             if (Socket.IsConnected && !IsRunning)
                 ThreadPool.QueueUserWorkItem(new WaitCallback(AsyncRecieveThread_DoWork));
         }
+
+        private void Pendant_StopEvent() => ModbusTCP.WriteSingleCoil(ModbusDictionary.ModbusData[App.Settings.Version]["Stop"].Addr, true);
+        private void Pendant_PlayPauseEvent() => ModbusTCP.WriteSingleCoil(ModbusDictionary.ModbusData[App.Settings.Version]["Play/Pause"].Addr, true);
+        private void Pendant_PlusEvent() => ModbusTCP.WriteSingleCoil(ModbusDictionary.ModbusData[App.Settings.Version]["Stick+"].Addr, true);
+        private void Pendant_MinusEvent() => ModbusTCP.WriteSingleCoil(ModbusDictionary.ModbusData[App.Settings.Version]["Stick-"].Addr, true);
 
         private void GetItems()
         {
@@ -167,22 +138,6 @@ namespace TM_Comms_WPF.ViewModels
             }
         }
 
-        private void StopAction(object parameter)
-        {
-            ModbusTCP.WriteSingleCoil(ModbusDictionary.ModbusData[App.Settings.Version]["Stop"].Addr, true);
-        }
-        private void PlayPauseAction(object parameter)
-        {
-            ModbusTCP.WriteSingleCoil(ModbusDictionary.ModbusData[App.Settings.Version]["Play/Pause"].Addr, true);
-        }
-        private void PlusAction(object parameter)
-        {
-            ModbusTCP.WriteSingleCoil(ModbusDictionary.ModbusData[App.Settings.Version]["Stick+"].Addr, true);
-        }
-        private void MinusAction(object parameter)
-        {
-            ModbusTCP.WriteSingleCoil(ModbusDictionary.ModbusData[App.Settings.Version]["Stick-"].Addr, true);
-        }
         private void Socket_ConnectState(object sender, bool state)
         {
             ConnectionState = state;
@@ -209,7 +164,7 @@ namespace TM_Comms_WPF.ViewModels
                     {
                         Heartbeat = !Heartbeat;
 
-                        ReadModbus();
+                        UpdatePendant();
 
                         if (Cancel) break;
 
@@ -225,95 +180,77 @@ namespace TM_Comms_WPF.ViewModels
                     }
                 }
                 else
-                    Reset();
+                    Pendant.Reset();
             }
 
             IsRunning = false;
             Cancel = false;
 
-            Reset();
+            Pendant.Reset();
         }
-        private void Reset()
+        private void UpdatePendant()
         {
-            Power = Meh;
-            Manual = Disabled;
-            Auto = Disabled;
-            Estop = Disabled;
-            GetControl = Disabled;
-            AutoActive = Disabled;
-            AutoEnable = Disabled;
-
-            Stop = Transparent;
-            Play = Transparent;
-
-            Error = Disabled;
-            ErrorCode = "";
-            ErrorDate = "";
-            ErrorDescription = "";
-        }
-        private void ReadModbus()
-        {
-            Power = Good;
+            Pendant.Power = Pendant.Good;
 
             if (ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["M/A Mode"].Addr) == 1)
             {
-                Auto = Good;
-                Manual = Disabled;
+                Pendant.Auto = Pendant.Good;
+                Pendant.Manual = Pendant.Disabled;
             }
             else
             {
-                Auto = Disabled;
-                Manual = Good;
+                Pendant.Auto = Pendant.Disabled;
+                Pendant.Manual = Pendant.Good;
             }
 
             if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["EStop"].Addr))
-                Estop = Bad;
+                Pendant.Estop = Pendant.Bad;
             else
-                Estop = Disabled;
+                Pendant.Estop = Pendant.Disabled;
 
-            if (App.Settings.Version == TMflowVersions.V1_80_xxxx)
+            if (App.Settings.Version > TMflowVersions.V1_80_xxxx)
             {
                 if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["Get Control"].Addr))
-                    GetControl = Good;
+                    Pendant.GetControl = Pendant.Good;
                 else
-                    GetControl = Bad;
+                    Pendant.GetControl = Pendant.Bad;
 
                 if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["Auto Remote Mode Active"].Addr))
-                    AutoActive = Good;
+                    Pendant.AutoActive = Pendant.Good;
                 else
-                    AutoActive = Bad;
+                    Pendant.AutoActive = Pendant.Bad;
 
                 if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["Auto Remote Mode Enabled"].Addr))
-                    AutoEnable = Good;
+                    Pendant.AutoEnable = Pendant.Good;
                 else
-                    AutoEnable = Bad;
+                    Pendant.AutoEnable = Pendant.Bad;
             }
 
             if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["Project Running"].Addr))
             {
-                Play = GoodRadial;
-                Stop = Transparent;
+                Pendant.Play = Pendant.GoodRadial;
+                Pendant.Stop = Pendant.Transparent;
             }
             else if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["Project Paused"].Addr))
             {
-                Play = MehRadial;
-                Stop = Transparent;
+                Pendant.Play = Pendant.MehRadial;
+                Pendant.Stop = Pendant.Transparent;
             }
             else if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["Project Editing"].Addr))
             {
-                Play = Transparent;
-                Stop = MehRadial;
+                Pendant.Play = Pendant.Transparent;
+                Pendant.Stop = Pendant.MehRadial;
             }
             else
             {
-                Play = Transparent;
-                Stop = BadRadial;
+                Pendant.Play = Pendant.Transparent;
+                Pendant.Stop = Pendant.BadRadial;
             }
 
             if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["Error"].Addr))
-                Error = Bad;
+                Pendant.Error = Pendant.Bad;
             else
-                Error = Disabled;
+                Pendant.Error = Pendant.Disabled;
 
 
             uint code = (uint)ModbusTCP.GetInt32(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Code"].Addr);
@@ -326,17 +263,19 @@ namespace TM_Comms_WPF.ViewModels
                                 $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Minute"].Addr)}:" +
                                 $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Second"].Addr)} ";
                 if (DateTime.TryParse(dat, out DateTime date))
-                    ErrorDate = date.ToString();
+                    Pendant.ErrorDate = date.ToString();
             }
             else
-                ErrorDate = "";
+                Pendant.ErrorDate = "";
 
-            ErrorCode = code.ToString("X");
+            Pendant.ErrorCode = code.ToString("X");
 
             if (ErrorCodes.Codes.TryGetValue(code, out string val))
-                ErrorDescription = val;
+                Pendant.ErrorDescription = val;
             else
-                ErrorDescription = "CAN NOT FIND ERROR IN TABLE.";
+                Pendant.ErrorDescription = "CAN NOT FIND ERROR IN TABLE.";
         }
+
+
     }
 }

@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using static TM_Comms.ExternalDetection;
 
-namespace TM_Comms_WPF
+namespace TM_Comms_WPF.Views
 {
 
     public partial class ExternalVisionWindow : Window

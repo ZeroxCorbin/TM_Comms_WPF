@@ -17,7 +17,7 @@ using System.Windows.Threading;
 using TM_Comms;
 using static TM_Comms.MotionScriptBuilder;
 
-namespace TM_Comms_WPF
+namespace TM_Comms_WPF.Views
 {
     public partial class ListenNodeWindow : Window
     {

@@ -24,6 +24,7 @@ namespace TM_Comms_WPF.ViewModels
             return true;
         }
 
+
         private SimpleModbusTCP ModbusTCP { get; }
         private TM_Comms.ModbusDictionary.MobusValue ModbusValue { get; set; }
 
