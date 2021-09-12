@@ -37,7 +37,7 @@ namespace TM_Comms_WPF.ViewModels
             return true;
         }
 
-        public string Title { get => "Ethernet Slave"; }
+        public string Title => "Ethernet Slave";
         public double Left { get => App.Settings.EthernetSlaveWindow.Left; set { App.Settings.EthernetSlaveWindow.Left = value; OnPropertyChanged(); } }
         public double Top { get => App.Settings.EthernetSlaveWindow.Top; set { App.Settings.EthernetSlaveWindow.Top = value; OnPropertyChanged(); } }
         public double Width { get => App.Settings.EthernetSlaveWindow.Width; set { App.Settings.EthernetSlaveWindow.Width = value; OnPropertyChanged(); } }
@@ -52,7 +52,7 @@ namespace TM_Comms_WPF.ViewModels
         private string connectButtonText = "Connect";
         public bool ConnectionState { get => connectionState; set => SetProperty(ref connectionState, value); }
         private bool connectionState;
-        public string ConnectMessage { get => connectMessage; set { SetProperty(ref connectMessage, value); PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsMessage")); } }
+        public string ConnectMessage { get => connectMessage; set { _ = SetProperty(ref connectMessage, value); PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsMessage")); } }
         private string connectMessage;
         public bool IsConnectMessage { get => !string.IsNullOrEmpty(connectMessage); }
         public bool IsRunning { get => isRunning; private set => SetProperty(ref isRunning, value); }
@@ -81,10 +81,6 @@ namespace TM_Comms_WPF.ViewModels
         public ICommand SendNotExistCommand { get; }
         public ICommand SendReadOnlyCommand { get; }
         public ICommand SendValueErrorCommand { get; }
-
-
-
-        private double SliderValue { get; set; }
 
         public EthernetSlaveViewModel()
         {
@@ -125,6 +121,7 @@ namespace TM_Comms_WPF.ViewModels
                 }
             }
         }
+
         private void ConnectAction(object parameter)
         {
             if (Socket.IsConnected)
@@ -318,17 +315,17 @@ namespace TM_Comms_WPF.ViewModels
                 Pendant.ErrorDescription = "CAN NOT FIND ERROR IN TABLE.";
         }
 
-        public ListViewItem CommandItem { get => commandItem; set { SetProperty(ref commandItem, value); UpdateScript(); } }
+        public ListViewItem CommandItem { get => commandItem; set { _ = SetProperty(ref commandItem, value); UpdateScript(); } }
         private ListViewItem commandItem;
 
-        public ComboBoxItem MessageType { get => messageType; set { SetProperty(ref messageType, value); GetESNode(); } }
+        public ComboBoxItem MessageType { get => messageType; set { _ = SetProperty(ref messageType, value); GetESNode(); } }
         private ComboBoxItem messageType;
-        public ComboBoxItem MessageFormat { get => messageFormat; set { SetProperty(ref messageFormat, value); GetESNode(); } }
+        public ComboBoxItem MessageFormat { get => messageFormat; set { _ = SetProperty(ref messageFormat, value); GetESNode(); } }
         private ComboBoxItem messageFormat;
         public ObservableCollection<ListViewItem> CommandList { get; } = new ObservableCollection<ListViewItem>();
-        public string Script { get => script; set { SetProperty(ref script, value); GetESNode(); } }
+        public string Script { get => script; set { _ = SetProperty(ref script, value); GetESNode(); } }
         private string script;
-        public string TransactionID { get => transactionID; set { SetProperty(ref transactionID, value); GetESNode(); } }
+        public string TransactionID { get => transactionID; set { _ = SetProperty(ref transactionID, value); GetESNode(); } }
         private string transactionID = "local";
         public string Command { get => command; set => SetProperty(ref command, value); }
         private string command;

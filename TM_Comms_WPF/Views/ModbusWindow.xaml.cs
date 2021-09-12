@@ -12,8 +12,8 @@ namespace TM_Comms_WPF.Views
 
             InitializeComponent();
 
-            SetBinding(Window.WidthProperty, new Binding("Width") { Source = this.DataContext, Mode = BindingMode.TwoWay });
-            SetBinding(Window.HeightProperty, new Binding("Height") { Source = this.DataContext, Mode = BindingMode.TwoWay });
+            _ = SetBinding(WidthProperty, new Binding("Width") { Source = DataContext, Mode = BindingMode.TwoWay });
+            _ = SetBinding(HeightProperty, new Binding("Height") { Source = DataContext, Mode = BindingMode.TwoWay });
         }
     }
 }

@@ -29,7 +29,7 @@ namespace TM_Comms_WPF.ViewModels
             return true;
         }
 
-        public string Title { get => "Modbus TCP"; }
+        public string Title => "Modbus TCP";
         public double Left { get => App.Settings.ModbusWindow.Left; set { App.Settings.ModbusWindow.Left = value; OnPropertyChanged(); } }
         public double Top { get => App.Settings.ModbusWindow.Top; set { App.Settings.ModbusWindow.Top = value; OnPropertyChanged(); } }
         public double Width { get => App.Settings.ModbusWindow.Width; set { App.Settings.ModbusWindow.Width = value; OnPropertyChanged(); } }
@@ -39,25 +39,23 @@ namespace TM_Comms_WPF.ViewModels
         public PendantControlViewModel Pendant { get; } = new PendantControlViewModel();
 
         private SocketManager Socket { get; set; }
-        SimpleModbusTCP ModbusTCP { get; set; }
+        private SimpleModbusTCP ModbusTCP { get; set; }
 
-        private string connectButtonText = "Connect";
-        private bool connectionState;
-        private string message;
-
-        private bool isRunning;
         private bool heartbeat;
 
         public string ConnectionString { get => App.Settings.RobotIP; set { App.Settings.RobotIP = value; OnPropertyChanged(); } }
         public string ConnectButtonText { get => connectButtonText; set => SetProperty(ref connectButtonText, value); }
-        public bool ConnectionState { get => connectionState; set => SetProperty(ref connectionState, value); }
-        public string Message { get => message; set { SetProperty(ref message, value); PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsMessage")); } }
+        private string connectButtonText = "Connect";
+        public bool ConnectionState { get => connectionState; set => SetProperty(ref connectionState, value); } 
+        private bool connectionState;
+        public string Message { get => message; set { _ = SetProperty(ref message, value); PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsMessage")); } } 
+        private string message;
         public bool IsMessage { get => !string.IsNullOrEmpty(message); }
         public bool IsRunning { get => isRunning; private set => SetProperty(ref isRunning, value); }
-        public bool Heartbeat { get => heartbeat; set { SetProperty(ref heartbeat, value); } }
+        private bool isRunning;
+        public bool Heartbeat { get => heartbeat; set { _ = SetProperty(ref heartbeat, value); } }
 
         public System.Windows.Visibility Border18Visible { get => App.Settings.Version >= TMflowVersions.V1_80_xxxx ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; }
-
 
         public ICommand ConnectCommand { get; }
         //public ICommand StopCommand { get; }
@@ -68,13 +66,8 @@ namespace TM_Comms_WPF.ViewModels
         public ObservableCollection<ModbusItemViewModel> UserItems { get; } = new ObservableCollection<ModbusItemViewModel>();
 
 
-
         public ModbusViewModel()
         {
-            //PlayPauseCommand = new RelayCommand(PlayPauseAction, c => true);
-            //PlusCommand = new RelayCommand(PlusAction, c => true);
-            //MinusCommand = new RelayCommand(MinusAction, c => true);
-            //StopCommand = new RelayCommand(StopAction, c => true);
             ConnectCommand = new RelayCommand(ConnectAction, c => true);
 
             Pendant.StopEvent += Pendant_StopEvent;

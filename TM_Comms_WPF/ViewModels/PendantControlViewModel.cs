@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+using TM_Comms;
 using TM_Comms_WPF.Commands;
 
 namespace TM_Comms_WPF.ViewModels
@@ -26,6 +27,9 @@ namespace TM_Comms_WPF.ViewModels
             OnPropertyChanged(propertyName);
             return true;
         }
+
+        public System.Windows.Visibility Border18Visible { get => App.Settings.Version >= TMflowVersions.V1_80_xxxx ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; }
+
 
         public delegate void ButtonEventDel();
 

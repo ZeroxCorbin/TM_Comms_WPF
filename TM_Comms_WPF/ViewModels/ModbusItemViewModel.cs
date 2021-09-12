@@ -1,7 +1,9 @@
 ﻿using SimpleModbus;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using TM_Comms_WPF.Commands;
@@ -39,6 +41,7 @@ namespace TM_Comms_WPF.ViewModels
         public string Addr { get; }
         public string Access { get; }
 
+        public Visibility ShowText => (Access == "W") ? Visibility.Collapsed : Visibility.Visible;
         public Visibility IsWritable { get; } = Visibility.Collapsed;
 
         public ICommand EditItemCommand { get; }
@@ -122,12 +125,15 @@ namespace TM_Comms_WPF.ViewModels
                         DialogService.OkDialog(new DialogParameters() { Title = "Parse error!", Message = $"Could not parse value: {result.Value}" }, parameter as Window);
                 }
             }
-
-            //else if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.String)
-            //{
-            //    if ((result = DialogService.EditValueDialog(new DialogParameters() { Title = "String", Value = this.Value }, parameter as Window)).Result == DialogResult.Ok)
-            //        Write(result.Value);
-            //}
+            else if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.String)
+            {
+                if ((result = DialogService.EditValueDialog(new DialogParameters() { Title = "String", Value = this.Value }, parameter as Window)).Result == DialogResult.Ok)
+                {
+                    
+                    if (!ModbusTCP.SetString(ModbusValue.Addr, result.Value))
+                        DialogService.OkDialog(new DialogParameters() { Title = "Modbus write error!", Message = $"Could not write value: {result.Value} to: {ModbusValue.Addr}" }, parameter as Window);
+                }
+            }
 
 
             //DialogResultData result = DialogService.EditValueDialog(param, parameter as Window);
@@ -137,6 +143,13 @@ namespace TM_Comms_WPF.ViewModels
         {
             if (ModbusTCP.Socket.IsConnected)
             {
+                if(ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.String)
+                {
+                    if(ModbusValue.Addr == 7308) // HMI Version
+                        return Value = ModbusTCP.GetString(ModbusValue.Addr, 4);
+                    else if(ModbusValue.Addr == 7701)
+                        return Value = ModbusTCP.GetString(ModbusValue.Addr, 98);
+                }
                 if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Input)
                     return Value = ModbusTCP.ReadDiscreteInput(ModbusValue.Addr).ToString();
                 if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Coil)
