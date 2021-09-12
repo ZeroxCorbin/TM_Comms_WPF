@@ -129,10 +129,17 @@
     </Compile>
     <Compile Include="Dialogs\Dialogs\DialogOkViewModel.cs" />
     <Compile Include="Dialogs\Dialogs\DialogYesNoViewModel.cs" />
+    <Compile Include="NIC_Adapter\AdapterConfigurationManager.cs" />
+    <Compile Include="NIC_Adapter\AdapterConfigurationWrapper.cs" />
+    <Compile Include="NIC_Adapter\AdapterConfigurationXMLFile.cs" />
+    <Compile Include="NIC_Adapter\AdapterManager.cs" />
+    <Compile Include="NIC_Adapter\AdapterWrapper.cs" />
+    <Compile Include="NIC_Adapter\AdapterXMLFile.cs" />
     <Compile Include="Support\StaticUtils.cs" />
     <Compile Include="ViewModels\EthernetSlaveViewModel.cs" />
     <Compile Include="ViewModels\ModbusItemViewModel.cs" />
     <Compile Include="ViewModels\PendantControlViewModel.cs" />
+    <Compile Include="ViewModels\ListenNodeViewModel.cs" />
     <Compile Include="Views\ExternalVisionResultControl.xaml.cs">
       <DependentUpon>ExternalVisionResultControl.xaml</DependentUpon>
     </Compile>
@@ -147,12 +154,6 @@
       <DependentUpon>Robot3DViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Support\ApplicationSettings_Serializer.cs" />
-    <Compile Include="Support\NIC_Adapter\AdapterConfigurationManager.cs" />
-    <Compile Include="Support\NIC_Adapter\AdapterConfigurationWrapper.cs" />
-    <Compile Include="Support\NIC_Adapter\AdapterConfigurationXMLFile.cs" />
-    <Compile Include="Support\NIC_Adapter\AdapterManager.cs" />
-    <Compile Include="Support\NIC_Adapter\AdapterWrapper.cs" />
-    <Compile Include="Support\NIC_Adapter\AdapterXMLFile.cs" />
     <Page Include="Dialogs\Dialogs\DialogEditValueView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -299,9 +300,7 @@
       <Name>TM_Comms</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

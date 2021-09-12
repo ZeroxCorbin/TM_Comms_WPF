@@ -44,10 +44,9 @@ namespace TM_Comms_WPF.ViewModels
         public double Height { get => App.Settings.EthernetSlaveWindow.Height; set { App.Settings.EthernetSlaveWindow.Height = value; OnPropertyChanged(); } }
         public WindowState WindowState { get => App.Settings.EthernetSlaveWindow.WindowState; set { App.Settings.EthernetSlaveWindow.WindowState = value; OnPropertyChanged(); } }
 
-        public PendantControlViewModel Pendant { get; } = new PendantControlViewModel();
-        private SocketManager Socket { get; set; } = new SocketManager();
 
-        public string ConnectionString { get => App.Settings.RobotIP; set { App.Settings.RobotIP = value; OnPropertyChanged(); } }
+        private SocketManager Socket { get; }
+        public string ConnectionString { get => $"{App.Settings.RobotIP}:5891"; }
         public string ConnectButtonText { get => connectButtonText; set => SetProperty(ref connectButtonText, value); }
         private string connectButtonText = "Connect";
         public bool ConnectionState { get => connectionState; set => SetProperty(ref connectionState, value); }
@@ -60,7 +59,7 @@ namespace TM_Comms_WPF.ViewModels
         public string CaptureButtonText { get => captureButtonText; set => SetProperty(ref captureButtonText, value); }
         private string captureButtonText = "Start Capture";
 
-
+        public PendantControlViewModel Pendant { get; } = new PendantControlViewModel();
 
         public string ESMessage { get => esMessage; set => SetProperty(ref esMessage, value); }
         private string esMessage;
@@ -72,10 +71,12 @@ namespace TM_Comms_WPF.ViewModels
         public ICommand ConnectCommand { get; }
         public ICommand SendCommand { get; }
         public ICommand CaptureCommand { get; }
+
         public ICommand SendBadChecksumCommand { get; }
         public ICommand SendBadHeaderCommand { get; }
         public ICommand SendBadPacketCommand { get; }
         public ICommand SendBadPacketDataCommand { get; }
+
         public ICommand SendNotSupportedCommand { get; }
         public ICommand SendInvalidDataCommand { get; }
         public ICommand SendNotExistCommand { get; }
@@ -87,10 +88,12 @@ namespace TM_Comms_WPF.ViewModels
             ConnectCommand = new RelayCommand(ConnectAction, c => true);
             SendCommand = new RelayCommand(SendCommandAction, c => true);
             CaptureCommand = new RelayCommand(CaptureAction, c => true);
+
             SendBadChecksumCommand = new RelayCommand(SendBadChecksumAction, c => true);
             SendBadHeaderCommand = new RelayCommand(SendBadHeaderAction, c => true);
             SendBadPacketCommand = new RelayCommand(SendBadPacketAction, c => true);
             SendBadPacketDataCommand = new RelayCommand(SendBadPacketDataAction, c => true);
+
             SendNotSupportedCommand = new RelayCommand(SendNotSupportedAction, c => true);
             SendInvalidDataCommand = new RelayCommand(SendInvalidDataAction, c => true);
             SendNotExistCommand = new RelayCommand(SendNotExistAction, c => true);
@@ -102,7 +105,9 @@ namespace TM_Comms_WPF.ViewModels
             Pendant.PlusEvent += Pendant_PlusEvent;
             Pendant.MinusEvent += Pendant_MinusEvent;
 
+            Socket = new SocketManager(ConnectionString);
             Socket.ConnectState += Socket_ConnectState;
+            Socket.MessageReceived += Socket_MessageReceived;
 
             EthernetSlaveXMLData.File data = EthernetSlave.GetXMLCommands(App.Settings.Version);
             if (data != null)
@@ -115,7 +120,7 @@ namespace TM_Comms_WPF.ViewModels
                         {
                             Content = setting.Item
                         };
-                        //lvi.MouseDoubleClick += Lvi_MouseDoubleClick;
+
                         CommandList.Add(lvi);
                     }
                 }
@@ -133,19 +138,73 @@ namespace TM_Comms_WPF.ViewModels
             {
                 ConnectMessage = string.Empty;
 
-                Socket.ConnectionString = $"{App.Settings.RobotIP}:5891";
+                Task.Run(() =>
+                {
+                    ConnectButtonText = "Trying";
 
-                if (!Socket.Connect())
-                    ConnectMessage = Socket.IsException ? Socket.Exception.Message : "Unable to connect!";
+                    if (!Socket.Connect())
+                        ConnectMessage = Socket.IsException ? Socket.Exception.Message : "Unable to connect!";
+                    else
+                        ConnectMessage = "Connected";
+                });
+            }
+        }
+        private void Socket_ConnectState(object sender, bool state)
+        {
+            ConnectionState = state;
+
+            if (state)
+            {
+                ConnectButtonText = "Close";
+
+                Socket.StartReceiveMessages(@"[$]", @"[*][A-Z0-9][A-Z0-9]");
+
+                DataReceiveStopWatch.Restart();
+            }
+            else
+            {
+                ConnectButtonText = "Connect";
+                
+                Pendant.Reset();
+            }
+        }
+        private void Socket_MessageReceived(object sender, string message, string pattern)
+        {
+            EthernetSlave es = new EthernetSlave();
+
+            if (!es.ParseMessage(message))
+            {
+                ESCommandResponse += message;
+                return;
+            }
+            if (es.Header == EthernetSlave.Headers.TMSVR && es.TransactionID_Int >= 0 && es.TransactionID_Int <= 9)
+            {
+                if (CaptureData)
+                    outputFile.WriteLine(Regex.Replace(message, @"^[$]TMSVR,\w*,[0-9],[0-2],", "").Replace("\r\n", ","));
+
+                if (DataReceiveStopWatch.ElapsedMilliseconds > 42)
+                {
+                    DataReceiveStopWatch.Restart();
+                    UpdatePendant(es);
+                    ESMessage = message;
+                }
+            }
+            else
+            {
+                if(es.Message.EndsWith("\r\n"))
+                    ESCommandResponse += es.Message;
+                else
+                    ESCommandResponse += es.Message + "\r\n";
             }
         }
 
         private void SendCommandAction(object parameter) => Socket?.Write(GetESNode().Message);
 
-        private void SendBadChecksumAction(object parameter) => Socket?.Write($"$TMSVR,20,diag,99,Stick_Stop=1,*45\r\n");
-        private void SendBadHeaderAction(object parameter) => Socket?.Write($"$TMsvr,20,local,2,Stick_Stop=1,*32\r\n");
+        private void SendBadChecksumAction(object parameter) => Socket?.Write($"$TMSVR,19,diag,2,Stick_Stop=1,*7C\r\n");
+        private void SendBadHeaderAction(object parameter) => Socket?.Write($"$TMSVr,20,local,2,Stick_Stop=1,*32\r\n");
         private void SendBadPacketAction(object parameter) => Socket?.Write($"$TMSVR,19,-100,2,Stick_Stop=1,*69\r\n");
         private void SendBadPacketDataAction(object parameter) => Socket?.Write($"$TMSVR,20,local,2,Stick_,*12\r\n");
+
         private void SendNotSupportedAction(object parameter) => Socket?.Write("$TMSVR,20,diag,99,Stick_Stop=1,*46\r\n");
         private void SendInvalidDataAction(object parameter) => Socket?.Write("$TMSVR,11,diag,1,[{}],*58\r\n");
         private void SendNotExistAction(object parameter) => Socket?.Write("$TMSVR,18,diag,2,Ctrl_DO16=1,*24\r\n");
@@ -182,55 +241,8 @@ namespace TM_Comms_WPF.ViewModels
             }
         }
 
-        private void Socket_ConnectState(object sender, bool state)
-        {
-
-            ConnectionState = state;
-            if (state)
-            {
-                ConnectButtonText = "Close";
-                Socket.MessageReceived += Socket_MessageReceived;
-                Socket.StartReceiveMessages(@"[$]", @"[*][A-Z0-9][A-Z0-9]");
-
-                DataReceiveStopWatch.Restart();
-            }
-            else
-            {
-                ConnectButtonText = "Connect";
-                Pendant.Reset();
-            }
-        }
-
         private Stopwatch DataReceiveStopWatch { get; set; } = new Stopwatch();
-        private void Socket_MessageReceived(object sender, string message, string pattern)
-        {
-            EthernetSlave es = new EthernetSlave();
 
-            if (!es.ParseMessage(message))
-            {
-                ESCommandResponse += message;
-                return;
-            }
-            if (es.Header == EthernetSlave.Headers.TMSVR && es.TransactionID_Int >= 0 && es.TransactionID_Int <= 9)
-            {
-                if (CaptureData)
-                    outputFile.WriteLine(Regex.Replace(message, @"^[$]TMSVR,\w*,[0-9],[0-2],", "").Replace("\r\n", ","));
-
-                if (DataReceiveStopWatch.ElapsedMilliseconds > 42)
-                {
-                    DataReceiveStopWatch.Restart();
-                    UpdatePendant(es);
-                    ESMessage = message;
-                }
-            }
-            else
-            {
-                if(es.Message.EndsWith("\r\n"))
-                    ESCommandResponse += es.Message;
-                else
-                    ESCommandResponse += es.Message + "\r\n";
-            }
-        }
 
         private void UpdatePendant(EthernetSlave es)
         {
@@ -315,14 +327,14 @@ namespace TM_Comms_WPF.ViewModels
                 Pendant.ErrorDescription = "CAN NOT FIND ERROR IN TABLE.";
         }
 
+        public ObservableCollection<ListViewItem> CommandList { get; } = new ObservableCollection<ListViewItem>();
         public ListViewItem CommandItem { get => commandItem; set { _ = SetProperty(ref commandItem, value); UpdateScript(); } }
         private ListViewItem commandItem;
-
-        public ComboBoxItem MessageType { get => messageType; set { _ = SetProperty(ref messageType, value); GetESNode(); } }
-        private ComboBoxItem messageType;
+        public ComboBoxItem MessageHeader { get => messageHeader; set { _ = SetProperty(ref messageHeader, value); GetESNode(); } }
+        private ComboBoxItem messageHeader;
         public ComboBoxItem MessageFormat { get => messageFormat; set { _ = SetProperty(ref messageFormat, value); GetESNode(); } }
         private ComboBoxItem messageFormat;
-        public ObservableCollection<ListViewItem> CommandList { get; } = new ObservableCollection<ListViewItem>();
+
         public string Script { get => script; set { _ = SetProperty(ref script, value); GetESNode(); } }
         private string script;
         public string TransactionID { get => transactionID; set { _ = SetProperty(ref transactionID, value); GetESNode(); } }
@@ -438,10 +450,10 @@ namespace TM_Comms_WPF.ViewModels
 
             EthernetSlave es = new EthernetSlave();
 
-            if (MessageType == null) return es;
+            if (MessageHeader == null) return es;
             if (MessageFormat == null) return es;
 
-            if (Enum.TryParse(MessageType.Content.ToString(), out EthernetSlave.Headers header))
+            if (Enum.TryParse(MessageHeader.Content.ToString(), out EthernetSlave.Headers header))
             {
                 if (Enum.TryParse(MessageFormat.Content.ToString(), out EthernetSlave.Modes mode))
                 {

@@ -15,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using TM_Comms;
+using TM_Comms_WPF.ViewModels;
 using static TM_Comms.MotionScriptBuilder;
 
 namespace TM_Comms_WPF.Views
@@ -31,66 +32,80 @@ namespace TM_Comms_WPF.Views
         //Public
         public ListenNodeWindow(Window owner)
         {
-            DataContext = App.Settings;
+
             Owner = owner;
 
             InitializeComponent();
 
-            Window_LoadSettings();
+            _ = SetBinding(WidthProperty, new Binding("Width") { Source = DataContext, Mode = BindingMode.TwoWay });
+            _ = SetBinding(HeightProperty, new Binding("Height") { Source = DataContext, Mode = BindingMode.TwoWay });
 
-            ListenNode = GetLNNode();
+            //Window_LoadSettings();
 
-            LoadCommandTreeView();
+            //ListenNode = GetLNNode();
+
+            //LoadCommandTreeView();
         }
-        private void Window_LoadSettings()
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(double.IsNaN(App.Settings.ListenNodeWindow.Left)
-                || !CheckOnScreen.IsOnScreen(this)
-                || Keyboard.IsKeyDown(Key.LeftShift))
-            {
-                Left = Owner.Left;
-                Top = Owner.Top + Owner.Height;
-                Height = 768;
-                Width = 1024;
-            }
-
+            ((TextBox)sender).ScrollToEnd();
         }
-        
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            ConnectionInActive();
+            ((ListenNodeViewModel)DataContext).CommandItem = (TreeViewItem)((TreeView)sender).SelectedItem;
         }
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => CleanSock();
+
+        //private void Window_LoadSettings()
+        //{
+        //    if(double.IsNaN(App.Settings.ListenNodeWindow.Left)
+        //        || !CheckOnScreen.IsOnScreen(this)
+        //        || Keyboard.IsKeyDown(Key.LeftShift))
+        //    {
+        //        Left = Owner.Left;
+        //        Top = Owner.Top + Owner.Height;
+        //        Height = 768;
+        //        Width = 1024;
+        //    }
+
+        //}
+
+        //private void Window_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    ConnectionInActive();
+        //}
+        //private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => CleanSock();
 
 
-        private void LoadCommandTreeView()
-        {
-            TreeViewItem tviParent = null;
-            foreach (string cmd in ListenNode.Commands[App.Settings.Version])
-            {
-                if (Regex.IsMatch(cmd, @"^[0-9][.][0-9]"))
-                {
-                    if (tviParent != null)
-                    {
-                        LstCommandList.Items.Add(tviParent);
-                    }
+        //private void LoadCommandTreeView()
+        //{
+        //    TreeViewItem tviParent = null;
+        //    foreach (string cmd in ListenNode.Commands[App.Settings.Version])
+        //    {
+        //        if (Regex.IsMatch(cmd, @"^[0-9][.][0-9]"))
+        //        {
+        //            if (tviParent != null)
+        //            {
+        //                LstCommandList.Items.Add(tviParent);
+        //            }
 
 
-                    tviParent = new TreeViewItem()
-                    {
-                        Header = cmd,
-                    };
-                    tviParent.MouseDoubleClick += TviParent_MouseDoubleClick;
-                    continue;
-                }
-                TreeViewItem tviChild = new TreeViewItem()
-                {
-                    Header = cmd,
-                };
-                tviChild.MouseDoubleClick += TviChild_MouseDoubleClick;
-                tviParent.Items.Add(tviChild);
-            }
-        }
+        //            tviParent = new TreeViewItem()
+        //            {
+        //                Header = cmd,
+        //            };
+        //            tviParent.MouseDoubleClick += TviParent_MouseDoubleClick;
+        //            continue;
+        //        }
+        //        TreeViewItem tviChild = new TreeViewItem()
+        //        {
+        //            Header = cmd,
+        //        };
+        //        tviChild.MouseDoubleClick += TviChild_MouseDoubleClick;
+        //        tviParent.Items.Add(tviChild);
+        //    }
+        //}
 
         private void TviParent_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -99,43 +114,43 @@ namespace TM_Comms_WPF.Views
 
         private void TviChild_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            TreeViewItem tvi = (TreeViewItem)sender;
-            string insert = "";
+            //TreeViewItem tvi = (TreeViewItem)sender;
+            //string insert = "";
 
-            int start = TxtScript.SelectionStart;
+            //int start = TxtScript.SelectionStart;
 
-            if (start == TxtScript.Text.Length)
-            {
-                if (start != 0)
-                    if (TxtScript.Text[start - 1] != '\n')
-                        insert += "\r\n";
-            }
-            else if (TxtScript.Text[start] == '\r')
-            {
-                if (start != 0)
-                    if (TxtScript.Text[start - 1] != '\n')
-                        insert += "\r\n";
-            }
+            //if (start == TxtScript.Text.Length)
+            //{
+            //    if (start != 0)
+            //        if (TxtScript.Text[start - 1] != '\n')
+            //            insert += "\r\n";
+            //}
+            //else if (TxtScript.Text[start] == '\r')
+            //{
+            //    if (start != 0)
+            //        if (TxtScript.Text[start - 1] != '\n')
+            //            insert += "\r\n";
+            //}
 
 
-            insert += (string)tvi.Header;
-            TxtScript.Text = TxtScript.Text.Insert(start, insert);
+            //insert += (string)tvi.Header;
+            //TxtScript.Text = TxtScript.Text.Insert(start, insert);
 
-            TxtScript.SelectionStart = start + insert.Length;
+            //TxtScript.SelectionStart = start + insert.Length;
         }
-        private ListenNode GetLNNode()
-        {
-            ListenNode node;
-            if (CmbMessageHeader.SelectedIndex == 0)
+        //private ListenNode GetLNNode()
+        //{
+        //    //ListenNode node;
+        //    //if (CmbMessageHeader.SelectedIndex == 0)
 
-                node = new ListenNode(TxtScript.Text, ListenNode.Headers.TMSCT, TxtScriptID.Text);
-            else
-                node = new ListenNode((string)((ComboBoxItem)CmbMessageSubCommands.SelectedItem).Tag, ListenNode.Headers.TMSTA);
+        //    //    node = new ListenNode(TxtScript.Text, ListenNode.Headers.TMSCT, TxtScriptID.Text);
+        //    //else
+        //    //    node = new ListenNode((string)((ComboBoxItem)CmbMessageSubCommands.SelectedItem).Tag, ListenNode.Headers.TMSTA);
 
-            TxtMessage.Text = node.Message;
+        //    //TxtMessage.Text = node.Message;
 
-            return node;
-        }
+        //    //return node;
+        //}
         private bool GetMoveStep(string str)
         {
             List<string> spl = str.Split(',').ToList<string>();
@@ -186,189 +201,189 @@ namespace TM_Comms_WPF.Views
         }
 
         //Private
-        private void ConnectionActive()
-        {
-            BtnConnect.Content = "Close";
-            BtnConnect.Tag = 2;
+        //private void ConnectionActive()
+        //{
+        //    BtnConnect.Content = "Close";
+        //    BtnConnect.Tag = 2;
 
-            List<GradientStop> gsc = new List<GradientStop>
-            {
-                new GradientStop((Color)ColorConverter.ConvertFromString("#FFDDDDDD"), 1),
-                new GradientStop((Color)ColorConverter.ConvertFromString("#AA4c88d6"), 1)
-            };
+        //    List<GradientStop> gsc = new List<GradientStop>
+        //    {
+        //        new GradientStop((Color)ColorConverter.ConvertFromString("#FFDDDDDD"), 1),
+        //        new GradientStop((Color)ColorConverter.ConvertFromString("#AA4c88d6"), 1)
+        //    };
 
-            BtnConnect.Background = new RadialGradientBrush(new GradientStopCollection(gsc));
+        //    BtnConnect.Background = new RadialGradientBrush(new GradientStopCollection(gsc));
 
-            BtnSend.IsEnabled = true;
-            BtnSendMoveMessage.IsEnabled = true;
-            btnLNNewReadPosition.IsEnabled = true;
+        //    BtnSend.IsEnabled = true;
+        //    BtnSendMoveMessage.IsEnabled = true;
+        //    btnLNNewReadPosition.IsEnabled = true;
 
-            BtnSendBadChecksum.IsEnabled = true;
-            BtnSendBadHeader.IsEnabled = true;
-            BtnSendBadPacket.IsEnabled = true;
-            BtnSendBadPacketData.IsEnabled = true;
+        //    BtnSendBadChecksum.IsEnabled = true;
+        //    BtnSendBadHeader.IsEnabled = true;
+        //    BtnSendBadPacket.IsEnabled = true;
+        //    BtnSendBadPacketData.IsEnabled = true;
 
-            BtnSendScriptExit.IsEnabled = true;
-            BtnSendBadCode.IsEnabled = true;
+        //    BtnSendScriptExit.IsEnabled = true;
+        //    BtnSendBadCode.IsEnabled = true;
 
-        }
-        private void ConnectionInActive()
-        {
-            BtnConnect.Content = "Connect";
-            BtnConnect.Tag = 0;
+        //}
+        //private void ConnectionInActive()
+        //{
+        //    BtnConnect.Content = "Connect";
+        //    BtnConnect.Tag = 0;
 
-            List<GradientStop> gsc = new List<GradientStop>
-            {
-                new GradientStop((Color)ColorConverter.ConvertFromString("#FFDDDDDD"), 1),
-                new GradientStop((Color)ColorConverter.ConvertFromString("#AA880000"), 1)
-            };
+        //    List<GradientStop> gsc = new List<GradientStop>
+        //    {
+        //        new GradientStop((Color)ColorConverter.ConvertFromString("#FFDDDDDD"), 1),
+        //        new GradientStop((Color)ColorConverter.ConvertFromString("#AA880000"), 1)
+        //    };
 
-            BtnConnect.Background = new RadialGradientBrush(new GradientStopCollection(gsc));
+        //    BtnConnect.Background = new RadialGradientBrush(new GradientStopCollection(gsc));
 
-            BtnSend.IsEnabled = false;
-            BtnSendMoveMessage.IsEnabled = false;
-            btnLNNewReadPosition.IsEnabled = false;
+        //    BtnSend.IsEnabled = false;
+        //    BtnSendMoveMessage.IsEnabled = false;
+        //    btnLNNewReadPosition.IsEnabled = false;
 
-            BtnSendBadChecksum.IsEnabled = false;
-            BtnSendBadHeader.IsEnabled = false;
-            BtnSendBadPacket.IsEnabled = false;
-            BtnSendBadPacketData.IsEnabled = false;
+        //    BtnSendBadChecksum.IsEnabled = false;
+        //    BtnSendBadHeader.IsEnabled = false;
+        //    BtnSendBadPacket.IsEnabled = false;
+        //    BtnSendBadPacketData.IsEnabled = false;
 
-            BtnSendScriptExit.IsEnabled = false;
-            BtnSendBadCode.IsEnabled = false;
-        }
-        private void ConnectionWaiting()
-        {
-            BtnConnect.Content = "Trying";
-            BtnConnect.Tag = 1;
+        //    BtnSendScriptExit.IsEnabled = false;
+        //    BtnSendBadCode.IsEnabled = false;
+        //}
+        //private void ConnectionWaiting()
+        //{
+        //    BtnConnect.Content = "Trying";
+        //    BtnConnect.Tag = 1;
 
-            List<GradientStop> gsc = new List<GradientStop>
-            {
-                new GradientStop((Color)ColorConverter.ConvertFromString("#FFDDDDDD"), 1),
-                new GradientStop((Color)ColorConverter.ConvertFromString("#AA888800"), 1)
-            };
+        //    List<GradientStop> gsc = new List<GradientStop>
+        //    {
+        //        new GradientStop((Color)ColorConverter.ConvertFromString("#FFDDDDDD"), 1),
+        //        new GradientStop((Color)ColorConverter.ConvertFromString("#AA888800"), 1)
+        //    };
 
-            BtnConnect.Background = new RadialGradientBrush(new GradientStopCollection(gsc));
+        //    BtnConnect.Background = new RadialGradientBrush(new GradientStopCollection(gsc));
 
-        }
+        //}
 
         private SocketManager Socket { get; set; }
-        private void BtnConnect_Click(object sender, RoutedEventArgs e)
-        {
-            if ((int)BtnConnect.Tag == 0)
-            {
-                ConnectionWaiting();
-                ThreadPool.QueueUserWorkItem(new WaitCallback(ConnectThread));
-                return;
-            }
-            else if ((int)BtnConnect.Tag == 1)
-                return;
+        //private void BtnConnect_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if ((int)BtnConnect.Tag == 0)
+        //    {
+        //        ConnectionWaiting();
+        //        ThreadPool.QueueUserWorkItem(new WaitCallback(ConnectThread));
+        //        return;
+        //    }
+        //    else if ((int)BtnConnect.Tag == 1)
+        //        return;
 
-            ConnectionInActive();
-            CleanSock();
-        }
-        private void ConnectThread(object sender)
-        {
-            Connect();
-        }
-        private bool Connect()
-        {
-            CleanSock();
+        //    ConnectionInActive();
+        //    CleanSock();
+        //}
+        //private void ConnectThread(object sender)
+        //{
+        //    Connect();
+        //}
+        //private bool Connect()
+        //{
+        //    CleanSock();
 
-            Socket = new SocketManager($"{App.Settings.RobotIP}:5890");
+        //    Socket = new SocketManager($"{App.Settings.RobotIP}:5890");
 
-            Socket.ConnectState += Socket_ConnectState;
+        //    Socket.ConnectState += Socket_ConnectState;
 
-            if (Socket.Connect())
-                return true;
-            else
-                return false;
-        }
-        private void CleanSock()
-        {
-            if (Socket != null)
-            {
-                Socket.MessageReceived -= Socket_MessageReceived;
-                Socket.ConnectState -= Socket_ConnectState;
+        //    if (Socket.Connect())
+        //        return true;
+        //    else
+        //        return false;
+        //}
+        //private void CleanSock()
+        //{
+        //    if (Socket != null)
+        //    {
+        //        Socket.MessageReceived -= Socket_MessageReceived;
+        //        Socket.ConnectState -= Socket_ConnectState;
 
-                Socket.StopReceiveAsync();
-                Socket.Close();
+        //        Socket.StopReceiveAsync();
+        //        Socket.Close();
 
-                Socket = null;
-            }
-        }
-        private void Socket_ConnectState(object sender, bool data)
-        {
-            if (!data)
-            {
-                Dispatcher.BeginInvoke(DispatcherPriority.Render,
-                        (Action)(() =>
-                        {
-                            ConnectionInActive();
+        //        Socket = null;
+        //    }
+        //}
+        //private void Socket_ConnectState(object sender, bool data)
+        //{
+        //    if (!data)
+        //    {
+        //        Dispatcher.BeginInvoke(DispatcherPriority.Render,
+        //                (Action)(() =>
+        //                {
+        //                    ConnectionInActive();
 
-                            if ((bool)ChkAutoReconnect.IsChecked)
-                            {
-                                ConnectionWaiting();
-                                ThreadPool.QueueUserWorkItem(new WaitCallback(ConnectThread));
-                            }
-                            else
-                            {
-                                ConnectionInActive();
-                                CleanSock();
-                            }
+        //                    if ((bool)ChkAutoReconnect.IsChecked)
+        //                    {
+        //                        ConnectionWaiting();
+        //                        ThreadPool.QueueUserWorkItem(new WaitCallback(ConnectThread));
+        //                    }
+        //                    else
+        //                    {
+        //                        ConnectionInActive();
+        //                        CleanSock();
+        //                    }
 
-                        }));
+        //                }));
 
 
-            }
+        //    }
 
-            else
-            {
-                Dispatcher.BeginInvoke(DispatcherPriority.Render,
-                        (Action)(() =>
-                        {
-                            ConnectionActive();
-                        }));
+        //    else
+        //    {
+        //        Dispatcher.BeginInvoke(DispatcherPriority.Render,
+        //                (Action)(() =>
+        //                {
+        //                    ConnectionActive();
+        //                }));
 
-                Socket.MessageReceived += Socket_MessageReceived;
-                Socket.StartReceiveMessages(@"[$]", @"[*][A-Z0-9][A-Z0-9]");
-            }
-        }
-        //Receive Data
-        private void Socket_MessageReceived(object sender, string message, string pattern)
-        {
-            ListenNode ln = new ListenNode();
+        //        Socket.MessageReceived += Socket_MessageReceived;
+        //        Socket.StartReceiveMessages(@"[$]", @"[*][A-Z0-9][A-Z0-9]");
+        //    }
+        //}
+        ////Receive Data
+        //private void Socket_MessageReceived(object sender, string message, string pattern)
+        //{
+        //    ListenNode ln = new ListenNode();
 
-            if (!ln.ParseMessage(message))
-                return;
+        //    if (!ln.ParseMessage(message))
+        //        return;
 
-            if (PositionRequest != null)
-            {
-                if (Regex.IsMatch(message, @"^[$]TMSTA,\w*,90,"))
-                {
-                    PositionRequest = null;
+        //    if (PositionRequest != null)
+        //    {
+        //        if (Regex.IsMatch(message, @"^[$]TMSTA,\w*,90,"))
+        //        {
+        //            PositionRequest = null;
 
-                    string[] spl = message.Split('{');
-                    string pos = spl[1].Substring(0, spl[1].IndexOf('}'));
+        //            string[] spl = message.Split('{');
+        //            string pos = spl[1].Substring(0, spl[1].IndexOf('}'));
 
-                    Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                            (Action)(() =>
-                            {
-                                TxtNewPosition.Text = pos;
-                            }));
+        //            Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+        //                    (Action)(() =>
+        //                    {
+        //                        TxtNewPosition.Text = pos;
+        //                    }));
 
-                }
-            }
+        //        }
+        //    }
 
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                    (Action)(() =>
-                    {
-                        //RectCommandHasResponse.Fill = new SolidColorBrush(Color.FromRgb(0, 255, 0));
-                        txtLNDataResponse.Text += message + "\r\n";
-                        txtLNDataResponse.ScrollToEnd();
-                    }));
+        //    Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+        //            (Action)(() =>
+        //            {
+        //                //RectCommandHasResponse.Fill = new SolidColorBrush(Color.FromRgb(0, 255, 0));
+        //                txtLNDataResponse.Text += message + "\r\n";
+        //                txtLNDataResponse.ScrollToEnd();
+        //            }));
 
-        }
+        //}
 
 
 
@@ -464,62 +479,62 @@ namespace TM_Comms_WPF.Views
         }
         private void BtnSendMoveMessage_Click(object sender, RoutedEventArgs e) => Socket?.Write(TxtMoveMessage.Text);
 
-        private void TxtScript_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (ListenNode != null)
-            {
-                ListenNode.Script = TxtScript.Text;
-                TxtMessage.Text = ListenNode.Message;
-            }
-        }
+        //private void TxtScript_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+        //    if (ListenNode != null)
+        //    {
+        //        ListenNode.Script = TxtScript.Text;
+        //        TxtMessage.Text = ListenNode.Message;
+        //    }
+        //}
 
-        private void CmbMessageHeader_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (CmbMessageHeader.SelectedIndex == 0)
-            {
-                LblMessageType.Content = "Scritp ID";
-                CmbMessageSubCommands.Visibility = Visibility.Collapsed;
-                TxtScriptID.Visibility = Visibility.Visible;
+        //private void CmbMessageHeader_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    if (CmbMessageHeader.SelectedIndex == 0)
+        //    {
+        //        LblMessageType.Content = "Scritp ID";
+        //        CmbMessageSubCommands.Visibility = Visibility.Collapsed;
+        //        TxtScriptID.Visibility = Visibility.Visible;
 
-                LstCommandList.IsEnabled = true;
-                TxtScript.IsEnabled = true;
-            }
-            else
-            {
-                LblMessageType.Content = "Sub Command";
-                CmbMessageSubCommands.Visibility = Visibility.Visible;
-                TxtScriptID.Visibility = Visibility.Collapsed;
+        //        LstCommandList.IsEnabled = true;
+        //        TxtScript.IsEnabled = true;
+        //    }
+        //    else
+        //    {
+        //        LblMessageType.Content = "Sub Command";
+        //        CmbMessageSubCommands.Visibility = Visibility.Visible;
+        //        TxtScriptID.Visibility = Visibility.Collapsed;
 
-                LstCommandList.IsEnabled = false;
-                TxtScript.IsEnabled = false;
-            }
-            if (!IsLoaded) return;
+        //        LstCommandList.IsEnabled = false;
+        //        TxtScript.IsEnabled = false;
+        //    }
+        //    if (!IsLoaded) return;
 
-            ListenNode = GetLNNode();
-        }
-        private void CmbMessageSubCommands_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if(!IsLoaded) return;
+        //    ListenNode = GetLNNode();
+        //}
+        //private void CmbMessageSubCommands_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    if(!IsLoaded) return;
 
-            ListenNode = GetLNNode();
-        }
+        //    ListenNode = GetLNNode();
+        //}
 
-        private void BtnSendScriptExit_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSCT,17,diag,ScriptExit(),*5E\r\n");
-        private void BtnSendBadCode_Click(object sender, RoutedEventArgs e) => Socket?.Write("$TMSCT,21,diag,int i=0\r\nint i=0,*52\r\n");
+        //private void BtnSendScriptExit_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSCT,17,diag,ScriptExit(),*5E\r\n");
+        //private void BtnSendBadCode_Click(object sender, RoutedEventArgs e) => Socket?.Write("$TMSCT,21,diag,int i=0\r\nint i=0,*52\r\n");
 
-        private void BtnSendBadChecksum_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSCT,25,1,ChangeBase(\"RobotBase\"),*09\r\n");
-        private void BtnSendBadHeader_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMsct,25,1,ChangeBase(\"RobotBase\"),*28\r\n");
-        private void BtnSendBadPacket_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSCT,-100,1,ChangeBase(\"RobotBase\"),*13\r\n");
-        private void BtnSendBadPacketData_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSTA,4,XXXX,*47\r\n");
+        //private void BtnSendBadChecksum_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSCT,25,1,ChangeBase(\"RobotBase\"),*09\r\n");
+        //private void BtnSendBadHeader_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMsct,25,1,ChangeBase(\"RobotBase\"),*28\r\n");
+        //private void BtnSendBadPacket_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSCT,-100,1,ChangeBase(\"RobotBase\"),*13\r\n");
+        //private void BtnSendBadPacketData_Click(object sender, RoutedEventArgs e) => Socket?.Write($"$TMSTA,4,XXXX,*47\r\n");
 
-        private void TxtScriptID_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if(!IsLoaded) return;
-            if (!Regex.IsMatch(TxtScriptID.Text, @"^[a-zA-Z0-9_]+$"))
-                TxtScriptID.Text = "local";
+        //private void TxtScriptID_LostFocus(object sender, RoutedEventArgs e)
+        //{
+        //    if(!IsLoaded) return;
+        //    if (!Regex.IsMatch(TxtScriptID.Text, @"^[a-zA-Z0-9_]+$"))
+        //        TxtScriptID.Text = "local";
 
-            ListenNode = GetLNNode();
-        }
+        //    ListenNode = GetLNNode();
+        //}
 
         private List<System.Windows.Controls.TextBox> PositionBoxes { get; set; } = new List<System.Windows.Controls.TextBox>();
 
@@ -631,5 +646,7 @@ namespace TM_Comms_WPF.Views
                 LblMB6.Content = "J6";
             }
         }
+
+
     }
 }
