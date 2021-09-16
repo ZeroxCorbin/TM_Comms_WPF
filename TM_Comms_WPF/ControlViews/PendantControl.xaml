@@ -1,14 +1,13 @@
-﻿<UserControl xmlns:Views="clr-namespace:TM_Comms_WPF.Views"
-            x:Class="TM_Comms_WPF.Views.PendantControl"
+﻿<UserControl x:Class="TM_Comms_WPF.ControlViews.PendantControl"
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-            xmlns:viewmodels="clr-namespace:TM_Comms_WPF.ViewModels"
-             d:DataContext="{d:DesignInstance Type=viewmodels:PendantControlViewModel}"
-             mc:Ignorable="d" d:DesignWidth="800" Height="117.593">
+            xmlns:ControlViewModels="clr-namespace:TM_Comms_WPF.ControlViewModels"
+             d:DataContext="{d:DesignInstance Type=ControlViewModels:PendantControlViewModel}"
+             mc:Ignorable="d">
     <UserControl.DataContext>
-        <viewmodels:PendantControlViewModel/>
+        <ControlViewModels:PendantControlViewModel/>
     </UserControl.DataContext>
     <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
         <Border Visibility="{Binding Border18Visible}" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">

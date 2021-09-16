@@ -11,9 +11,10 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using TM_Comms_WPF.ControlViews;
 using static TM_Comms.ExternalDetection;
 
-namespace TM_Comms_WPF.Views
+namespace TM_Comms_WPF.WindowViews
 {
 
     public partial class ExternalVisionWindow : Window

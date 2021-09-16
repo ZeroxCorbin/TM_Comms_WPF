@@ -110,6 +110,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="ControlViewModels\PositionControlViewModel.cs" />
+    <Compile Include="ControlViews\PositionControl.xaml.cs">
+      <DependentUpon>PositionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DialogService\DialogParameters.cs" />
     <Compile Include="Dialogs\Dialogs\DialogEditValueView.xaml.cs">
       <DependentUpon>DialogEditValueView.xaml</DependentUpon>
@@ -136,24 +140,28 @@
     <Compile Include="NIC_Adapter\AdapterWrapper.cs" />
     <Compile Include="NIC_Adapter\AdapterXMLFile.cs" />
     <Compile Include="Support\StaticUtils.cs" />
-    <Compile Include="ViewModels\EthernetSlaveViewModel.cs" />
-    <Compile Include="ViewModels\ModbusItemViewModel.cs" />
-    <Compile Include="ViewModels\PendantControlViewModel.cs" />
-    <Compile Include="ViewModels\ListenNodeViewModel.cs" />
-    <Compile Include="Views\ExternalVisionResultControl.xaml.cs">
+    <Compile Include="WindowViewModels\EthernetSlaveViewModel.cs" />
+    <Compile Include="WindowViewModels\ModbusItemViewModel.cs" />
+    <Compile Include="ControlViewModels\PendantControlViewModel.cs" />
+    <Compile Include="WindowViewModels\ListenNodeViewModel.cs" />
+    <Compile Include="ControlViews\ExternalVisionResultControl.xaml.cs">
       <DependentUpon>ExternalVisionResultControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ExternalVisionWindow.xaml.cs">
+    <Compile Include="WindowViews\ExternalVisionWindow.xaml.cs">
       <DependentUpon>ExternalVisionWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\ModbusViewModel.cs" />
-    <Compile Include="Views\PendantControl.xaml.cs">
+    <Compile Include="WindowViewModels\ModbusViewModel.cs" />
+    <Compile Include="ControlViews\PendantControl.xaml.cs">
       <DependentUpon>PendantControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Robot3DViewer.xaml.cs">
+    <Compile Include="WindowViews\Robot3DViewer.xaml.cs">
       <DependentUpon>Robot3DViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Support\ApplicationSettings_Serializer.cs" />
+    <Page Include="ControlViews\PositionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\Dialogs\DialogEditValueView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -170,15 +178,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\EthernetSlaveWindow.xaml">
+    <Page Include="WindowViews\EthernetSlaveWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ExternalVisionResultControl.xaml">
+    <Page Include="ControlViews\ExternalVisionResultControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ListenNodeWindow.xaml">
+    <Page Include="WindowViews\ListenNodeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -192,39 +200,39 @@
     </Compile>
     <Compile Include="Support\RingBuffer.cs" />
     <Compile Include="Support\PingCommand.cs" />
-    <Compile Include="Views\EthernetSlaveWindow.xaml.cs">
+    <Compile Include="WindowViews\EthernetSlaveWindow.xaml.cs">
       <DependentUpon>EthernetSlaveWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ListenNodeWindow.xaml.cs">
+    <Compile Include="WindowViews\ListenNodeWindow.xaml.cs">
       <DependentUpon>ListenNodeWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ModbusWindow.xaml.cs">
+    <Compile Include="WindowViews\ModbusWindow.xaml.cs">
       <DependentUpon>ModbusWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Port8080Window.xaml.cs">
+    <Compile Include="WindowViews\Port8080Window.xaml.cs">
       <DependentUpon>Port8080Window.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\ModbusWindow.xaml">
+    <Page Include="WindowViews\ModbusWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PendantControl.xaml">
+    <Page Include="ControlViews\PendantControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Port8080Window.xaml">
+    <Page Include="WindowViews\Port8080Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ExternalVisionWindow.xaml">
+    <Page Include="WindowViews\ExternalVisionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Robot3DViewer.xaml">
+    <Page Include="WindowViews\Robot3DViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -243,10 +251,16 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Support\up_down.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Support\autosave.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Support\add.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Support\delete.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Content Include="Support\save.png">

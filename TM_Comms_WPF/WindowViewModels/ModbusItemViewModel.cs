@@ -9,7 +9,7 @@ using System.Windows.Input;
 using TM_Comms_WPF.Commands;
 using TM_Comms_WPF.Dialogs.DialogService;
 
-namespace TM_Comms_WPF.ViewModels
+namespace TM_Comms_WPF.WindowViewModels
 {
     public class ModbusItemViewModel : INotifyPropertyChanged
     {

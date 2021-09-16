@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using static TM_Comms.ExternalDetection;
 
-namespace TM_Comms_WPF
+namespace TM_Comms_WPF.ControlViews
 {
     public partial class ExternalVisionResultControl : UserControl
     {

@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace TM_Comms_WPF
+namespace TM_Comms_WPF.WindowViews
 {
     /// <summary>
     /// Interaction logic for Robot3DViewer.xaml

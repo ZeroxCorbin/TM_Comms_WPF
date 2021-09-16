@@ -2,8 +2,9 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Data;
+using TM_Comms_WPF.WindowViewModels;
 
-namespace TM_Comms_WPF.Views
+namespace TM_Comms_WPF.WindowViews
 {
     public partial class EthernetSlaveWindow : Window
     {
@@ -29,6 +30,11 @@ namespace TM_Comms_WPF.Views
             {
                 _ = MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ((EthernetSlaveViewModel)DataContext).ViewClosing();
         }
     }
 }

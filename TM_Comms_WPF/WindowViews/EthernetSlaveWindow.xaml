@@ -1,41 +1,42 @@
-﻿<Window xmlns:Views="clr-namespace:TM_Comms_WPF.Views"
-        x:Class="TM_Comms_WPF.Views.EthernetSlaveWindow"
+﻿<Window x:Class="TM_Comms_WPF.WindowViews.EthernetSlaveWindow"
+        xmlns:controlview="clr-namespace:TM_Comms_WPF.ControlViews"
+        xmlns:windowviewmodels="clr-namespace:TM_Comms_WPF.WindowViewModels"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewmodels="clr-namespace:TM_Comms_WPF.ViewModels"
-        d:DataContext="{d:DesignInstance Type=viewmodels:EthernetSlaveViewModel}"
+        d:DataContext="{d:DesignInstance Type=windowviewmodels:EthernetSlaveViewModel}"
         mc:Ignorable="d"
         Title="{Binding Title, Mode=OneWay}"
         Left="{Binding Left, Mode=TwoWay}"
         Top="{Binding Top, Mode=TwoWay}"
         WindowState="{Binding WindowState, Mode=TwoWay}"
-        Icon="../Support/favicon.ico" d:DesignHeight="787.84" Width="1249.309">
+        Icon="../Support/favicon.ico" d:DesignHeight="787.84" Width="1249.309" Closing="Window_Closing">
     <Window.DataContext>
-        <viewmodels:EthernetSlaveViewModel/>
+        <windowviewmodels:EthernetSlaveViewModel/>
     </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="500"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="5"/>
             <ColumnDefinition MinWidth="250"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
-            <RowDefinition Height="130"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="2*"/>
-            <RowDefinition Height="auto "/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1* "/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Grid.Column="0" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="0,0,0,3" Margin="5">
+        <Border Grid.Row="0" Grid.Column="0" Margin="3" Padding="3" BorderBrush="Black" BorderThickness="1" CornerRadius="3">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="34"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Content="Ethernet Slave" FontSize="18" HorizontalContentAlignment="Center">
+                <Label Grid.Row="0" Margin="-3" Content="Ethernet Slave" FontSize="18" HorizontalContentAlignment="Center">
                     <Label.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FF4c88d6" Offset="0"/>
@@ -43,13 +44,14 @@
                         </LinearGradientBrush>
                     </Label.Background>
                 </Label>
-                <Button Grid.Row="1" Command="{Binding ConnectCommand}" Content="{Binding ConnectButtonText}" Width="90" BorderBrush="{x:Null}" />
+                <Button Grid.Row="1" Command="{Binding ConnectCommand}" Content="{Binding ConnectButtonText}" Width="90" Height="28" BorderBrush="{x:Null}" />
+                <controlview:PendantControl Grid.Row="2" Grid.Column="0" DataContext="{Binding Pendant}"/>
             </Grid>
         </Border>
 
-        <Views:PendantControl Grid.Row="1" Grid.Column="0" DataContext="{Binding Pendant}"/>
+        
 
-        <Border Grid.Row="2" Grid.Column="0" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="0,0,0,3" Margin="5">
+        <Border Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Margin="3" Padding="3" BorderBrush="Black" BorderThickness="1" CornerRadius="3">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="34"/>
@@ -60,7 +62,7 @@
                     <ColumnDefinition Width="0.5*" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-                <Label Grid.Row="0" Grid.ColumnSpan="3" Content="Message Builder" FontSize="18" HorizontalContentAlignment="Center">
+                <Label Grid.Row="0" Grid.ColumnSpan="3" Margin="-3" Content="Message Builder" FontSize="18" HorizontalContentAlignment="Center">
                     <Label.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FF4c88d6" Offset="0"/>
@@ -111,18 +113,18 @@
                     <Label Grid.Row="2" Content="Message to Send" HorizontalAlignment="Left"/>
                     <TextBox Grid.Row="3" Text="{Binding Command}" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#19000000" Grid.ColumnSpan="2"/>
 
-                    <Button Grid.Row="4" Content="Send Message" Width="90" Height="26" Command="{Binding SendCommand}" BorderBrush="{x:Null}"/>
+                    <Button Grid.Row="4" Content="Send Message" Width="90" Height="26" Command="{Binding SendCommand}" IsEnabled="{Binding ConnectionState}" BorderBrush="{x:Null}"/>
                 </Grid>
             </Grid>
         </Border>
 
-        <Border Grid.Row="3" Grid.Column="0" BorderThickness="1" BorderBrush="Black" CornerRadius="3" Padding="0,0,0,3" Margin="5">
+        <Border Grid.Row="4" Grid.Column="0" Margin="3" Padding="3" BorderBrush="Black" BorderThickness="1" CornerRadius="3">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="34"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Content="Disagnostic Tests" FontSize="18" HorizontalContentAlignment="Center">
+                <Label Grid.Row="0" Margin="-3" Content="Disagnostic Tests" FontSize="18" HorizontalContentAlignment="Center">
                     <Label.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FF4c88d6" Offset="0"/>
@@ -147,39 +149,23 @@
                     </Grid.RowDefinitions>
 
                     <Label Grid.Column="0" Grid.Row="0" Content="CPERR" HorizontalContentAlignment="Right"/>
-                    <Button Grid.Column="1" Grid.Row="0" Command="{Binding SendBadPacketDataCommand}" Content="Bad Data" Width="90" Height="26" BorderBrush="{x:Null}"/>
-                    <Button Grid.Column="2" Grid.Row="0" Command="{Binding SendBadChecksumCommand}" Content="Bad Checksum" Width="90" Height="26" BorderBrush="{x:Null}"/>
-                    <Button Grid.Column="3" Grid.Row="0" Command="{Binding SendBadHeaderCommand}" Content="Bad Header" Width="90" Height="26" BorderBrush="{x:Null}"/>
-                    <Button Grid.Column="4" Grid.Row="0" Command="{Binding SendBadPacketCommand}" Content="Bad Packet" Width="90" Height="26" BorderBrush="{x:Null}"/>
-                    
+                    <Button Grid.Column="1" Grid.Row="0" Command="{Binding SendBadPacketDataCommand}" IsEnabled="{Binding ConnectionState}" Content="Bad Data" Width="90" Height="26" BorderBrush="{x:Null}"/>
+                    <Button Grid.Column="2" Grid.Row="0" Command="{Binding SendBadChecksumCommand}" IsEnabled="{Binding ConnectionState}" Content="Bad Checksum" Width="90" Height="26" BorderBrush="{x:Null}"/>
+                    <Button Grid.Column="3" Grid.Row="0" Command="{Binding SendBadHeaderCommand}" IsEnabled="{Binding ConnectionState}" Content="Bad Header" Width="90" Height="26" BorderBrush="{x:Null}"/>
+                    <Button Grid.Column="4" Grid.Row="0" Command="{Binding SendBadPacketCommand}" IsEnabled="{Binding ConnectionState}" Content="Bad Packet" Width="90" Height="26" BorderBrush="{x:Null}"/>
+
                     <Label Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" Content="TMSVR" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-                    <Button Grid.Column="1" Grid.Row="1" Command="{Binding SendNotSupportedCommand}" Content="Not Supported" Width="90" Height="26" BorderBrush="{x:Null}"/>
-                    <Button Grid.Column="2" Grid.Row="1" Command="{Binding SendInvalidDataCommand}" Content="Invalid Data" Width="90" Height="26" BorderBrush="{x:Null}"/>
-                    <Button Grid.Column="3" Grid.Row="1" Command="{Binding SendNotExistCommand}" Content="Not Exists" Width="90" Height="26" BorderBrush="{x:Null}"/>
-                    <Button Grid.Column="4" Grid.Row="1" Command="{Binding SendReadOnlyCommand}" Content="Read Only" Width="90" Height="26" BorderBrush="{x:Null}"/>
-                    <Button Grid.Column="5" Grid.Row="1" Command="{Binding SendValueErrorCommand}" Content="Value Error" Width="90" Height="26" BorderBrush="{x:Null}"/>
-                    
+                    <Button Grid.Column="1" Grid.Row="1" Command="{Binding SendNotSupportedCommand}" IsEnabled="{Binding ConnectionState}" Content="Not Supported" Width="90" Height="26" BorderBrush="{x:Null}"/>
+                    <Button Grid.Column="2" Grid.Row="1" Command="{Binding SendInvalidDataCommand}" IsEnabled="{Binding ConnectionState}" Content="Invalid Data" Width="90" Height="26" BorderBrush="{x:Null}"/>
+                    <Button Grid.Column="3" Grid.Row="1" Command="{Binding SendNotExistCommand}" IsEnabled="{Binding ConnectionState}" Content="Not Exists" Width="90" Height="26" BorderBrush="{x:Null}"/>
+                    <Button Grid.Column="4" Grid.Row="1" Command="{Binding SendReadOnlyCommand}" IsEnabled="{Binding ConnectionState}" Content="Read Only" Width="90" Height="26" BorderBrush="{x:Null}"/>
+                    <Button Grid.Column="5" Grid.Row="1" Command="{Binding SendValueErrorCommand}" IsEnabled="{Binding ConnectionState}" Content="Value Error" Width="90" Height="26" BorderBrush="{x:Null}"/>
+
                 </Grid>
             </Grid>
         </Border>
 
-        <Border Grid.Row="4" Grid.Column="0" BorderThickness="1" BorderBrush="Black" CornerRadius="3"  Padding="0,0,0,3" Margin="5">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="34"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Label Grid.Row="0" Content="Message Responses" FontSize="18" HorizontalContentAlignment="Center">
-                    <Label.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FF4c88d6" Offset="0"/>
-                            <GradientStop Color="White" Offset="0.3"/>
-                        </LinearGradientBrush>
-                    </Label.Background>
-                </Label>
-                <TextBox Grid.Row="1" Text="{Binding ESCommandResponse}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="#19000000" TextChanged="TextBox_TextChanged"/>
-            </Grid>
-        </Border>
+
 
         <GridSplitter Grid.Row="0" Grid.Column="1" Grid.RowSpan="5" Width="5"  HorizontalAlignment="Stretch"  >
             <GridSplitter.Background>
@@ -191,14 +177,14 @@
         </GridSplitter>
 
 
-        <Border Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" BorderBrush="Black" BorderThickness="1" CornerRadius="3"  Padding="0,0,0,3" Margin="5">
+        <Border Grid.Row="0" Grid.Column="2" Grid.RowSpan="3" Margin="3" Padding="3" BorderBrush="Black" BorderThickness="1" CornerRadius="3">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="34"/>
                     <RowDefinition Height="38"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Content="Data Table Items and Values (100 Hz)" FontSize="18" HorizontalContentAlignment="Center">
+                <Label Grid.Row="0" Margin="-3" Content="Data Table Items and Values (100 Hz)" FontSize="18" HorizontalContentAlignment="Center">
                     <Label.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FF4c88d6" Offset="0"/>
@@ -207,10 +193,8 @@
                     </Label.Background>
                 </Label>
 
-                <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="3">
+                    <TextBox Grid.Row="2" Text="{Binding ESMessage}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Background="#19000000" TextWrapping="Wrap" TextChanged="TextBox_TextChanged_1" />
 
-                    <TextBox Text="{Binding ESMessage}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Background="#19000000" TextWrapping="Wrap" TextChanged="TextBox_TextChanged_1" />
-                </Border>
                 <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="3">
 
                     <Grid>
@@ -223,13 +207,30 @@
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Button Grid.Row="0" Grid.Column="0"  x:Name="BtnCapture" Content="Start Capture" Width="90" BorderBrush="{x:Null}" Command="{Binding CaptureCommand}" />
+                        <Button Grid.Row="0" Grid.Column="0" Command="{Binding CaptureCommand}" IsEnabled="{Binding ConnectionState}" Content="Start Capture" Width="90" BorderBrush="{x:Null}" />
 
                     </Grid>
                 </Border>
             </Grid>
         </Border>
 
+        <Border Grid.Row="3" Grid.Column="2" Grid.RowSpan="2"  Margin="3" Padding="3" BorderBrush="Black" BorderThickness="1" CornerRadius="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="34"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Margin="-3" Content="Message Responses" FontSize="18" HorizontalContentAlignment="Center">
+                    <Label.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF4c88d6" Offset="0"/>
+                            <GradientStop Color="White" Offset="0.3"/>
+                        </LinearGradientBrush>
+                    </Label.Background>
+                </Label>
+                <TextBox Grid.Row="1" Text="{Binding ESCommandResponse}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="#19000000" TextChanged="TextBox_TextChanged"/>
+            </Grid>
+        </Border>
     </Grid>
 
 </Window>

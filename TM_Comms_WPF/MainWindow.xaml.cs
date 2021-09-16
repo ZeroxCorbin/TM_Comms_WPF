@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using ApplicationSettingsNS;
 using TM_Comms;
-using TM_Comms_WPF.Views;
+using TM_Comms_WPF.WindowViews;
 
 namespace TM_Comms_WPF
 {

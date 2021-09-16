@@ -10,7 +10,7 @@ using System.Windows.Media;
 using TM_Comms;
 using TM_Comms_WPF.Commands;
 
-namespace TM_Comms_WPF.ViewModels
+namespace TM_Comms_WPF.ControlViewModels
 {
     public class PendantControlViewModel : INotifyPropertyChanged
     {

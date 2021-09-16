@@ -1,44 +1,75 @@
-﻿<Window xmlns:Views="clr-namespace:TM_Comms_WPF.Views"
-        x:Class="TM_Comms_WPF.Views.ModbusWindow"
+﻿<Window x:Class="TM_Comms_WPF.WindowViews.ModbusWindow"
+        xmlns:controlview="clr-namespace:TM_Comms_WPF.ControlViews"
+        xmlns:windowviewmodels="clr-namespace:TM_Comms_WPF.WindowViewModels"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewmodels="clr-namespace:TM_Comms_WPF.ViewModels"
-        d:DataContext="{d:DesignInstance Type=viewmodels:ModbusViewModel}"
+        d:DataContext="{d:DesignInstance Type=windowviewmodels:ModbusViewModel}"
         mc:Ignorable="d"
         Title="{Binding Title, Mode=OneWay}"
         Left="{Binding Left, Mode=TwoWay}"
         Top="{Binding Top, Mode=TwoWay}"
         WindowState="{Binding WindowState, Mode=TwoWay}"
-        Icon="../Support/favicon.ico">
+        Icon="../Support/favicon.ico" Height="647" Width="869" Closing="Window_Closing">
     <Window.DataContext>
-        <viewmodels:ModbusViewModel/>
+        <windowviewmodels:ModbusViewModel/>
     </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="5"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <Border Grid.Row="0" Grid.Column="0" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
+
+        <Border Grid.Row="0" Grid.Column="0" Margin="3" Padding="3" BorderBrush="Black" BorderThickness="1" CornerRadius="3">
             <Grid>
-                <Button Content="{Binding ConnectButtonText}" Command="{Binding ConnectCommand}" Width="86" Height="48"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Margin="-3" Content="Modbus TCP" FontSize="18" HorizontalContentAlignment="Center">
+                    <Label.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF4c88d6" Offset="0"/>
+                            <GradientStop Color="White" Offset="0.3"/>
+                        </LinearGradientBrush>
+                    </Label.Background>
+                </Label>
+                <Button Grid.Row="1" Command="{Binding ConnectCommand}" Content="{Binding ConnectButtonText}" Width="90" Height="28" BorderBrush="{x:Null}" />
+                <controlview:PendantControl Grid.Row="2" Grid.Column="0" DataContext="{Binding Pendant}"/>
             </Grid>
         </Border>
 
-        <Views:PendantControl Grid.Row="1" Grid.Column="0" DataContext="{Binding Pendant}"/>
+        <GridSplitter Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Width="5"  HorizontalAlignment="Center"  >
+            <GridSplitter.Background>
+                <RadialGradientBrush>
+                    <GradientStop Color="#FF4C88D6" Offset="0.19"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </RadialGradientBrush>
+            </GridSplitter.Background>
+        </GridSplitter>
 
-        <Grid Grid.Row="2" Grid.Column="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
-                <ListView Grid.Row="2" ItemsSource="{Binding Items}">
+        <Border Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Margin="-3" Content="Data Table Range" FontSize="18" HorizontalContentAlignment="Center">
+                    <Label.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF4c88d6" Offset="0"/>
+                            <GradientStop Color="White" Offset="0.3"/>
+                        </LinearGradientBrush>
+                    </Label.Background>
+                </Label>
+                <ListView Grid.Row="1" ItemsSource="{Binding Items}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
 
@@ -66,17 +97,26 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-            </Border>
-            <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1"  CornerRadius="3" Padding="3" HorizontalAlignment="Left" Margin="5">
-                <!--<Grid>
-                    <StackPanel Orientation="Horizontal" >
-                        <StackPanel x:Name="stackModbusUserComboBox" HorizontalAlignment="Left"/>
-                        <StackPanel x:Name="stackModbusUserReadButton" HorizontalAlignment="Left"/>
-                        <StackPanel x:Name="stackModbusUserText" HorizontalAlignment="Left"/>
-                        <StackPanel x:Name="stackModbusUserWriteButton" HorizontalAlignment="Left"/>
-                    </StackPanel>
+            </Grid>
 
-                </Grid>-->
+        </Border>
+
+
+
+        <Border Grid.Row="1" Grid.Column="0"  Margin="3" Padding="3" BorderBrush="Black" BorderThickness="1" CornerRadius="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Margin="-3" Content="User Range" FontSize="18" HorizontalContentAlignment="Center">
+                    <Label.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF4c88d6" Offset="0"/>
+                            <GradientStop Color="White" Offset="0.3"/>
+                        </LinearGradientBrush>
+                    </Label.Background>
+                </Label>
                 <ListView Grid.Row="2" ItemsSource="{Binding UserItems}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -107,8 +147,9 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-            </Border>
-        </Grid>
+            </Grid>
+        </Border>
+
 
 
 

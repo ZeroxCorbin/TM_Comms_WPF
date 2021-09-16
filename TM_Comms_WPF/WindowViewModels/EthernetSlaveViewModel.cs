@@ -18,8 +18,9 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using TM_Comms;
 using TM_Comms_WPF.Commands;
+using TM_Comms_WPF.ControlViewModels;
 
-namespace TM_Comms_WPF.ViewModels
+namespace TM_Comms_WPF.WindowViewModels
 {
     public class EthernetSlaveViewModel : INotifyPropertyChanged
     {
@@ -53,9 +54,7 @@ namespace TM_Comms_WPF.ViewModels
         private bool connectionState;
         public string ConnectMessage { get => connectMessage; set { _ = SetProperty(ref connectMessage, value); PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsMessage")); } }
         private string connectMessage;
-        public bool IsConnectMessage { get => !string.IsNullOrEmpty(connectMessage); }
-        public bool IsRunning { get => isRunning; private set => SetProperty(ref isRunning, value); }
-        private bool isRunning;
+
         public string CaptureButtonText { get => captureButtonText; set => SetProperty(ref captureButtonText, value); }
         private string captureButtonText = "Start Capture";
 
@@ -127,6 +126,12 @@ namespace TM_Comms_WPF.ViewModels
             }
         }
 
+        public void ViewClosing()
+        {
+            Socket.StopReceiveAsync();
+            Socket.Close();
+        }
+
         private void ConnectAction(object parameter)
         {
             if (Socket.IsConnected)
@@ -144,8 +149,6 @@ namespace TM_Comms_WPF.ViewModels
 
                     if (!Socket.Connect())
                         ConnectMessage = Socket.IsException ? Socket.Exception.Message : "Unable to connect!";
-                    else
-                        ConnectMessage = "Connected";
                 });
             }
         }

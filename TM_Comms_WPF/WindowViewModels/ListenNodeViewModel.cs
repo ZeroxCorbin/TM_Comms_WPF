@@ -13,8 +13,11 @@ using TM_Comms_WPF.Commands;
 using System.Windows.Controls;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
+using TM_Comms_WPF.ControlViewModels;
+using static TM_Comms.MotionScriptBuilder;
+using TM_Comms_WPF.ControlViews;
 
-namespace TM_Comms_WPF.ViewModels
+namespace TM_Comms_WPF.WindowViewModels
 {
     public class ListenNodeViewModel : INotifyPropertyChanged
     {
@@ -51,6 +54,7 @@ namespace TM_Comms_WPF.ViewModels
         private bool autoReconnect;
         public bool IsConnectMessage { get => !string.IsNullOrEmpty(connectMessage); }
 
+
         public string LNMessage { get => lnMessage; set => SetProperty(ref lnMessage, value); }
         private string lnMessage;
         public string LNCommandResponse { get => lnCommandResponse; set => SetProperty(ref lnCommandResponse, value); }
@@ -67,6 +71,19 @@ namespace TM_Comms_WPF.ViewModels
         public ICommand SendScriptExitCommand { get; }
         public ICommand SendBadCodeCommand { get; }
 
+        public ICommand ReadPosition { get; }
+        public ICommand InsertMoveStep { get; }
+        public ICommand GenerateMotionScript { get; }
+        public ICommand SendMotionScript { get; }
+        public PositionControlViewModel PositionControl { get; } = new PositionControlViewModel();
+
+        public void ViewClosing()
+        {
+            Socket.StopReceiveAsync();
+            Socket.Close();
+
+            AutoReconnect = false;
+        }
         public ListenNodeViewModel()
         {
             ConnectCommand = new RelayCommand(ConnectAction, c => true);
@@ -80,12 +97,18 @@ namespace TM_Comms_WPF.ViewModels
             SendScriptExitCommand = new RelayCommand(SendScriptExit, c => true);
             SendBadCodeCommand = new RelayCommand(SendBadCode, c => true);
 
+            ReadPosition = new RelayCommand(ReadPositionAction, c => true);
+            InsertMoveStep = new RelayCommand(InsertMoveStepAction, c => true);
+            GenerateMotionScript = new RelayCommand(GenerateMotionScriptAction, c => true);
+            SendMotionScript = new RelayCommand(SendMotionScriptAction, c => true);
+
             Socket = new SocketManager(ConnectionString);
             Socket.ConnectState += Socket_ConnectState;
             Socket.MessageReceived += Socket_MessageReceived;
 
             LoadCommandTreeView();
         }
+
 
         private SocketManager Socket { get; set; }
         private void ConnectAction(object parameter)
@@ -115,6 +138,7 @@ namespace TM_Comms_WPF.ViewModels
         private void Socket_ConnectState(object sender, bool state)
         {
             ConnectionState = state;
+
             if (state)
             {
                 ConnectButtonText = "Close";
@@ -145,32 +169,19 @@ namespace TM_Comms_WPF.ViewModels
                 return;
 
             LNCommandResponse += message + "\r\n";
-            //if (PositionRequest != null)
-            //{
-            //    if (Regex.IsMatch(message, @"^[$]TMSTA,\w*,90,"))
-            //    {
-            //        PositionRequest = null;
 
-            //        string[] spl = message.Split('{');
-            //        string pos = spl[1].Substring(0, spl[1].IndexOf('}'));
+            if (PositionRequest != null)
+            {
+                if (Regex.IsMatch(message, @"^[$]TMSTA,\w*,90,"))
+                {
+                    PositionRequest = null;
 
-            //        Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-            //                (Action)(() =>
-            //                {
-            //                    TxtNewPosition.Text = pos;
-            //                }));
+                    string[] spl = message.Split('{');
+                    string pos = spl[1].Substring(0, spl[1].IndexOf('}'));
 
-            //    }
-            //}
-
-            //Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-            //        (Action)(() =>
-            //        {
-            //            //RectCommandHasResponse.Fill = new SolidColorBrush(Color.FromRgb(0, 255, 0));
-            //            txtLNDataResponse.Text += message + "\r\n";
-            //            txtLNDataResponse.ScrollToEnd();
-            //        }));
-
+                    PositionControl.Position = pos;
+                }
+            }
         }
 
 
@@ -186,14 +197,14 @@ namespace TM_Comms_WPF.ViewModels
         //public ListViewItem CommandItem { get => commandItem; set { _ = SetProperty(ref commandItem, value); UpdateScript(); } }
         //private ListViewItem commandItem;
 
-        public ComboBoxItem MessageHeader 
-        { 
+        public ComboBoxItem MessageHeader
+        {
             get => messageHeader;
             set
-            { 
+            {
                 _ = SetProperty(ref messageHeader, value);
 
-                if((string)value.Tag == "0")
+                if ((string)value.Tag == "0")
                 {
                     SubCommandVisible = Visibility.Collapsed;
                     ScriptIDVisible = Visibility.Visible;
@@ -205,7 +216,7 @@ namespace TM_Comms_WPF.ViewModels
                 }
 
                 GetLNNode();
-            } 
+            }
         }
         private ComboBoxItem messageHeader;
 
@@ -222,7 +233,7 @@ namespace TM_Comms_WPF.ViewModels
         public ObservableCollection<TreeViewItem> CommandList { get; } = new ObservableCollection<TreeViewItem>();
         public TreeViewItem CommandItem { get => commandItem; set { _ = SetProperty(ref commandItem, value); UpdateScript(); } }
         private TreeViewItem commandItem;
- 
+
         public string Script { get => script; set { _ = SetProperty(ref script, value); GetLNNode(); } }
         private string script;
 
@@ -273,7 +284,161 @@ namespace TM_Comms_WPF.ViewModels
 
             return node;
         }
-
         private void SendCommandAction(object parameter) => Socket?.Write(GetLNNode().Message);
+
+        public ObservableCollection<ListBoxItem> PositionControlList { get; } = new ObservableCollection<ListBoxItem>();
+        public bool AddScriptExit { get => addScriptExit; set => SetProperty(ref addScriptExit, value); }
+        private bool addScriptExit = true;
+        public bool InitializeVariables { get => initializeVariables; set => SetProperty(ref initializeVariables, value); }
+        private bool initializeVariables;
+
+        public string MotionScript { get => motionScript; set => SetProperty(ref motionScript, value); }
+        private string motionScript = "";
+
+        private string PositionRequest = null;
+        public void ReadPositionAction(object parameter)
+        {
+            char[] type = PositionControl.DataFormat.ToCharArray();
+            if (type[0] == 'C')
+            {
+                ListenNode ln = new ListenNode("ListenSend(90, GetString(Robot[1].CoordRobot, 10, 3))");
+                PositionRequest = ln.ScriptID.ToString();
+                Socket?.Write(ln.Message);
+            }
+            else
+            {
+                ListenNode ln = new ListenNode("ListenSend(90, GetString(Robot[1].Joint, 10, 3))");
+                PositionRequest = ln.ScriptID.ToString();
+                Socket?.Write(ln.Message);
+            }
+        }
+
+        public void InsertMoveStepAction(object parameter)
+        {
+            PositionControlViewModel pcvm = new PositionControlViewModel();
+            pcvm.MoveStep = PositionControl.MoveStep; 
+            pcvm.DragDropEvent += PositionControl_DragDropEvent;
+            pcvm.Labels = Visibility.Collapsed;
+            pcvm.DragDropTarget = Visibility.Visible;
+
+            ListBoxItem lbi = new ListBoxItem() { Content = new ControlViews.PositionControl() { DataContext = pcvm } };
+
+
+            //lbi.PreviewMouseMove += Lbi_PreviewMouseMove;
+            //lbi.Drop += Lbi_Drop;
+            //lbi.PreviewMouseLeftButtonDown += Lbi_PreviewMouseLeftButtonDown;
+            lbi.AllowDrop = true;
+            PositionControlList.Add(lbi);
+        }
+
+        private ListBoxItem draggedItem;
+        private void PositionControl_DragDropEvent(object parent, bool drop)
+        {
+
+            if (drop)
+            {
+                //ListBoxItem droppedData = e.Data.GetData(typeof(ListBoxItem)) as ListBoxItem;
+                ListBoxItem target = (ListBoxItem)parent;
+
+                int removedIdx = PositionControlList.IndexOf(draggedItem);
+                int targetIdx = PositionControlList.IndexOf(target);
+
+                if (removedIdx < targetIdx)
+                {
+                    PositionControlList.Insert(targetIdx + 1, draggedItem);
+                    PositionControlList.RemoveAt(removedIdx);
+                }
+                else
+                {
+                    int remIdx = removedIdx + 1;
+                    if (PositionControlList.Count + 1 > remIdx)
+                    {
+                        PositionControlList.Insert(targetIdx, draggedItem);
+                        PositionControlList.RemoveAt(remIdx);
+                    }
+                }
+            }
+            else
+            {
+                if (parent is ListBoxItem)
+                {
+                    draggedItem = parent as ListBoxItem;
+
+                    draggedItem.Dispatcher.BeginInvoke(new Action(() => { DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.Move); }));
+
+                    draggedItem.IsSelected = true;
+                }
+            }
+
+        }
+        //private void Lbi_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    if (sender is ListBoxItem)
+        //    {
+        //        ListBoxItem draggedItem = sender as ListBoxItem;
+
+        //        draggedItem.Dispatcher.BeginInvoke(new Action(() => { DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.Move); }));
+
+        //        draggedItem.IsSelected = true;
+        //    }
+        // }
+
+        private void Lbi_Drop(object sender, DragEventArgs e)
+        {
+            //ListBoxItem droppedData = e.Data.GetData(typeof(ListBoxItem)) as ListBoxItem;
+            //ListBoxItem target = (ListBoxItem)sender;
+
+            //int removedIdx = PositionControlList.IndexOf(droppedData);
+            //int targetIdx = PositionControlList.IndexOf(target);
+
+            //if (removedIdx < targetIdx)
+            //{
+            //    PositionControlList.Insert(targetIdx + 1, droppedData);
+            //    PositionControlList.RemoveAt(removedIdx);
+            //}
+            //else
+            //{
+            //    int remIdx = removedIdx + 1;
+            //    if (PositionControlList.Count + 1 > remIdx)
+            //    {
+            //        PositionControlList.Insert(targetIdx, droppedData);
+            //        PositionControlList.RemoveAt(remIdx);
+            //    }
+            //}
+        }
+
+        private void Lbi_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            //if (e.LeftButton == MouseButtonState.Pressed)
+            //    if (sender is ListBoxItem)
+            //    {
+            //        ListBoxItem draggedItem = sender as ListBoxItem;
+
+            //        draggedItem.Dispatcher.BeginInvoke(new Action(() => { DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.Move); }));
+
+            //        draggedItem.IsSelected = true;
+            //    }
+        }
+        public void DeleteMoveStep(object e)
+        {
+            ListBoxItem droppedData = e as ListBoxItem;
+            int removedIdx = PositionControlList.IndexOf(droppedData);
+
+            PositionControlList.RemoveAt(removedIdx);
+        }
+
+        private void GenerateMotionScriptAction(object p)
+        {
+            MotionScriptBuilder msb = new MotionScriptBuilder();
+
+            foreach (ListBoxItem lbi in PositionControlList)
+            {
+                msb.Moves.Add(((PositionControlViewModel)((PositionControl)lbi.Content).DataContext).MoveStep);
+            }
+            ListenNode ln = msb.BuildScriptData(AddScriptExit, InitializeVariables);
+
+            MotionScript = ln.Message;
+        }
+        private void SendMotionScriptAction(object p) => Socket.Write(MotionScript);
     }
 }

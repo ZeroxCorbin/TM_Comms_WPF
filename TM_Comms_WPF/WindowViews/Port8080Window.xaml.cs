@@ -12,7 +12,7 @@ using RingBuffer;
 using SocketManagerNS;
 using TM_Comms;
 
-namespace TM_Comms_WPF.Views
+namespace TM_Comms_WPF.WindowViews
 {
     /// <summary>
     /// Interaction logic for Port8080Window.xaml
