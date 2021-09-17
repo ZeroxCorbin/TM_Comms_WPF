@@ -12,7 +12,7 @@
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight"
                 Left="{Binding Port8080Window.Left, Mode=TwoWay}"
-        Top="{Binding Port8080Window.Top, Mode=TwoWay}">
+        Top="{Binding Port8080Window.Top, Mode=TwoWay}" Activated="Window_Activated">
     <Grid>
         <StackPanel>
             <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="3" Margin="5">

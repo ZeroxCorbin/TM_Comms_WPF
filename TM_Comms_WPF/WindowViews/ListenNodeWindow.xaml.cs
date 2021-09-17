@@ -61,6 +61,14 @@ namespace TM_Comms_WPF.WindowViews
             ((ListenNodeViewModel)DataContext).DeleteMoveStep(e.Data.GetData(typeof(ListBoxItem)));
         }
 
+        private void Window_Activated(object sender, System.EventArgs e)
+        {
+            if (!CheckOnScreen.IsOnScreen(this))
+            {
+                this.Left = Owner.Left;
+                this.Top = Owner.Top + Owner.ActualHeight;
+            }
+        }
 
         //private void Window_LoadSettings()
         //{

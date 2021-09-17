@@ -30,7 +30,11 @@
     <Grid>
         <Border Margin="5" Padding="10" VerticalAlignment="Top" BorderThickness="1" BorderBrush="Black" CornerRadius="10">
             <Grid>
-                <StackPanel>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0">
                     <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
                         <StackPanel>
                             <Label Content="Robot IP Address" Padding="0" Margin="3,0" HorizontalContentAlignment="Center"/>

@@ -154,7 +154,7 @@ namespace TM_Comms_WPF
                 ModbusWindow.Activated += AnyWindow_Activated;
                 ModbusWindow.Show();
 
-                ModbusWindow.Owner = null;
+                //ModbusWindow.Owner = null;
 
                 WindowShow();
             }
@@ -187,7 +187,7 @@ namespace TM_Comms_WPF
                 ListenNodeWindow.Activated += AnyWindow_Activated;
                 ListenNodeWindow.Show();
 
-                ListenNodeWindow.Owner = null;
+                //ListenNodeWindow.Owner = null;
 
                 WindowShow();
             }
@@ -220,7 +220,7 @@ namespace TM_Comms_WPF
                 EthernetSlaveWindow.Activated += AnyWindow_Activated;
                 EthernetSlaveWindow.Show();
 
-                EthernetSlaveWindow.Owner = null;
+                //EthernetSlaveWindow.Owner = null;
 
                 WindowShow();
             }
@@ -255,7 +255,7 @@ namespace TM_Comms_WPF
                 Port8080Window.Owner = this;
                 Port8080Window.Show();
 
-                Port8080Window.Owner = null;
+                //Port8080Window.Owner = null;
 
                 WindowShow();
             }
@@ -288,7 +288,7 @@ namespace TM_Comms_WPF
                 ExternalVisionWindow.Activated += AnyWindow_Activated;
                 ExternalVisionWindow.Show();
 
-                ExternalVisionWindow.Owner = null;
+               //ExternalVisionWindow.Owner = null;
 
                 WindowShow();
             }

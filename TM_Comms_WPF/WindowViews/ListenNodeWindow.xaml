@@ -10,7 +10,7 @@
         Title="{Binding Title, Mode=OneWay}"
         Left="{Binding Left, Mode=TwoWay}"
         Top="{Binding Top, Mode=TwoWay}"
-        WindowState="{Binding WindowState, Mode=TwoWay}" Height="727" Width="1074" Closing="Window_Closing">
+        WindowState="{Binding WindowState, Mode=TwoWay}" Height="727" Width="1074" Closing="Window_Closing" Activated="Window_Activated">
     <Window.DataContext>
         <windowviewmodels:ListenNodeViewModel/>
     </Window.DataContext>

@@ -219,6 +219,15 @@ namespace TM_Comms_WPF.WindowViews
                 HttpListener.Stop();
         }
 
+        private void Window_Activated(object sender, System.EventArgs e)
+        {
+            if (!CheckOnScreen.IsOnScreen(this))
+            {
+                this.Left = Owner.Left;
+                this.Top = Owner.Top + Owner.ActualHeight;
+            }
+        }
+
         private void BtnStartListener_Click(object sender, RoutedEventArgs e)
         {
             if(HttpListener.IsListening)

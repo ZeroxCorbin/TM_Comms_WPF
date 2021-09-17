@@ -11,7 +11,7 @@
         Left="{Binding Left, Mode=TwoWay}"
         Top="{Binding Top, Mode=TwoWay}"
         WindowState="{Binding WindowState, Mode=TwoWay}"
-        Icon="../Support/favicon.ico" Height="647" Width="869" Closing="Window_Closing">
+        Icon="../Support/favicon.ico" Height="647" Width="869" Closing="Window_Closing" Activated="Window_Activated">
     <Window.DataContext>
         <windowviewmodels:ModbusViewModel/>
     </Window.DataContext>

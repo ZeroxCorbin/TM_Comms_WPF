@@ -10,7 +10,7 @@
         Height="{Binding ExternalVisionWindow.Height, Mode=TwoWay}"
         Left="{Binding ExternalVisionWindow.Left, Mode=TwoWay}"
         Top="{Binding ExternalVisionWindow.Top, Mode=TwoWay}"
-        WindowState="{Binding ExternalVisionWindow.WindowState, Mode=TwoWay}" Icon="../Support/favicon.ico">
+        WindowState="{Binding ExternalVisionWindow.WindowState, Mode=TwoWay}" Icon="../Support/favicon.ico" Activated="Window_Activated">
     <Window.Resources>
         <Style x:Key="ButtonFocusVisual" TargetType="{x:Type Button}">
             <Setter Property="Control.Template">

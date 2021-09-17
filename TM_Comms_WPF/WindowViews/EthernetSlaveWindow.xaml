@@ -11,7 +11,7 @@
         Left="{Binding Left, Mode=TwoWay}"
         Top="{Binding Top, Mode=TwoWay}"
         WindowState="{Binding WindowState, Mode=TwoWay}"
-        Icon="../Support/favicon.ico" d:DesignHeight="787.84" Width="1249.309" Closing="Window_Closing">
+        Icon="../Support/favicon.ico" d:DesignHeight="787.84" Width="1249.309" Closing="Window_Closing" Activated="Window_Activated">
     <Window.DataContext>
         <windowviewmodels:EthernetSlaveViewModel/>
     </Window.DataContext>

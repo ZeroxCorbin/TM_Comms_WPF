@@ -20,5 +20,14 @@ namespace TM_Comms_WPF.WindowViews
         {
             ((ModbusViewModel)DataContext).ViewClosing();
         }
+
+        private void Window_Activated(object sender, System.EventArgs e)
+        {
+            if (!CheckOnScreen.IsOnScreen(this))
+            {
+                this.Left = Owner.Left;
+                this.Top = Owner.Top + Owner.ActualHeight;
+            }
+        }
     }
 }
