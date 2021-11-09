@@ -1,4 +1,5 @@
-﻿using SocketManagerNS;
+﻿using ControlzEx.Theming;
+using SocketManagerNS;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,7 @@ using static TM_Comms.MotionScriptBuilder;
 
 namespace TM_Comms_WPF.WindowViews
 {
-    public partial class ListenNodeWindow : Window
+    public partial class ListenNodeWindow : MahApps.Metro.Controls.MetroWindow
     {
 
         //private ListenNode ListenNode { get; set; }
@@ -26,6 +27,8 @@ namespace TM_Comms_WPF.WindowViews
         //Public
         public ListenNodeWindow(Window owner)
         {
+            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
+            ThemeManager.Current.SyncTheme();
 
             Owner = owner;
 

@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using ApplicationSettingsNS;
+using ControlzEx.Theming;
 using MahApps.Metro.Controls;
 using TM_Comms;
 using TM_Comms_WPF.WindowViews;
@@ -17,6 +18,9 @@ namespace TM_Comms_WPF
     {
         public MainWindow()
         {
+            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
+            ThemeManager.Current.SyncTheme();
+
             InitializeComponent();
 
             txtRobotIP.Text = App.Settings.RobotIP;

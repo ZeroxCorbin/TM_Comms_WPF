@@ -3,13 +3,16 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Data;
 using TM_Comms_WPF.WindowViewModels;
+using ControlzEx.Theming;
 
 namespace TM_Comms_WPF.WindowViews
 {
-    public partial class EthernetSlaveWindow : Window
+    public partial class EthernetSlaveWindow : MahApps.Metro.Controls.MetroWindow
     {
         public EthernetSlaveWindow(Window owner)
         {
+            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
+            ThemeManager.Current.SyncTheme();
 
             Owner = owner;
 

@@ -31,11 +31,11 @@ namespace TM_Comms_WPF.WindowViews
             ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
             ThemeManager.Current.SyncTheme();
 
+            InitializeComponent();
+     
             Owner = owner;
             DataContext = App.Settings;
-
-            InitializeComponent();
-
+          
             AddNewAnnotation();
 
             LoadIPCombo();

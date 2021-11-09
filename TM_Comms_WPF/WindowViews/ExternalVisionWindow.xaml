@@ -14,6 +14,11 @@
         Top="{Binding ExternalVisionWindow.Top, Mode=TwoWay}"
         WindowState="{Binding ExternalVisionWindow.WindowState, Mode=TwoWay}" Icon="../Support/favicon.ico" Activated="Window_Activated">
     <mah:MetroWindow.Resources>
+        <LinearGradientBrush x:Key="Header" EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="{DynamicResource MahApps.Colors.AccentBase}" Offset="0"/>
+            <GradientStop Color="{DynamicResource MahApps.Colors.ThemeBackground}" Offset="0.3"/>
+        </LinearGradientBrush>
+        
         <Style x:Key="ButtonFocusVisual" TargetType="{x:Type Button}">
             <Setter Property="Control.Template">
                 <Setter.Value>
@@ -53,14 +58,8 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <Label Grid.Row="0" Content="External Vision" FontSize="18" HorizontalContentAlignment="Center">
-                    <Label.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FF4c88d6" Offset="0"/>
-                            <GradientStop Color="White" Offset="0.3"/>
-                        </LinearGradientBrush>
-                    </Label.Background>
-                </Label>
+                <Label Grid.Row="0" Content="External Vision"
+                       Background="{StaticResource Header}" FontSize="18" HorizontalContentAlignment="Center"/>
 
 
                 <Grid Grid.Row="1" Margin="5">
@@ -130,14 +129,8 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Content="Camera Image" FontSize="18" HorizontalContentAlignment="Center" Grid.ColumnSpan="2">
-                        <Label.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#FF4c88d6" Offset="0"/>
-                                <GradientStop Color="White" Offset="0.3"/>
-                            </LinearGradientBrush>
-                        </Label.Background>
-                    </Label>
+                    <Label Grid.Row="0" Content="Camera Image"
+                           Background="{StaticResource Header}" FontSize="18" HorizontalContentAlignment="Center" Grid.ColumnSpan="2"/>
 
                     <ToolBar Grid.Row="1" Background="{x:Null}">
                         <Button x:Name="BtnSaveImage" MinWidth="22" MinHeight="22" Click="BtnSaveImage_Click" VerticalAlignment="Bottom" ToolTip="Save Image">
@@ -174,14 +167,8 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Content="Responses" FontSize="18" HorizontalContentAlignment="Center" Grid.ColumnSpan="2">
-                        <Label.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#FF4c88d6" Offset="0"/>
-                                <GradientStop Color="White" Offset="0.3"/>
-                            </LinearGradientBrush>
-                        </Label.Background>
-                    </Label>
+                    <Label Grid.Row="0" Content="Responses"
+                           Background="{StaticResource Header}" FontSize="18" HorizontalContentAlignment="Center" Grid.ColumnSpan="2"/>
                     <TabControl Grid.Row="1" >
                         <TabItem Header="Inspect">
                             <Grid>

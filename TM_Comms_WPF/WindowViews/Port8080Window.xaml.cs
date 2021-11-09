@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using ApplicationSettingsNS;
+using ControlzEx.Theming;
 using RingBuffer;
 using SocketManagerNS;
 using TM_Comms;
@@ -28,6 +29,9 @@ namespace TM_Comms_WPF.WindowViews
 
         public Port8080Window()
         {
+            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
+            ThemeManager.Current.SyncTheme();
+
             DataContext = App.Settings;
 
             InitializeComponent();

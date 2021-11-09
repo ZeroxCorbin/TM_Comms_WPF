@@ -1,13 +1,17 @@
-﻿using System.Windows;
+﻿using ControlzEx.Theming;
+using System.Windows;
 using System.Windows.Data;
 using TM_Comms_WPF.WindowViewModels;
 
 namespace TM_Comms_WPF.WindowViews
 {
-    public partial class ModbusWindow : Window
+    public partial class ModbusWindow : MahApps.Metro.Controls.MetroWindow
     {
         public ModbusWindow(Window owner)
         {
+            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
+            ThemeManager.Current.SyncTheme();
+
             Owner = owner;
 
             InitializeComponent();
