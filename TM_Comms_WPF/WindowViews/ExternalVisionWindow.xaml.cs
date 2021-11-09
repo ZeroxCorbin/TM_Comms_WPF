@@ -1,4 +1,6 @@
-﻿using InterManage.Adapter;
+﻿using ControlzEx.Theming;
+using InterManage.Adapter;
+using MahApps.Metro.Controls;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,7 +19,7 @@ using static TM_Comms.ExternalDetection;
 namespace TM_Comms_WPF.WindowViews
 {
 
-    public partial class ExternalVisionWindow : Window
+    public partial class ExternalVisionWindow : MetroWindow
     {
         HttpListener HttpListener = new HttpListener();
         DetectionResponse DetectionResponse;
@@ -25,6 +27,10 @@ namespace TM_Comms_WPF.WindowViews
 
         public ExternalVisionWindow(Window owner)
         {
+            //ThemeManager.Current.ThemeChanged += Current_ThemeChanged;
+            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
+            ThemeManager.Current.SyncTheme();
+
             Owner = owner;
             DataContext = App.Settings;
 

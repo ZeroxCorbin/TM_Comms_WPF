@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using TM_Comms;
@@ -62,7 +59,7 @@ namespace TM_Comms_WPF.ControlViewModels
                 int i = 0;
                 foreach (ComboBoxItem cmb in MoveTypes)
                 {
-                    if ((string)cmb.Content == value.MoveType)
+                    if ((MotionScriptBuilder.MoveTypes)cmb.Content == value.MoveType)
                     {
                         MoveTypesSelectedIndex = i;
                         break;
@@ -72,7 +69,7 @@ namespace TM_Comms_WPF.ControlViewModels
 
                 foreach (ComboBoxItem cmb in DataFormats)
                 {
-                    if ((string)cmb.Content == value.DataFormat)
+                    if ((MotionScriptBuilder.DataFormats)cmb.Content == value.DataFormat)
                     {
                         DataFormatsSelectedIndex = i;
                         break;
@@ -88,8 +85,8 @@ namespace TM_Comms_WPF.ControlViewModels
             }
         }
 
-        public string MoveType => MoveTypes.Count > 0 ? (string)MoveTypes[MoveTypesSelectedIndex].Content : "PTP";
-        public string DataFormat => DataFormats.Count > 0 ? (string)DataFormats[DataFormatsSelectedIndex].Content : "CPP";
+        public string MoveType => MoveTypes.Count > 0 ? ((MotionScriptBuilder.DataFormats)MoveTypes[MoveTypesSelectedIndex].Content).ToString() : "PTP";
+        public string DataFormat => DataFormats.Count > 0 ? ((MotionScriptBuilder.DataFormats)DataFormats[DataFormatsSelectedIndex].Content).ToString() : "CPP";
 
         public string Position
         {
@@ -148,7 +145,7 @@ namespace TM_Comms_WPF.ControlViewModels
 
         private void SetupMoveTypes()
         {
-            foreach (KeyValuePair<string, List<string>> kv in MotionScriptBuilder.MoveTypes_DataFormats)
+            foreach (KeyValuePair<MotionScriptBuilder.MoveTypes, List<MotionScriptBuilder.DataFormats>> kv in MotionScriptBuilder.MoveTypes_DataFormats)
             {
                 ComboBoxItem cmb = new ComboBoxItem()
                 {
@@ -163,11 +160,11 @@ namespace TM_Comms_WPF.ControlViewModels
         {
             DataFormats.Clear();
 
-            foreach (string s in MotionScriptBuilder.MoveTypes_DataFormats[(string)MoveTypes[MoveTypesSelectedIndex].Content])
+            foreach (MotionScriptBuilder.DataFormats df in MotionScriptBuilder.MoveTypes_DataFormats[(MotionScriptBuilder.MoveTypes)MoveTypes[MoveTypesSelectedIndex].Content])
             {
                 ComboBoxItem cmb = new ComboBoxItem()
                 {
-                    Content = s
+                    Content = df
                 };
                 DataFormats.Add(cmb);
             }
@@ -192,7 +189,7 @@ namespace TM_Comms_WPF.ControlViewModels
         {
             if (DataFormats.Count == 0) return;
 
-            char[] type = ((string)DataFormats[DataFormatsSelectedIndex].Content).ToCharArray();
+            char[] type = (((MotionScriptBuilder.DataFormats)DataFormats[DataFormatsSelectedIndex].Content).ToString()).ToCharArray();
 
             if (type[0] == 'C')
             {

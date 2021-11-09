@@ -7,12 +7,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using ApplicationSettingsNS;
+using MahApps.Metro.Controls;
 using TM_Comms;
 using TM_Comms_WPF.WindowViews;
 
 namespace TM_Comms_WPF
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         public MainWindow()
         {
@@ -33,34 +34,34 @@ namespace TM_Comms_WPF
                 App.Settings.Port8080Window = new ApplicationSettings_Serializer.ApplicationSettings.WindowSettings();
             }
 
-            if (double.IsNaN(App.Settings.MainWindow.Left))
-                this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            else
-            {
-                this.Left = App.Settings.MainWindow.Left;
-                this.Top = App.Settings.MainWindow.Top;
+            //if (double.IsNaN(App.Settings.MainWindow.Left))
+            //    this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            //else
+            //{
+            //    this.Left = App.Settings.MainWindow.Left;
+            //    this.Top = App.Settings.MainWindow.Top;
 
-                if (!CheckOnScreen.IsOnScreen(this))
-                    this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            }
+            //    if (!CheckOnScreen.IsOnScreen(this))
+            //        this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            //}
 
            
         }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (WindowStartupLocation == WindowStartupLocation.CenterScreen)
-            {
-                WindowStartupLocation = WindowStartupLocation.Manual;
-                this.Top /= 2;
-            }
-         }
-        private void Window_LocationChanged(object sender, EventArgs e)
-        {
-            if(!IsLoaded) return;
+        //private void Window_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    if (WindowStartupLocation == WindowStartupLocation.CenterScreen)
+        //    {
+        //        WindowStartupLocation = WindowStartupLocation.Manual;
+        //        this.Top /= 2;
+        //    }
+        // }
+        //private void Window_LocationChanged(object sender, EventArgs e)
+        //{
+        //    if(!IsLoaded) return;
 
-            App.Settings.MainWindow.Top = Top;
-            App.Settings.MainWindow.Left = Left;
-        }
+        //    App.Settings.MainWindow.Top = Top;
+        //    App.Settings.MainWindow.Left = Left;
+        //}
 
         private bool IPValid { get; set; } = false;
         private void TxtRobotIP_TextChanged(object sender, TextChangedEventArgs e)
@@ -320,5 +321,13 @@ namespace TM_Comms_WPF
             ExternalVisionWindow?.Close();
         }
 
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            if (!CheckOnScreen.IsOnScreen(this))
+            {
+                this.Left = 0;
+                this.Top = 0;
+            }
+        }
     }
 }

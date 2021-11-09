@@ -11,21 +11,8 @@ using TM_Comms_WPF.Dialogs.DialogService;
 
 namespace TM_Comms_WPF.WindowViewModels
 {
-    public class ModbusItemViewModel : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        private bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
-        {
-            if (Object.Equals(storage, value))
-                return false;
-
-            storage = value;
-            OnPropertyChanged(propertyName);
-            return true;
-        }
-
+    public class ModbusItemViewModel : BaseViewModel
+    { 
 
         private SimpleModbusTCP ModbusTCP { get; }
         private TM_Comms.ModbusDictionary.MobusValue ModbusValue { get; set; }
@@ -36,7 +23,7 @@ namespace TM_Comms_WPF.WindowViewModels
         private string type;
 
         public string Name { get; }
-        public string Value { get => _value; set { _value = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Value")); } }
+        public string Value { get => _value; set { _value = value; OnPropertyChanged("Value"); } }
         public string Type { get => type; set { SetProperty(ref type, value); ModbusValue.Type = (TM_Comms.ModbusDictionary.MobusValue.DataTypes)Enum.Parse(typeof(TM_Comms.ModbusDictionary.MobusValue.DataTypes), value); } }
         public string Addr { get; }
         public string Access { get; }

@@ -3,16 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:dialogs="clr-namespace:TM_Comms_WPF.Dialogs" 
              xmlns:local="clr-namespace:TM_Comms_WPF"
-             StartupUri="MainWindow.xaml">
+             StartupUri="WindowViews/MainWindow.xaml">
     <Application.Resources>
-        <DataTemplate DataType="{x:Type dialogs:DialogYesNoViewModel}">
-            <dialogs:DialogYesNoView></dialogs:DialogYesNoView>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type dialogs:DialogEditValueViewModel}">
-            <dialogs:DialogEditValueView></dialogs:DialogEditValueView>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type dialogs:DialogOkViewModel}">
-            <dialogs:DialogOkView></dialogs:DialogOkView>
-        </DataTemplate>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.FlatButton.xaml" />
+                <!--<ResourceDictionary Source="/PresentationFramework.Aero2;component/themes/aero2.normalcolor.xaml" />-->
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate DataType="{x:Type dialogs:DialogYesNoViewModel}">
+                <dialogs:DialogYesNoView></dialogs:DialogYesNoView>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type dialogs:DialogEditValueViewModel}">
+                <dialogs:DialogEditValueView></dialogs:DialogEditValueView>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type dialogs:DialogOkViewModel}">
+                <dialogs:DialogOkView></dialogs:DialogOkView>
+            </DataTemplate>
+        </ResourceDictionary>
+
     </Application.Resources>
 </Application>

@@ -45,6 +45,8 @@ namespace ApplicationSettingsNS
         [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
         public partial class ApplicationSettings
         {
+            public string Theme { get; set; } = "Light.Steel";
+
             public string RobotIP { get; set; } = "Enter a valid IP.";
 
             public TMflowVersions Version { get; set; } = TMflowVersions.V1_76_xxxx;

@@ -22,21 +22,8 @@ using TM_Comms_WPF.ControlViewModels;
 
 namespace TM_Comms_WPF.WindowViewModels
 {
-    public class EthernetSlaveViewModel : INotifyPropertyChanged
+    public class EthernetSlaveViewModel : BaseViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        private bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
-        {
-            if (Object.Equals(storage, value))
-                return false;
-
-            storage = value;
-            OnPropertyChanged(propertyName);
-            return true;
-        }
 
         public string Title => "Ethernet Slave";
         public double Left { get => App.Settings.EthernetSlaveWindow.Left; set { App.Settings.EthernetSlaveWindow.Left = value; OnPropertyChanged(); } }
@@ -52,7 +39,7 @@ namespace TM_Comms_WPF.WindowViewModels
         private string connectButtonText = "Connect";
         public bool ConnectionState { get => connectionState; set => SetProperty(ref connectionState, value); }
         private bool connectionState;
-        public string ConnectMessage { get => connectMessage; set { _ = SetProperty(ref connectMessage, value); PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsMessage")); } }
+        public string ConnectMessage { get => connectMessage; set { _ = SetProperty(ref connectMessage, value); OnPropertyChanged("IsMessage"); } }
         private string connectMessage;
 
         public string CaptureButtonText { get => captureButtonText; set => SetProperty(ref captureButtonText, value); }

@@ -1,8 +1,10 @@
-﻿<Window x:Class="TM_Comms_WPF.WindowViews.ExternalVisionWindow"
+﻿<mah:MetroWindow x:Class="TM_Comms_WPF.WindowViews.ExternalVisionWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:local="clr-namespace:TM_Comms_WPF"
         mc:Ignorable="d"
         Title="External Vision" Closing="Window_Closing"
@@ -11,7 +13,7 @@
         Left="{Binding ExternalVisionWindow.Left, Mode=TwoWay}"
         Top="{Binding ExternalVisionWindow.Top, Mode=TwoWay}"
         WindowState="{Binding ExternalVisionWindow.WindowState, Mode=TwoWay}" Icon="../Support/favicon.ico" Activated="Window_Activated">
-    <Window.Resources>
+    <mah:MetroWindow.Resources>
         <Style x:Key="ButtonFocusVisual" TargetType="{x:Type Button}">
             <Setter Property="Control.Template">
                 <Setter.Value>
@@ -35,7 +37,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-    </Window.Resources>
+    </mah:MetroWindow.Resources>
     <Grid>
 
         <Grid.RowDefinitions>
@@ -206,4 +208,4 @@
             </Border>
         </Grid>
     </Grid>
-</Window>
+</mah:MetroWindow>

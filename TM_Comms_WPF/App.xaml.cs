@@ -1,4 +1,5 @@
 ﻿using ApplicationSettingsNS;
+using ControlzEx.Theming;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -53,8 +54,8 @@ namespace TM_Comms_WPF
             System.Windows.Forms.Screen[] screens = System.Windows.Forms.Screen.AllScreens;
             foreach (System.Windows.Forms.Screen screen in screens)
             {
-                System.Drawing.Rectangle formRectangle = new System.Drawing.Rectangle((int)window.Left * 2, (int)window.Top * 2,
-                                                         (int)window.Width * 2, (int)window.Height * 2);
+                System.Drawing.Rectangle formRectangle = new System.Drawing.Rectangle((int)window.Left, (int)window.Top,
+                                                         (int)window.Width, (int)window.Height);
 
                 if (screen.WorkingArea.Contains(formRectangle))
                 {
@@ -155,6 +156,8 @@ namespace TM_Comms_WPF
         {
             //GetData d = new GetData();
             base.OnStartup(e);
+
+            ThemeManager.Current.ChangeTheme(this, Settings.Theme);
         }
 
         protected override void OnExit(ExitEventArgs e)
