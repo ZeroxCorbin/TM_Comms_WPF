@@ -7,19 +7,11 @@ using ControlzEx.Theming;
 
 namespace TM_Comms_WPF.WindowViews
 {
-    public partial class EthernetSlaveWindow : MahApps.Metro.Controls.MetroWindow
+    public partial class EthernetSlaveWindow : MahApps.Metro.Controls.MetroContentControl
     {
-        public EthernetSlaveWindow(Window owner)
+        public EthernetSlaveWindow()
         {
-            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
-            ThemeManager.Current.SyncTheme();
-
-            Owner = owner;
-
             InitializeComponent();
-
-            _ = SetBinding(WidthProperty, new Binding("Width") { Source = DataContext, Mode = BindingMode.TwoWay });
-            _ = SetBinding(HeightProperty, new Binding("Height") { Source = DataContext, Mode = BindingMode.TwoWay });
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -35,18 +27,18 @@ namespace TM_Comms_WPF.WindowViews
             }
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            ((EthernetSlaveViewModel)DataContext).ViewClosing();
-        }
+        //private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        //{
+        //    ((EthernetSlaveViewModel)DataContext).ViewClosing();
+        //}
 
-        private void Window_Activated(object sender, System.EventArgs e)
-        {
-            if (!CheckOnScreen.IsOnScreen(this))
-            {
-                this.Left = Owner.Left;
-                this.Top = Owner.Top + Owner.ActualHeight;
-            }
-        }
+        //private void Window_Activated(object sender, System.EventArgs e)
+        //{
+        //    if (!CheckOnScreen.IsOnScreen(this))
+        //    {
+        //        this.Left = Owner.Left;
+        //        this.Top = Owner.Top + Owner.ActualHeight;
+        //    }
+        //}
     }
 }

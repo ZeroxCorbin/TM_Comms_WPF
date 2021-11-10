@@ -3,41 +3,54 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:windowviewmodels="clr-namespace:TM_Comms_WPF.WindowViewModels"
+        xmlns:WindowViewModels="clr-namespace:TM_Comms_WPF.WindowViewModels"
+        xmlns:WindowViews="clr-namespace:TM_Comms_WPF.WindowViews"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-        d:DataContext="{d:DesignInstance Type=windowviewmodels:MainWindowViewModel}"
+        d:DataContext="{d:DesignInstance Type=WindowViewModels:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="{Binding Title, Mode=OneWay}"
         Left="{Binding Left, Mode=TwoWay}"
-        Top="{Binding Top, Mode=TwoWay}"
-        ResizeMode="NoResize" SizeToContent="WidthAndHeight" Closing="Window_Closing" Activated="Window_Activated">
+        Top="{Binding Top, Mode=TwoWay}">
     <mah:MetroWindow.DataContext>
-        <windowviewmodels:MainWindowViewModel/>
+        <WindowViewModels:MainWindowViewModel/>
     </mah:MetroWindow.DataContext>
-    <mah:MetroWindow.Resources>
-        <Style x:Key="dgStyleModbus" TargetType="{x:Type DataGrid}">
-            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-            <Setter Property="BorderBrush" Value="#FF688CAF"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="RowDetailsVisibilityMode" Value="VisibleWhenSelected"/>
-            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-            <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
-            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
-            <Style.Triggers>
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsGrouping" Value="true"/>
-                        <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
-                    </MultiTrigger.Conditions>
-                    <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
-                </MultiTrigger>
-            </Style.Triggers>
-        </Style>
-    </mah:MetroWindow.Resources>
+
     <Grid>
-        <Border Margin="5" Padding="10" VerticalAlignment="Top" BorderThickness="1" BorderBrush="Black" CornerRadius="10">
+        <mah:MetroTabControl>
+            <mah:MetroTabItem >
+                <mah:MetroTabItem.Header>
+                    <Grid>
+                        <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
+
+                            <StackPanel>
+                                <Label Content="Robot IP Address" HorizontalContentAlignment="Center"/>
+                                <TextBox Text="{Binding RobotIPAddress}" 
+                                         mah:TextBoxHelper.Watermark="Enter IP Address"
+                                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="System Version" HorizontalContentAlignment="Center"/>
+                                <ComboBox ItemsSource="{Binding Versions}" SelectedItem="{Binding SelectedVersion}"  IsReadOnly="True"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </mah:MetroTabItem.Header>
+            </mah:MetroTabItem>
+            <mah:MetroTabItem Header="Modbus">
+                <WindowViews:ModbusWindow/>
+            </mah:MetroTabItem>
+            <mah:MetroTabItem Header="Ethernet Slave">
+                <WindowViews:EthernetSlaveWindow/>
+            </mah:MetroTabItem>
+            <mah:MetroTabItem Header="Listen Node">
+                <WindowViews:ListenNodeWindow/>
+            </mah:MetroTabItem>
+            <mah:MetroTabItem Header="External Vision">
+                <WindowViews:ExternalVisionWindow/>
+            </mah:MetroTabItem>
+        </mah:MetroTabControl>
+        <!--<Border Margin="5" Padding="10" VerticalAlignment="Top" BorderThickness="1" BorderBrush="Black" CornerRadius="10">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -66,7 +79,7 @@
                 </StackPanel>
             </Grid>
 
-        </Border>
+        </Border>-->
 
     </Grid>
 </mah:MetroWindow>

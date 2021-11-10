@@ -18,12 +18,12 @@ namespace TM_Comms_WPF.WindowViewModels
     public class ModbusViewModel : BaseViewModel
     {
 
-        public string Title => "Modbus TCP";
-        public double Left { get => App.Settings.ModbusWindow.Left; set { App.Settings.ModbusWindow.Left = value; OnPropertyChanged(); } }
-        public double Top { get => App.Settings.ModbusWindow.Top; set { App.Settings.ModbusWindow.Top = value; OnPropertyChanged(); } }
-        public double Width { get => App.Settings.ModbusWindow.Width; set { App.Settings.ModbusWindow.Width = value; OnPropertyChanged(); } }
-        public double Height { get => App.Settings.ModbusWindow.Height; set { App.Settings.ModbusWindow.Height = value; OnPropertyChanged(); } }
-        public WindowState WindowState { get => App.Settings.ModbusWindow.WindowState; set { App.Settings.ModbusWindow.WindowState = value; OnPropertyChanged(); } }
+        //public string Title => "Modbus TCP";
+        //public double Left { get => App.Settings.ModbusWindow.Left; set { App.Settings.ModbusWindow.Left = value; OnPropertyChanged(); } }
+        //public double Top { get => App.Settings.ModbusWindow.Top; set { App.Settings.ModbusWindow.Top = value; OnPropertyChanged(); } }
+        //public double Width { get => App.Settings.ModbusWindow.Width; set { App.Settings.ModbusWindow.Width = value; OnPropertyChanged(); } }
+        //public double Height { get => App.Settings.ModbusWindow.Height; set { App.Settings.ModbusWindow.Height = value; OnPropertyChanged(); } }
+        //public WindowState WindowState { get => App.Settings.ModbusWindow.WindowState; set { App.Settings.ModbusWindow.WindowState = value; OnPropertyChanged(); } }
 
         public PendantControlViewModel Pendant { get; } = new PendantControlViewModel();
 

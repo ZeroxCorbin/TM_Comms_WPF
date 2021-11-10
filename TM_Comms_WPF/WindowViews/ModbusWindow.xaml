@@ -1,4 +1,4 @@
-﻿<mah:MetroWindow x:Class="TM_Comms_WPF.WindowViews.ModbusWindow"
+﻿<mah:MetroContentControl x:Class="TM_Comms_WPF.WindowViews.ModbusWindow"
         xmlns:controlview="clr-namespace:TM_Comms_WPF.ControlViews"
         xmlns:windowviewmodels="clr-namespace:TM_Comms_WPF.WindowViewModels"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -8,23 +8,18 @@
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         d:DataContext="{d:DesignInstance Type=windowviewmodels:ModbusViewModel}"
-        mc:Ignorable="d"
-        Title="{Binding Title, Mode=OneWay}"
-        Left="{Binding Left, Mode=TwoWay}"
-        Top="{Binding Top, Mode=TwoWay}"
-        WindowState="{Binding WindowState, Mode=TwoWay}"
-        Icon="../Support/favicon.ico" Height="647" Width="869" Closing="Window_Closing" Activated="Window_Activated">
-    <mah:MetroWindow.DataContext>
+        mc:Ignorable="d">
+    <mah:MetroContentControl.DataContext>
         <windowviewmodels:ModbusViewModel/>
-    </mah:MetroWindow.DataContext>
-    <mah:MetroWindow.Resources>
+    </mah:MetroContentControl.DataContext>
+    <mah:MetroContentControl.Resources>
         
         <LinearGradientBrush x:Key="Header" EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="{DynamicResource MahApps.Colors.AccentBase}" Offset="0"/>
             <GradientStop Color="{DynamicResource MahApps.Colors.ThemeBackground}" Offset="0.3"/>
         </LinearGradientBrush>
         
-    </mah:MetroWindow.Resources>
+    </mah:MetroContentControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -43,8 +38,8 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Content="Modbus TCP" 
-                       Background="{StaticResource Header}" FontSize="18" HorizontalContentAlignment="Center"/>
+                <!--<Label Grid.Row="0" Content="Modbus TCP" 
+                       Background="{StaticResource Header}" FontSize="18" HorizontalContentAlignment="Center"/>-->
                 <Button Grid.Row="1" Command="{Binding ConnectCommand}" Content="{Binding ConnectButtonText}" Width="90" Height="28" BorderBrush="{x:Null}" />
                 <controlview:PendantControl Grid.Row="2" Grid.Column="0" DataContext="{Binding Pendant}"/>
             </Grid>
@@ -191,4 +186,4 @@
 
 
     </Grid>
-</mah:MetroWindow>
+</mah:MetroContentControl>

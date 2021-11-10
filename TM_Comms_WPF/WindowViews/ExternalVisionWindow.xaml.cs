@@ -19,21 +19,17 @@ using static TM_Comms.ExternalDetection;
 namespace TM_Comms_WPF.WindowViews
 {
 
-    public partial class ExternalVisionWindow : MetroWindow
+    public partial class ExternalVisionWindow : MetroContentControl
     {
         HttpListener HttpListener = new HttpListener();
         DetectionResponse DetectionResponse;
 
 
-        public ExternalVisionWindow(Window owner)
+        public ExternalVisionWindow()
         {
-            //ThemeManager.Current.ThemeChanged += Current_ThemeChanged;
-            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
-            ThemeManager.Current.SyncTheme();
 
             InitializeComponent();
-     
-            Owner = owner;
+
             DataContext = App.Settings;
           
             AddNewAnnotation();
@@ -225,14 +221,6 @@ namespace TM_Comms_WPF.WindowViews
                 HttpListener.Stop();
         }
 
-        private void Window_Activated(object sender, System.EventArgs e)
-        {
-            if (!CheckOnScreen.IsOnScreen(this))
-            {
-                this.Left = Owner.Left;
-                this.Top = Owner.Top + Owner.ActualHeight;
-            }
-        }
 
         private void BtnStartListener_Click(object sender, RoutedEventArgs e)
         {

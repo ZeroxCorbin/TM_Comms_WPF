@@ -15,7 +15,7 @@ using static TM_Comms.MotionScriptBuilder;
 
 namespace TM_Comms_WPF.WindowViews
 {
-    public partial class ListenNodeWindow : MahApps.Metro.Controls.MetroWindow
+    public partial class ListenNodeWindow : MahApps.Metro.Controls.MetroContentControl
     {
 
         //private ListenNode ListenNode { get; set; }
@@ -25,17 +25,11 @@ namespace TM_Comms_WPF.WindowViews
         //private string PositionRequest { get; set; } = null;
 
         //Public
-        public ListenNodeWindow(Window owner)
+        public ListenNodeWindow()
         {
-            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
-            ThemeManager.Current.SyncTheme();
-
-            Owner = owner;
 
             InitializeComponent();
 
-            _ = SetBinding(WidthProperty, new Binding("Width") { Source = DataContext, Mode = BindingMode.TwoWay });
-            _ = SetBinding(HeightProperty, new Binding("Height") { Source = DataContext, Mode = BindingMode.TwoWay });
 
             //Window_LoadSettings();
 
@@ -64,14 +58,14 @@ namespace TM_Comms_WPF.WindowViews
             ((ListenNodeViewModel)DataContext).DeleteMoveStep(e.Data.GetData(typeof(ListBoxItem)));
         }
 
-        private void Window_Activated(object sender, System.EventArgs e)
-        {
-            if (!CheckOnScreen.IsOnScreen(this))
-            {
-                this.Left = Owner.Left;
-                this.Top = Owner.Top + Owner.ActualHeight;
-            }
-        }
+        //private void Window_Activated(object sender, System.EventArgs e)
+        //{
+        //    if (!CheckOnScreen.IsOnScreen(this))
+        //    {
+        //        this.Left = Owner.Left;
+        //        this.Top = Owner.Top + Owner.ActualHeight;
+        //    }
+        //}
 
         //private void Window_LoadSettings()
         //{

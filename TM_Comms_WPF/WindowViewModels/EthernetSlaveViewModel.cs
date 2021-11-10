@@ -25,12 +25,12 @@ namespace TM_Comms_WPF.WindowViewModels
     public class EthernetSlaveViewModel : BaseViewModel
     {
 
-        public string Title => "Ethernet Slave";
-        public double Left { get => App.Settings.EthernetSlaveWindow.Left; set { App.Settings.EthernetSlaveWindow.Left = value; OnPropertyChanged(); } }
-        public double Top { get => App.Settings.EthernetSlaveWindow.Top; set { App.Settings.EthernetSlaveWindow.Top = value; OnPropertyChanged(); } }
-        public double Width { get => App.Settings.EthernetSlaveWindow.Width; set { App.Settings.EthernetSlaveWindow.Width = value; OnPropertyChanged(); } }
-        public double Height { get => App.Settings.EthernetSlaveWindow.Height; set { App.Settings.EthernetSlaveWindow.Height = value; OnPropertyChanged(); } }
-        public WindowState WindowState { get => App.Settings.EthernetSlaveWindow.WindowState; set { App.Settings.EthernetSlaveWindow.WindowState = value; OnPropertyChanged(); } }
+        //public string Title => "Ethernet Slave";
+        //public double Left { get => App.Settings.EthernetSlaveWindow.Left; set { App.Settings.EthernetSlaveWindow.Left = value; OnPropertyChanged(); } }
+        //public double Top { get => App.Settings.EthernetSlaveWindow.Top; set { App.Settings.EthernetSlaveWindow.Top = value; OnPropertyChanged(); } }
+        //public double Width { get => App.Settings.EthernetSlaveWindow.Width; set { App.Settings.EthernetSlaveWindow.Width = value; OnPropertyChanged(); } }
+        //public double Height { get => App.Settings.EthernetSlaveWindow.Height; set { App.Settings.EthernetSlaveWindow.Height = value; OnPropertyChanged(); } }
+        //public WindowState WindowState { get => App.Settings.EthernetSlaveWindow.WindowState; set { App.Settings.EthernetSlaveWindow.WindowState = value; OnPropertyChanged(); } }
 
 
         private SocketManager Socket { get; }

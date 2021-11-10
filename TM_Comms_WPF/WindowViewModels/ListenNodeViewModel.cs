@@ -22,12 +22,12 @@ namespace TM_Comms_WPF.WindowViewModels
     public class ListenNodeViewModel : BaseViewModel
     {
 
-        public string Title => "Listen Node";
-        public double Left { get => App.Settings.ListenNodeWindow.Left; set { App.Settings.ListenNodeWindow.Left = value; OnPropertyChanged(); } }
-        public double Top { get => App.Settings.ListenNodeWindow.Top; set { App.Settings.ListenNodeWindow.Top = value; OnPropertyChanged(); } }
-        public double Width { get => App.Settings.ListenNodeWindow.Width; set { App.Settings.ListenNodeWindow.Width = value; OnPropertyChanged(); } }
-        public double Height { get => App.Settings.ListenNodeWindow.Height; set { App.Settings.ListenNodeWindow.Height = value; OnPropertyChanged(); } }
-        public WindowState WindowState { get => App.Settings.ListenNodeWindow.WindowState; set { App.Settings.ListenNodeWindow.WindowState = value; OnPropertyChanged(); } }
+        //public string Title => "Listen Node";
+        //public double Left { get => App.Settings.ListenNodeWindow.Left; set { App.Settings.ListenNodeWindow.Left = value; OnPropertyChanged(); } }
+        //public double Top { get => App.Settings.ListenNodeWindow.Top; set { App.Settings.ListenNodeWindow.Top = value; OnPropertyChanged(); } }
+        //public double Width { get => App.Settings.ListenNodeWindow.Width; set { App.Settings.ListenNodeWindow.Width = value; OnPropertyChanged(); } }
+        //public double Height { get => App.Settings.ListenNodeWindow.Height; set { App.Settings.ListenNodeWindow.Height = value; OnPropertyChanged(); } }
+        //public WindowState WindowState { get => App.Settings.ListenNodeWindow.WindowState; set { App.Settings.ListenNodeWindow.WindowState = value; OnPropertyChanged(); } }
 
         public string ConnectionString { get => $"{App.Settings.RobotIP}:5890"; }
         public string ConnectButtonText { get => connectButtonText; set => SetProperty(ref connectButtonText, value); }

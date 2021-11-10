@@ -1,4 +1,4 @@
-﻿<mah:MetroWindow x:Class="TM_Comms_WPF.WindowViews.ExternalVisionWindow"
+﻿<mah:MetroContentControl x:Class="TM_Comms_WPF.WindowViews.ExternalVisionWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,14 +6,8 @@
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:local="clr-namespace:TM_Comms_WPF"
-        mc:Ignorable="d"
-        Title="External Vision" Closing="Window_Closing"
-        Width="{Binding ExternalVisionWindow.Width, Mode=TwoWay}"
-        Height="{Binding ExternalVisionWindow.Height, Mode=TwoWay}"
-        Left="{Binding ExternalVisionWindow.Left, Mode=TwoWay}"
-        Top="{Binding ExternalVisionWindow.Top, Mode=TwoWay}"
-        WindowState="{Binding ExternalVisionWindow.WindowState, Mode=TwoWay}" Icon="../Support/favicon.ico" Activated="Window_Activated">
-    <mah:MetroWindow.Resources>
+        mc:Ignorable="d">
+    <mah:MetroContentControl.Resources>
         <LinearGradientBrush x:Key="Header" EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="{DynamicResource MahApps.Colors.AccentBase}" Offset="0"/>
             <GradientStop Color="{DynamicResource MahApps.Colors.ThemeBackground}" Offset="0.3"/>
@@ -42,7 +36,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-    </mah:MetroWindow.Resources>
+    </mah:MetroContentControl.Resources>
     <Grid>
 
         <Grid.RowDefinitions>
@@ -195,4 +189,4 @@
             </Border>
         </Grid>
     </Grid>
-</mah:MetroWindow>
+</mah:MetroContentControl>

@@ -1,30 +1,26 @@
-﻿<mah:MetroWindow x:Class="TM_Comms_WPF.WindowViews.ListenNodeWindow"
+﻿<mah:MetroContentControl x:Class="TM_Comms_WPF.WindowViews.ListenNodeWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ControlViews="clr-namespace:TM_Comms_WPF.ControlViews"
-        xmlns:windowviewmodels="clr-namespace:TM_Comms_WPF.WindowViewModels"
+        xmlns:WindowViewModels="clr-namespace:TM_Comms_WPF.WindowViewModels"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-        d:DataContext="{d:DesignInstance Type=windowviewmodels:ListenNodeViewModel}"
-        mc:Ignorable="d"
-        Title="{Binding Title, Mode=OneWay}"
-        Left="{Binding Left, Mode=TwoWay}"
-        Top="{Binding Top, Mode=TwoWay}"
-        WindowState="{Binding WindowState, Mode=TwoWay}" Height="727" Width="1074" Closing="Window_Closing" Activated="Window_Activated">
-    <mah:MetroWindow.DataContext>
-        <windowviewmodels:ListenNodeViewModel/>
-    </mah:MetroWindow.DataContext>
+        d:DataContext="{d:DesignInstance Type=WindowViewModels:ListenNodeViewModel}"
+        mc:Ignorable="d">
+    <mah:MetroContentControl.DataContext>
+        <WindowViewModels:ListenNodeViewModel/>
+    </mah:MetroContentControl.DataContext>
 
-    <mah:MetroWindow.Resources>
+    <mah:MetroContentControl.Resources>
 
         <LinearGradientBrush x:Key="Header" EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="{DynamicResource MahApps.Colors.AccentBase}" Offset="0"/>
             <GradientStop Color="{DynamicResource MahApps.Colors.ThemeBackground}" Offset="0.3"/>
         </LinearGradientBrush>
 
-    </mah:MetroWindow.Resources>
+    </mah:MetroContentControl.Resources>
     
     <Grid>
         <Grid.ColumnDefinitions>
@@ -45,8 +41,8 @@
                     <RowDefinition Height="34"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Content="Listen Node"
-                       Background="{StaticResource Header}" FontSize="18" HorizontalContentAlignment="Center"/>
+                <!--<Label Grid.Row="0" Content="Listen Node"
+                       Background="{StaticResource Header}" FontSize="18" HorizontalContentAlignment="Center"/>-->
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
 
@@ -257,4 +253,4 @@
         </Border>
 
     </Grid>
-</mah:MetroWindow>
+</mah:MetroContentControl>

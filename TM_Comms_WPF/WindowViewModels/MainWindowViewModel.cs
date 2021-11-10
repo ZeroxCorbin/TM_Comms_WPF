@@ -12,10 +12,28 @@ namespace TM_Comms_WPF.WindowViewModels
         public string Title => "TM Comms";
         public double Left { get => App.Settings.MainWindow.Left; set { App.Settings.MainWindow.Left = value; OnPropertyChanged(); } }
         public double Top { get => App.Settings.MainWindow.Top; set { App.Settings.MainWindow.Top = value; OnPropertyChanged(); } }
-        //public double Width { get => App.Settings.ListenNodeWindow.Width; set { App.Settings.ListenNodeWindow.Width = value; OnPropertyChanged(); } }
-        //public double Height { get => App.Settings.ListenNodeWindow.Height; set { App.Settings.ListenNodeWindow.Height = value; OnPropertyChanged(); } }
-        //public WindowState WindowState { get => App.Settings.ListenNodeWindow.WindowState; set { App.Settings.ListenNodeWindow.WindowState = value; OnPropertyChanged(); } }
+        public WindowState WindowState { get => App.Settings.MainWindow.WindowState; set { App.Settings.MainWindow.WindowState = value; OnPropertyChanged(); } }
 
+        public string RobotIPAddress
+        {
+            get { return App.Settings.RobotIP; }
+            set { App.Settings.RobotIP = value; }
+        }
+
+        public TM_Comms.TMflowVersions SelectedVersion
+        {
+            get { return App.Settings.Version; }
+            set { App.Settings.Version = value; }
+        }
+
+        public IEnumerable<TM_Comms.TMflowVersions> Versions
+        {
+            get
+            {
+                return Enum.GetValues(typeof(TM_Comms.TMflowVersions))
+                    .Cast<TM_Comms.TMflowVersions>();
+            }
+        }
 
     }
 }
