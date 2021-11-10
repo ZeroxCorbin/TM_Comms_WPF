@@ -139,7 +139,7 @@
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Grid.Column="4" Grid.Row="0"
+                                    <Button Grid.Column="4" Grid.Row="0" Dialog:DialogParticipation.Register="{Binding}"
                                         Command="{Binding EditItemCommand}"
                                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                                         Visibility="{Binding IsWritable}"

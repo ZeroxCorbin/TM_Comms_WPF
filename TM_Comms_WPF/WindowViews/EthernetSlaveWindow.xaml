@@ -76,13 +76,13 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" Grid.Column="0" Content="Message Header" Padding="5,3"  HorizontalContentAlignment="Center"/>
-                    <ComboBox Grid.Row="1" Grid.Column="0" SelectedItem="{Binding MessageHeader}" IsReadOnly="True" SelectedIndex="0">
+                    <ComboBox Grid.Row="1" Grid.Column="0" SelectedItem="{Binding MessageHeader, Mode=OneWayToSource}" SelectedIndex="0" IsReadOnly="True">
                         <ComboBoxItem Content="TMSVR" Tag="0"/>
                     </ComboBox>
                     <Label Grid.Row="0" Grid.Column="1" Content="Transaction ID" Padding="5,3"  HorizontalContentAlignment="Center" />
                     <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding TransactionID}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#19FFFF00"/>
                     <Label Grid.Row="0" Grid.Column="2" Content="Message Format" Padding="5,3"  HorizontalContentAlignment="Center"/>
-                    <ComboBox Grid.Row="1" Grid.Column="2" SelectedItem="{Binding MessageFormat}" IsReadOnly="True" SelectedIndex="0">
+                    <ComboBox Grid.Row="1" Grid.Column="2" SelectedItem="{Binding MessageFormat, Mode=OneWayToSource}" SelectedIndex="0" IsReadOnly="True">
                         <ComboBoxItem Content="STRING" Tag="2"/>
                         <ComboBoxItem Content="JSON" Tag="3"/>
                     </ComboBox>

@@ -51,7 +51,9 @@ namespace TM_Comms_WPF.WindowViewModels
         public ICommand ClosingCommand { get; }
         private void ClosingCallback(object parameter)
         {
-
+            Modbus.ViewClosing();
+            EthernetSlave.ViewClosing();
+            ListenNode.ViewClosing();
         }
         public string RobotIPAddress
         {

@@ -90,7 +90,7 @@ namespace TM_Comms_WPF.WindowViewModels
             string result;
             if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Coil)
             {
-                if (!string.IsNullOrEmpty(result = await ShowInputDialog("Boolean", "Enter 'true' or 'false'.", this.Value)))
+                if (!string.IsNullOrEmpty(result = await ShowInputDialog(Name, "Enter 'true' or 'false'.", this.Value)))
                 {
                     if (bool.TryParse(result, out bool res))
                     {
@@ -101,54 +101,54 @@ namespace TM_Comms_WPF.WindowViewModels
                         _ = ShowOkDialog("Parse error!",$"Could not parse value: {result}");
                 }
             }
-            //else if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Int16)
-            //{
-            //    if ((result = DialogService.EditValueDialog(new DialogParameters() { Title = "Int16", Value = this.Value }, parameter as Window)).Result == DialogResult.Ok)
-            //    {
-            //        if (Int16.TryParse(result.Value, out short res))
-            //        {
-            //            if (!ModbusTCP.SetInt16(ModbusValue.Addr, new Int16[] { res }))
-            //                DialogService.OkDialog(new DialogParameters() { Title = "Modbus write error!", Message = $"Could not write value: {res} to: {ModbusValue.Addr}" }, parameter as Window);
-            //        }
-            //        else
-            //            DialogService.OkDialog(new DialogParameters() { Title = "Parse error!", Message = $"Could not parse value: {result.Value}" }, parameter as Window);
-            //    }
-            //}
-            //else if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Int32)
-            //{
-            //    if ((result = DialogService.EditValueDialog(new DialogParameters() { Title = "Int32", Value = this.Value }, parameter as Window)).Result == DialogResult.Ok)
-            //    {
-            //        if (Int32.TryParse(result.Value, out int res))
-            //        {
-            //            if (!ModbusTCP.SetInt32(ModbusValue.Addr, new Int32[] { res }))
-            //                DialogService.OkDialog(new DialogParameters() { Title = "Modbus write error!", Message = $"Could not write value: {res} to: {ModbusValue.Addr}" }, parameter as Window);
-            //        }
-            //        else
-            //            DialogService.OkDialog(new DialogParameters() { Title = "Parse error!", Message = $"Could not parse value: {result.Value}" }, parameter as Window);
-            //    }
-            //}
-            //else if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Float)
-            //{
-            //    if ((result = DialogService.EditValueDialog(new DialogParameters() { Title = "Float", Value = this.Value }, parameter as Window)).Result == DialogResult.Ok)
-            //    {
-            //        if (float.TryParse(result.Value, out float res))
-            //        {
-            //            if (!ModbusTCP.SetFloat(ModbusValue.Addr, new float[] { res }))
-            //                DialogService.OkDialog(new DialogParameters() { Title = "Modbus write error!", Message = $"Could not write value: {res} to: {ModbusValue.Addr}" }, parameter as Window);
-            //        }
-            //        else
-            //            DialogService.OkDialog(new DialogParameters() { Title = "Parse error!", Message = $"Could not parse value: {result.Value}" }, parameter as Window);
-            //    }
-            //}
-            //else if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.String)
-            //{
-            //    if ((result = DialogService.EditValueDialog(new DialogParameters() { Title = "String", Value = this.Value }, parameter as Window)).Result == DialogResult.Ok)
-            //    {
+            else if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Int16)
+            {
+                if (!string.IsNullOrEmpty(result = await ShowInputDialog(Name, $"Enter a value.", this.Value)))
+                {
+                    if (Int16.TryParse(result, out short res))
+                    {
+                        if (!ModbusTCP.SetInt16(ModbusValue.Addr, new Int16[] { res }))
+                            _ = ShowOkDialog("Modbus write error!", $"Could not write value: {res} to: {ModbusValue.Addr}");
+                    }
+                    else
+                        _ = ShowOkDialog("Parse error!", $"Could not parse value: {result}");
+                }
+            }
+            else if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Int32)
+            {
+                if (!string.IsNullOrEmpty(result = await ShowInputDialog(Name, $"Enter a value.", this.Value)))
+                {
+                    if (Int32.TryParse(result, out int res))
+                    {
+                        if (!ModbusTCP.SetInt32(ModbusValue.Addr, new Int32[] { res }))
+                            _ = ShowOkDialog("Modbus write error!", $"Could not write value: {res} to: {ModbusValue.Addr}");
+                    }
+                    else
+                        _ = ShowOkDialog("Parse error!", $"Could not parse value: {result}");
+                }
+            }
+            else if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.Float)
+            {
+                if (!string.IsNullOrEmpty(result = await ShowInputDialog(Name, $"Enter a value.", this.Value)))
+                {
+                    if (float.TryParse(result, out float res))
+                    {
+                        if (!ModbusTCP.SetFloat(ModbusValue.Addr, new float[] { res }))
+                            _ = ShowOkDialog("Modbus write error!", $"Could not write value: {res} to: {ModbusValue.Addr}");
+                    }
+                    else
+                        _ = ShowOkDialog("Parse error!", $"Could not parse value: {result}");
+                }
+            }
+            else if (ModbusValue.Type == TM_Comms.ModbusDictionary.MobusValue.DataTypes.String)
+            {
+                if (!string.IsNullOrEmpty(result = await ShowInputDialog(Name, $"Enter a value.", this.Value)))
+                {
 
-            //        if (!ModbusTCP.SetString(ModbusValue.Addr, result.Value))
-            //            DialogService.OkDialog(new DialogParameters() { Title = "Modbus write error!", Message = $"Could not write value: {result.Value} to: {ModbusValue.Addr}" }, parameter as Window);
-            //    }
-            //}
+                    if (!ModbusTCP.SetString(ModbusValue.Addr, result))
+                        _ = ShowOkDialog("Modbus write error!", $"Could not write value: {result} to: {ModbusValue.Addr}");
+                }
+            }
 
 
             //DialogResultData result = DialogService.EditValueDialog(param, parameter as Window);

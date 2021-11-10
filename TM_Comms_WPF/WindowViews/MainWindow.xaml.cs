@@ -16,13 +16,15 @@ namespace TM_Comms_WPF
     public partial class MainWindow : MetroWindow
     {
         public MainWindow()
-        {
+        {   
+
             InitializeComponent();
 
             DataContext = new MainWindowViewModel();
             Modbus.DataContext = ((MainWindowViewModel)DataContext).Modbus;
             EthernetSlave.DataContext = ((MainWindowViewModel)DataContext).EthernetSlave;
             ListenNode.DataContext = ((MainWindowViewModel)DataContext).ListenNode;
+
             //CmbSystemVersions.ItemsSource = Enum.GetValues(typeof(TMflowVersions));
             //CmbSystemVersions.SelectedItem = App.Settings.Version;
 
@@ -55,6 +57,12 @@ namespace TM_Comms_WPF
         private void btnDarkTheme_Click(object sender, RoutedEventArgs e) => ThemeManager.Current.ChangeTheme(App.Current, "Dark.Steel");
 
         private void Current_ThemeChanged(object sender, ThemeChangedEventArgs e) => App.Settings.Theme = e.NewTheme.Name;
+
+        private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ((MainWindowViewModel)DataContext).ClosingCommand.Execute(this);
+
+        }
 
         //private void Window_Loaded(object sender, RoutedEventArgs e)
         //{
