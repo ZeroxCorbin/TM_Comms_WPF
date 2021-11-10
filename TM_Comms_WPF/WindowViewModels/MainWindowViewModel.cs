@@ -29,6 +29,16 @@ namespace TM_Comms_WPF.WindowViewModels
         public ModbusViewModel Modbus { get; set; } = new ModbusViewModel();
         public ListenNodeViewModel ListenNode { get; set; } = new ListenNodeViewModel();
 
+        public int SelectedTabIndex 
+        { 
+            get => _SelectedTabIndex;
+            set 
+            { 
+                SetProperty(ref _SelectedTabIndex, value);
+            }
+        }
+        private int _SelectedTabIndex;
+
         public MainWindowViewModel()
         {
             ClosingCommand = new RelayCommand(ClosingCallback, c => true);
@@ -91,7 +101,6 @@ namespace TM_Comms_WPF.WindowViewModels
             EthernetSlave.Reload();
             Modbus.Reload();
             ListenNode.Reload();
-            
         }
 
         public IEnumerable<TM_Comms.TMflowVersions> Versions

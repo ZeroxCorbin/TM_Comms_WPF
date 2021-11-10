@@ -3,10 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:WindowViewModels="clr-namespace:TM_Comms_WPF.WindowViewModels"
-        xmlns:WindowViews="clr-namespace:TM_Comms_WPF.WindowViews"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:WindowViewModels="clr-namespace:TM_Comms_WPF.WindowViewModels"
+        xmlns:WindowViews="clr-namespace:TM_Comms_WPF.WindowViews"
+        xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+        Dialog:DialogParticipation.Register="{Binding}"
         d:DataContext="{d:DesignInstance Type=WindowViewModels:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="{Binding Title, Mode=OneWay}"
@@ -18,9 +20,30 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
 
     </mah:MetroWindow.Resources>
+    <mah:MetroWindow.RightWindowCommands>
+        <mah:WindowCommands>>
+
+            <Button BorderThickness="0" 
+                        x:Name="btnLightTheme"
+                        Click="btnLightTheme_Click">
+                <Button.Content>
+                    <IconPacks:PackIconModern Width="20" Height="20" Kind="WeatherSun"/>
+                </Button.Content>
+
+            </Button>
+
+            <Button BorderThickness="0" 
+                        x:Name="btnDarkTheme"
+                        Click="btnDarkTheme_Click">
+                <Button.Content>
+                    <IconPacks:PackIconModern Width="20" Height="20" Kind="MoonWaningCrescent"/>
+                </Button.Content>
+            </Button>
+        </mah:WindowCommands>
+    </mah:MetroWindow.RightWindowCommands>
     <Grid>
-        <mah:MetroTabControl>
-            <mah:MetroTabItem >
+        <mah:MetroTabControl SelectedIndex="{Binding SelectedTabIndex}">
+            <mah:MetroTabItem IsSelected="False">
                 <mah:MetroTabItem.Header>
                     <Grid>
                         <StackPanel VerticalAlignment="Top" Orientation="Horizontal">

@@ -157,9 +157,13 @@ namespace TM_Comms_WPF
             //GetData d = new GetData();
             base.OnStartup(e);
 
-            ThemeManager.Current.ChangeTheme(this, Settings.Theme);
-        }
+            ThemeManager.Current.ChangeTheme(Current, Settings.Theme);
 
+            ThemeManager.Current.ThemeChanged += Current_ThemeChanged;
+            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
+            
+        }
+        private void Current_ThemeChanged(object sender, ThemeChangedEventArgs e) => Settings.Theme = e.NewTheme.Name;
         protected override void OnExit(ExitEventArgs e)
         {
             try

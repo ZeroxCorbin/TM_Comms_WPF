@@ -18,9 +18,6 @@ namespace TM_Comms_WPF
     {
         public MainWindow()
         {
-            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
-            ThemeManager.Current.SyncTheme();
-
             InitializeComponent();
 
             DataContext = new MainWindowViewModel();
@@ -53,6 +50,13 @@ namespace TM_Comms_WPF
 
            
         }
+
+        private void btnLightTheme_Click(object sender, RoutedEventArgs e) => ThemeManager.Current.ChangeTheme(App.Current, "Light.Steel");
+
+        private void btnDarkTheme_Click(object sender, RoutedEventArgs e) => ThemeManager.Current.ChangeTheme(App.Current, "Dark.Steel");
+
+        private void Current_ThemeChanged(object sender, ThemeChangedEventArgs e) => App.Settings.Theme = e.NewTheme.Name;
+
         //private void Window_Loaded(object sender, RoutedEventArgs e)
         //{
         //    if (WindowStartupLocation == WindowStartupLocation.CenterScreen)
@@ -145,7 +149,7 @@ namespace TM_Comms_WPF
         //    }
         //}
 
-       // private ModbusWindow ModbusWindow { get; set; } = null;
+        // private ModbusWindow ModbusWindow { get; set; } = null;
 
 
         //private void BtnModbusWindow_Click(object sender, RoutedEventArgs e)

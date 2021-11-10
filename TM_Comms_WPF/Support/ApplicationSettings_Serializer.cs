@@ -47,44 +47,15 @@ namespace ApplicationSettingsNS
         {
             public string Theme { get; set; } = "Light.Steel";
 
-            public string RobotIP { get; set; } = "Enter a valid IP.";
+            public string RobotIP { get; set; } = "";
 
-            public TMflowVersions Version { get; set; } = TMflowVersions.V1_76_xxxx;
-            public bool Is18 { get; set; } = false;
-
-            public string[] ModbusComboBoxIndices { get; set; } = {
-                "Current Base With Tool X",
-                "Current Base With Tool Y",
-                "Current Base With Tool Z",
-                "Current Base With Tool Rx",
-                "Current Base With Tool Ry",
-                "Current Base With Tool Rz",
-                "TCP Force X",
-                "TCP Force Y",
-                "TCP Force Z",
-                "TCP Force 3D"};
-
-            public string[] ModbusUserComboBoxIndices { get; set; } = {
-                "Int16",
-                "Int16",
-                "Int16",
-                "Int16",
-                "Int16",
-                "Int16",
-                "Int16",
-                "Int16",
-                "Int16",
-                "Int16"};
+            public TMflowVersions Version { get; set; } = TMflowVersions.V1_84_xxxx;
 
             public string ExternalVisionWindow_ListenAddress { get; set; } = "*";
             public int ExternalVisionWindow_ListenPort { get; set; } = 8080;
 
             public WindowSettings MainWindow { get; set; } = new WindowSettings();
-            public WindowSettings ModbusWindow { get; set; } = new WindowSettings();
-            public WindowSettings ListenNodeWindow { get; set; } = new WindowSettings();
-            public WindowSettings EthernetSlaveWindow { get; set; } = new WindowSettings();
             public WindowSettings Port8080Window { get; set; } = new WindowSettings();
-            public WindowSettings ExternalVisionWindow { get; set; } = new WindowSettings();
 
             public class WindowSettings : INotifyPropertyChanged
             {
