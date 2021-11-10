@@ -417,6 +417,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\AsyncSocket\AsyncSocket.csproj">
+      <Project>{d0980a50-af23-4569-b412-abdf197942d7}</Project>
+      <Name>AsyncSocket</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SimpleModbus\SimpleModbus.csproj">
       <Project>{0ddfaf2b-426e-4c19-a547-18e266f5dfdf}</Project>
       <Name>SimpleModbus</Name>

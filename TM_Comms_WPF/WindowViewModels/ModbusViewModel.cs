@@ -27,7 +27,7 @@ namespace TM_Comms_WPF.WindowViewModels
 
         public PendantControlViewModel Pendant { get; } = new PendantControlViewModel();
 
-        private SocketManager Socket { get; set; }
+        private AsyncSocket.ASocket Socket { get; set; }
         private SimpleModbusTCP ModbusTCP { get; set; }
 
         private bool heartbeat;
@@ -67,23 +67,13 @@ namespace TM_Comms_WPF.WindowViewModels
             Pendant.PlusEvent += Pendant_PlusEvent;
             Pendant.MinusEvent += Pendant_MinusEvent;
 
-            Socket = new SocketManager($"{App.Settings.RobotIP}:502");
-            ModbusTCP = new SimpleModbusTCP(Socket);
 
-            if (Socket.IsConnected)
-                ConnectButtonText = "Close";
-
-            Socket.ConnectState += Socket_ConnectState;
-
-            GetItems();
-
-            if (Socket.IsConnected && !IsRunning)
-                ThreadPool.QueueUserWorkItem(new WaitCallback(AsyncRecieveThread_DoWork));
+            Reload();
         }
 
         public void ViewClosing()
         {
-            Socket.StopReceiveAsync();
+            //Socket.StopReceiveAsync();
             Socket.Close();
         }
 
@@ -92,8 +82,24 @@ namespace TM_Comms_WPF.WindowViewModels
         private void Pendant_PlusEvent() => ModbusTCP.WriteSingleCoil(ModbusDictionary.ModbusData[App.Settings.Version]["Stick+"].Addr, true);
         private void Pendant_MinusEvent() => ModbusTCP.WriteSingleCoil(ModbusDictionary.ModbusData[App.Settings.Version]["Stick-"].Addr, true);
 
-        private void GetItems()
+        private void Reload()
         {
+            if(Socket == null)
+            {
+                Socket = new AsyncSocket.ASocket();
+                ModbusTCP = new SimpleModbusTCP(Socket);
+
+                Socket.ConnectEvent += Socket_ConnectEvent;
+                Socket.CloseEvent += Socket_CloseEvent;
+                Socket.ExceptionEvent += Socket_ExceptionEvent;
+            }
+
+            if (Socket.IsConnected)
+                ConnectAction(new object());
+
+            Items.Clear();
+            UserItems.Clear();
+
             foreach (var kv in ModbusDictionary.ModbusData[App.Settings.Version])
                 Items.Add(new ModbusItemViewModel(kv.Key, kv.Value, ModbusTCP));
 
@@ -103,11 +109,36 @@ namespace TM_Comms_WPF.WindowViewModels
             }
         }
 
+        private void Socket_ExceptionEvent(object sender, EventArgs e)
+        {
+            ConnectMessage = ((Exception)sender).Message;
+        }
+
+        private void Socket_CloseEvent(object sender, EventArgs e)
+        {
+            Cancel = true;
+            while (isRunning)
+                Thread.Sleep(1);
+
+            ConnectButtonText = "Connect";
+            Heartbeat = false;
+        }
+
+        private void Socket_ConnectEvent(object sender, EventArgs e)
+        {
+            ConnectButtonText = "Close";
+            
+            if (!IsRunning)
+                ThreadPool.QueueUserWorkItem(new WaitCallback(AsyncRecieveThread_DoWork));
+        }
+
         private void ConnectAction(object parameter)
         {
             if (Socket.IsConnected)
             {
-                Socket.StopReceiveAsync();
+                Cancel = true;
+                while (isRunning) Thread.Sleep(1);
+
                 Socket.Close();
             }
             else
@@ -118,39 +149,40 @@ namespace TM_Comms_WPF.WindowViewModels
                 {
                     ConnectButtonText = "Trying";
 
-                    if (!Socket.Connect())
-                        ConnectMessage = Socket.IsException ? Socket.Exception.Message : "Unable to connect!";
+                    if (!Socket.Connect(App.Settings.RobotIP, 502))
+                        ConnectMessage = "Unable to connect!";
                 });
             }
         }
 
-        private void Socket_ConnectState(object sender, bool state)
-        {
-            ConnectionState = state;
+        //private void Socket_ConnectState(object sender, bool state)
+        //{
+        //    ConnectionState = state;
 
-            if (state)
-            {
-                ConnectButtonText = "Close";
+        //    if (state)
+        //    {
+        //        ConnectButtonText = "Close";
 
-                if (!IsRunning)
-                     ThreadPool.QueueUserWorkItem(new WaitCallback(AsyncRecieveThread_DoWork));
-            }
+        //        if (!IsRunning)
+        //             ThreadPool.QueueUserWorkItem(new WaitCallback(AsyncRecieveThread_DoWork));
+        //    }
 
-            else
-            {
-                Cancel = true;
-                while (isRunning) Thread.Sleep(1);
+        //    else
+        //    {
+        //        Cancel = true;
+        //        while (isRunning) Thread.Sleep(1);
 
-                ConnectButtonText = "Connect";
-                Heartbeat = false;
-            }
+        //        ConnectButtonText = "Connect";
+        //        Heartbeat = false;
+        //    }
 
-        }
+        //}
 
         private bool Cancel { get; set; } = false;
         private void AsyncRecieveThread_DoWork(object sender)
         {
             IsRunning = true;
+            Cancel = false;
 
             while (!Cancel)
             {
