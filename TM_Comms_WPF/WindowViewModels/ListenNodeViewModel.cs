@@ -19,7 +19,7 @@ using TM_Comms_WPF.ControlViews;
 
 namespace TM_Comms_WPF.WindowViewModels
 {
-    public class ListenNodeViewModel : BaseViewModel
+    public class ListenNodeViewModel : Core.BaseViewModel
     {
 
         //public string Title => "Listen Node";
@@ -94,7 +94,8 @@ namespace TM_Comms_WPF.WindowViewModels
             Socket.ExceptionEvent += Socket_ExceptionEvent;
             Socket.MessageEvent += Socket_MessageEvent;
 
-            LoadCommandTreeView();
+            Reload();
+
         }
 
         private void Socket_MessageEvent(object sender, EventArgs e)
@@ -224,8 +225,13 @@ namespace TM_Comms_WPF.WindowViewModels
 
         public string Command { get => command; set => SetProperty(ref command, value); }
         private string command;
-        private void LoadCommandTreeView()
+        public void Reload()
         {
+            if (Socket.IsConnected)
+                ConnectAction(new object());
+
+            CommandList.Clear();
+
             TreeViewItem tviParent = null;
             foreach (string cmd in ListenNode.Commands[App.Settings.Version])
             {

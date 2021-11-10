@@ -9,7 +9,7 @@ using System.Windows.Media;
 using ApplicationSettingsNS;
 using ControlzEx.Theming;
 using MahApps.Metro.Controls;
-using TM_Comms;
+using TM_Comms_WPF.WindowViewModels;
 using TM_Comms_WPF.WindowViews;
 
 namespace TM_Comms_WPF
@@ -23,6 +23,10 @@ namespace TM_Comms_WPF
 
             InitializeComponent();
 
+            DataContext = new MainWindowViewModel();
+            Modbus.DataContext = ((MainWindowViewModel)DataContext).Modbus;
+            EthernetSlave.DataContext = ((MainWindowViewModel)DataContext).EthernetSlave;
+            ListenNode.DataContext = ((MainWindowViewModel)DataContext).ListenNode;
             //CmbSystemVersions.ItemsSource = Enum.GetValues(typeof(TMflowVersions));
             //CmbSystemVersions.SelectedItem = App.Settings.Version;
 
@@ -141,7 +145,7 @@ namespace TM_Comms_WPF
         //    }
         //}
 
-        private ModbusWindow ModbusWindow { get; set; } = null;
+       // private ModbusWindow ModbusWindow { get; set; } = null;
 
 
         //private void BtnModbusWindow_Click(object sender, RoutedEventArgs e)

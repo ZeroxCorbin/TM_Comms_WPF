@@ -9,10 +9,6 @@
         xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         d:DataContext="{d:DesignInstance Type=WindowViewModels:EthernetSlaveViewModel}"
         mc:Ignorable="d">
-    
-    <mah:MetroContentControl.DataContext>
-        <WindowViewModels:EthernetSlaveViewModel/>
-    </mah:MetroContentControl.DataContext>
     <mah:MetroContentControl.Resources>
 
         <LinearGradientBrush x:Key="Header" EndPoint="0.5,1" StartPoint="0.5,0">

@@ -11,7 +11,7 @@ using TM_Comms_WPF.Dialogs.DialogService;
 
 namespace TM_Comms_WPF.WindowViewModels
 {
-    public class ModbusItemViewModel : BaseViewModel
+    public class ModbusItemViewModel : Core.BaseViewModel
     { 
 
         private SimpleModbusTCP ModbusTCP { get; }

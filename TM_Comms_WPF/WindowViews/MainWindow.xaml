@@ -12,10 +12,12 @@
         Title="{Binding Title, Mode=OneWay}"
         Left="{Binding Left, Mode=TwoWay}"
         Top="{Binding Top, Mode=TwoWay}">
-    <mah:MetroWindow.DataContext>
-        <WindowViewModels:MainWindowViewModel/>
-    </mah:MetroWindow.DataContext>
 
+    <mah:MetroWindow.Resources>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+
+    </mah:MetroWindow.Resources>
     <Grid>
         <mah:MetroTabControl>
             <mah:MetroTabItem >
@@ -38,15 +40,17 @@
                 </mah:MetroTabItem.Header>
             </mah:MetroTabItem>
             <mah:MetroTabItem Header="Modbus">
-                <WindowViews:ModbusWindow/>
+                <WindowViews:ModbusWindow x:Name="Modbus" />
             </mah:MetroTabItem>
-            <mah:MetroTabItem Header="Ethernet Slave">
-                <WindowViews:EthernetSlaveWindow/>
+            <mah:MetroTabItem Header="Ethernet Slave" 
+                              Visibility="{Binding HasEthernetSlave, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <WindowViews:EthernetSlaveWindow x:Name="EthernetSlave"/>
             </mah:MetroTabItem>
             <mah:MetroTabItem Header="Listen Node">
-                <WindowViews:ListenNodeWindow/>
+                <WindowViews:ListenNodeWindow x:Name="ListenNode"/>
             </mah:MetroTabItem>
-            <mah:MetroTabItem Header="External Vision">
+            <mah:MetroTabItem Header="External Vision"
+                              Visibility="{Binding HasExternalVision, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <WindowViews:ExternalVisionWindow/>
             </mah:MetroTabItem>
         </mah:MetroTabControl>

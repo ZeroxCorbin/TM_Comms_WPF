@@ -254,7 +254,7 @@
     <Compile Include="NIC_Adapter\AdapterWrapper.cs" />
     <Compile Include="NIC_Adapter\AdapterXMLFile.cs" />
     <Compile Include="Support\StaticUtils.cs" />
-    <Compile Include="WindowViewModels\BaseViewModel.cs" />
+    <Compile Include="Core\BaseViewModel.cs" />
     <Compile Include="WindowViewModels\EthernetSlaveViewModel.cs" />
     <Compile Include="WindowViewModels\MainWindowViewModel.cs" />
     <Compile Include="WindowViewModels\ModbusItemViewModel.cs" />

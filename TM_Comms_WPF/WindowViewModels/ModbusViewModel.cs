@@ -15,7 +15,7 @@ using TM_Comms_WPF.ControlViewModels;
 
 namespace TM_Comms_WPF.WindowViewModels
 {
-    public class ModbusViewModel : BaseViewModel
+    public class ModbusViewModel : Core.BaseViewModel
     {
 
         //public string Title => "Modbus TCP";
@@ -82,7 +82,7 @@ namespace TM_Comms_WPF.WindowViewModels
         private void Pendant_PlusEvent() => ModbusTCP.WriteSingleCoil(ModbusDictionary.ModbusData[App.Settings.Version]["Stick+"].Addr, true);
         private void Pendant_MinusEvent() => ModbusTCP.WriteSingleCoil(ModbusDictionary.ModbusData[App.Settings.Version]["Stick-"].Addr, true);
 
-        private void Reload()
+        public void Reload()
         {
             if(Socket == null)
             {

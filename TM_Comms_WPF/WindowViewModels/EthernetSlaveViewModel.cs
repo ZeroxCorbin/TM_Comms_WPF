@@ -22,17 +22,8 @@ using TM_Comms_WPF.ControlViewModels;
 
 namespace TM_Comms_WPF.WindowViewModels
 {
-    public class EthernetSlaveViewModel : BaseViewModel
+    public class EthernetSlaveViewModel : Core.BaseViewModel
     {
-
-        //public string Title => "Ethernet Slave";
-        //public double Left { get => App.Settings.EthernetSlaveWindow.Left; set { App.Settings.EthernetSlaveWindow.Left = value; OnPropertyChanged(); } }
-        //public double Top { get => App.Settings.EthernetSlaveWindow.Top; set { App.Settings.EthernetSlaveWindow.Top = value; OnPropertyChanged(); } }
-        //public double Width { get => App.Settings.EthernetSlaveWindow.Width; set { App.Settings.EthernetSlaveWindow.Width = value; OnPropertyChanged(); } }
-        //public double Height { get => App.Settings.EthernetSlaveWindow.Height; set { App.Settings.EthernetSlaveWindow.Height = value; OnPropertyChanged(); } }
-        //public WindowState WindowState { get => App.Settings.EthernetSlaveWindow.WindowState; set { App.Settings.EthernetSlaveWindow.WindowState = value; OnPropertyChanged(); } }
-
-
         private AsyncSocket.ASocketManager Socket { get; }
         public string ConnectButtonText { get => connectButtonText; set => SetProperty(ref connectButtonText, value); }
         private string connectButtonText = "Connect";
@@ -95,6 +86,15 @@ namespace TM_Comms_WPF.WindowViewModels
             Socket.ConnectEvent += Socket_ConnectEvent;
             Socket.ExceptionEvent += Socket_ExceptionEvent;
             Socket.MessageEvent += Socket_MessageEvent;
+
+            Reload();
+        }
+        public void Reload()
+        {
+            if (Socket.IsConnected)
+                ConnectAction(new object());
+
+            CommandList.Clear();
 
             EthernetSlaveXMLData.File data = EthernetSlave.GetXMLCommands(App.Settings.Version);
             if (data != null)
