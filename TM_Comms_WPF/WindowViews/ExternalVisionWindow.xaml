@@ -12,6 +12,11 @@
             <GradientStop Color="{DynamicResource MahApps.Colors.AccentBase}" Offset="0"/>
             <GradientStop Color="{DynamicResource MahApps.Colors.ThemeBackground}" Offset="0.3"/>
         </LinearGradientBrush>
+
+        <IconPacks:Material Kind="ContentSave" x:Key="ImageSave" x:Shared="False"/>
+        <IconPacks:Material Kind="ContentSaveCog" x:Key="ImageAutoSave" x:Shared="False"/>
+
+        <IconPacks:BootstrapIcons Kind="PlusCircle" x:Key="Add" x:Shared="False"/>
         
         <Style x:Key="ButtonFocusVisual" TargetType="{x:Type Button}">
             <Setter Property="Control.Template">
@@ -127,16 +132,12 @@
                            Background="{StaticResource Header}" FontSize="18" HorizontalContentAlignment="Center" Grid.ColumnSpan="2"/>
 
                     <ToolBar Grid.Row="1" Background="{x:Null}">
-                        <Button x:Name="BtnSaveImage" MinWidth="22" MinHeight="22" Click="BtnSaveImage_Click" VerticalAlignment="Bottom" ToolTip="Save Image">
-                            <Button.Background>
-                                <ImageBrush ImageSource="../Support/save.png" Stretch="Uniform"/>
-                            </Button.Background>
-                        </Button>
-                        <CheckBox MinWidth="22" MinHeight="22" ToolTip="Auto Save Image" >
-                            <CheckBox.Background>
-                                <ImageBrush Stretch="Uniform" ImageSource="/TM_Comms_WPF;component/Support/autosave.png"/>
-                            </CheckBox.Background>
-                        </CheckBox>
+                        <Button x:Name="BtnSaveImage" MinWidth="22" MinHeight="22" Click="BtnSaveImage_Click" 
+                                Content="{DynamicResource ImageSave}"
+                                BorderBrush="{x:Null}"
+                                VerticalAlignment="Bottom" ToolTip="Save Image"/>
+                        <CheckBox MinWidth="22" MinHeight="22" ToolTip="Auto Save Image"
+                                  Content="{DynamicResource ImageAutoSave}"/>
                     </ToolBar>
 
                     <Image x:Name="ImgMain" Grid.Row="2"/>
@@ -172,11 +173,8 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <ToolBar Grid.Row="1" Background="{x:Null}">
-                                    <Button x:Name="BtnAddManualResponse" MinWidth="22" MinHeight="22" VerticalAlignment="Top" Click="BtnAddManualResponse_Click" >
-                                        <Button.Background>
-                                            <ImageBrush Stretch="Uniform" ImageSource="/TM_Comms_WPF;component/Support/add.png"/>
-                                        </Button.Background>
-                                    </Button>
+                                    <Button x:Name="BtnAddManualResponse" MinWidth="22" MinHeight="22" VerticalAlignment="Top" Click="BtnAddManualResponse_Click"
+                                            Content="{DynamicResource Add}" Background="Transparent" BorderBrush="{x:Null}"/>
                                 </ToolBar>
                                 <StackPanel Grid.Row="2" x:Name="StkResponse"/>
                             </Grid>

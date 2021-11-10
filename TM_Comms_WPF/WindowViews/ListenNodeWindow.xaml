@@ -36,14 +36,10 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Column="0" Grid.Row="0"  Margin="3" Padding="3" BorderBrush="Black" BorderThickness="1" CornerRadius="3">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="34"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+
                 <!--<Label Grid.Row="0" Content="Listen Node"
                        Background="{StaticResource Header}" FontSize="18" HorizontalContentAlignment="Center"/>-->
-                <Grid Grid.Row="1">
+                <Grid >
                     <Grid.ColumnDefinitions>
 
                         <ColumnDefinition/>
@@ -52,7 +48,7 @@
                     <Button Grid.Column="0" Command="{Binding ConnectCommand}" Content="{Binding ConnectButtonText}" HorizontalAlignment="Right"/>
                     <CheckBox Grid.Column="1" Content="Auto Reconnect" IsChecked="{Binding AutoReconnect}" VerticalContentAlignment="Center" Margin="2" HorizontalAlignment="Left"/>
                 </Grid>
-            </Grid>
+
         </Border>
 
         <Border Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" Margin="3" Padding="3" BorderBrush="Black" BorderThickness="1" CornerRadius="3">
@@ -221,10 +217,10 @@
                     <Button Grid.Row="0" Grid.Column="1" Command="{Binding InsertMoveStep}" Content="Insert"/>
 
                     <Grid Grid.Row="0" Grid.Column="2" >
-                        <Button Margin="3" BorderBrush="{x:Null}" AllowDrop="True" Drop="Button_Drop">
-                            <Button.Background>
-                                <ImageBrush ImageSource="../Support/delete.png" Stretch="Uniform"/>
-                            </Button.Background>
+                        <Button Margin="3" BorderBrush="{x:Null}" Background="Transparent" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"  AllowDrop="True" Drop="Button_Drop">
+                            <Button.Content>
+                                <IconPacks:Modern Kind="Delete"/>
+                            </Button.Content>
                         </Button>
                     </Grid>
                     <ScrollViewer Grid.Row="1" Grid.ColumnSpan="3">

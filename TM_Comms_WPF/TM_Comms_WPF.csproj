@@ -253,7 +253,6 @@
     <Compile Include="NIC_Adapter\AdapterManager.cs" />
     <Compile Include="NIC_Adapter\AdapterWrapper.cs" />
     <Compile Include="NIC_Adapter\AdapterXMLFile.cs" />
-    <Compile Include="Support\StaticUtils.cs" />
     <Compile Include="Core\BaseViewModel.cs" />
     <Compile Include="WindowViewModels\EthernetSlaveViewModel.cs" />
     <Compile Include="WindowViewModels\MainWindowViewModel.cs" />
@@ -314,8 +313,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Support\RingBuffer.cs" />
-    <Compile Include="Support\PingCommand.cs" />
     <Compile Include="WindowViews\EthernetSlaveWindow.xaml.cs">
       <DependentUpon>EthernetSlaveWindow.xaml</DependentUpon>
     </Compile>
@@ -324,9 +321,6 @@
     </Compile>
     <Compile Include="WindowViews\ModbusWindow.xaml.cs">
       <DependentUpon>ModbusWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WindowViews\Port8080Window.xaml.cs">
-      <DependentUpon>Port8080Window.xaml</DependentUpon>
     </Compile>
     <Compile Include="WindowViews\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -337,10 +331,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ControlViews\PendantControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="WindowViews\Port8080Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -367,21 +357,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Resource Include="Support\up_down.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Support\autosave.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Support\add.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Support\delete.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Content Include="Support\save.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="Support\IntroText.txt" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -406,7 +382,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Support\question-mark.png" />
     <Content Include="Support\TMControllerImage.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

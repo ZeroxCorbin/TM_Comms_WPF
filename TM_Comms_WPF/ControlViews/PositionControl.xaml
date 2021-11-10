@@ -3,12 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
             xmlns:ControlViewModels="clr-namespace:TM_Comms_WPF.ControlViewModels"
              d:DataContext="{d:DesignInstance Type=ControlViewModels:PositionControlViewModel}"
              mc:Ignorable="d" Drop="UserControl_Drop">
     <UserControl.DataContext>
         <ControlViewModels:PositionControlViewModel/>
     </UserControl.DataContext>
+    <UserControl.Resources>
+        <IconPacks:RadixIcons Kind="DragHandleHorizontal" x:Key="DragHandle" x:Shared="False"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -68,7 +73,11 @@
             <Label Grid.Column="11" Grid.Row="0" Content="Prec." Visibility="{Binding Labels}" HorizontalContentAlignment="Center"/>
             <CheckBox Grid.Column="11" Grid.Row="1" IsChecked="{Binding Precision}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-            <Image Grid.Column="12" Grid.Row="1" Source="/TM_Comms_WPF;component/Support/up_down.png" Height="22" Width="22" x:Name="ImgDragDrop" PreviewMouseDown="ImgDragDrop_PreviewMouseDown" Visibility="{Binding DragDropTarget}"/>
+            <Label Grid.Column="12" Grid.Row="1" 
+                   Content="{DynamicResource DragHandle}"
+                   x:Name="ImgDragDrop"
+                   PreviewMouseDown="ImgDragDrop_PreviewMouseDown"
+                   Visibility="{Binding DragDropTarget}"/>
         </Grid>
 
 

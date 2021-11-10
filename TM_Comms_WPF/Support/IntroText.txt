@@ -1,0 +1,9 @@
+﻿<Span FontSize="20">
+1. Enter the IP Address of the OMRON/TM Cobot.
+</Span></br>
+<Span FontSize="20">
+2. Select the current TMflow version.
+</Span>
+<Run Margin="10,0,0,0">
+a. When you change this all connections are closed.
+</Run>

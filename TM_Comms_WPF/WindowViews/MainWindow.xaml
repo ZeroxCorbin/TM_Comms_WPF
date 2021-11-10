@@ -46,21 +46,53 @@
             <mah:MetroTabItem IsSelected="False">
                 <mah:MetroTabItem.Header>
                     <Grid>
-                        <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <!--<Label Content="Robot IP Address" HorizontalContentAlignment="Center"/>-->
+                        <TextBox Text="{Binding RobotIPAddress}" 
+                                         mah:TextBoxHelper.Watermark="Robot IP Address"
+                                         Grid.Column="0"
+                                         VerticalAlignment="Bottom"/>
 
-                            <StackPanel>
-                                <Label Content="Robot IP Address" HorizontalContentAlignment="Center"/>
-                                <TextBox Text="{Binding RobotIPAddress}" 
-                                         mah:TextBoxHelper.Watermark="Enter IP Address"
-                                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-                            </StackPanel>
-                            <StackPanel>
-                                <Label Content="System Version" HorizontalContentAlignment="Center"/>
-                                <ComboBox ItemsSource="{Binding Versions}" SelectedItem="{Binding SelectedVersion}"  IsReadOnly="True"/>
-                            </StackPanel>
-                        </StackPanel>
+                        <!--<Label Content="System Version" HorizontalContentAlignment="Center"/>-->
+                        <ComboBox ItemsSource="{Binding Versions}"
+                                          SelectedItem="{Binding SelectedVersion}"
+                                          IsReadOnly="True"
+                                          Grid.Column="1"
+                                          VerticalAlignment="Bottom"/>
                     </Grid>
                 </mah:MetroTabItem.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="1" Grid.Column="1">
+<Run FontSize="20">
+1. Enter the IP Address of the OMRON/TM Cobot.
+</Run><LineBreak/><LineBreak/>
+<Run FontSize="20">
+2. Select a TMflow version.
+</Run><LineBreak/>
+<Run Foreground="Transparent">INDIND</Run>
+<Run FontSize="16">
+If you change the version all open connections will be closed.
+</Run><LineBreak/><LineBreak/>
+<Run FontSize="20">
+3. Modbus, Ethernet Slave, and Listen Node pages have connect buttons in the upper left.
+</Run><LineBreak/>
+
+                    </TextBlock>
+
+
+                </Grid>
             </mah:MetroTabItem>
             <mah:MetroTabItem Header="Modbus">
                 <WindowViews:ModbusWindow x:Name="Modbus" />
