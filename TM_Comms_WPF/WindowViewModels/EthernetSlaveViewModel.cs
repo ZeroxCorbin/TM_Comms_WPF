@@ -33,8 +33,7 @@ namespace TM_Comms_WPF.WindowViewModels
         //public WindowState WindowState { get => App.Settings.EthernetSlaveWindow.WindowState; set { App.Settings.EthernetSlaveWindow.WindowState = value; OnPropertyChanged(); } }
 
 
-        private SocketManager Socket { get; }
-        public string ConnectionString { get => $"{App.Settings.RobotIP}:5891"; }
+        private AsyncSocket.ASocketManager Socket { get; }
         public string ConnectButtonText { get => connectButtonText; set => SetProperty(ref connectButtonText, value); }
         private string connectButtonText = "Connect";
         public bool ConnectionState { get => connectionState; set => SetProperty(ref connectionState, value); }
@@ -91,9 +90,11 @@ namespace TM_Comms_WPF.WindowViewModels
             Pendant.PlusEvent += Pendant_PlusEvent;
             Pendant.MinusEvent += Pendant_MinusEvent;
 
-            Socket = new SocketManager(ConnectionString);
-            Socket.ConnectState += Socket_ConnectState;
-            Socket.MessageReceived += Socket_MessageReceived;
+            Socket = new AsyncSocket.ASocketManager();
+            Socket.CloseEvent += Socket_CloseEvent;
+            Socket.ConnectEvent += Socket_ConnectEvent;
+            Socket.ExceptionEvent += Socket_ExceptionEvent;
+            Socket.MessageEvent += Socket_MessageEvent;
 
             EthernetSlaveXMLData.File data = EthernetSlave.GetXMLCommands(App.Settings.Version);
             if (data != null)
@@ -113,9 +114,65 @@ namespace TM_Comms_WPF.WindowViewModels
             }
         }
 
+        private void Socket_MessageEvent(object sender, EventArgs e)
+        {
+            string message = (string)sender;
+
+            EthernetSlave es = new EthernetSlave();
+
+            if (!es.ParseMessage(message))
+            {
+                ESCommandResponse += message;
+                return;
+            }
+            if (es.Header == EthernetSlave.Headers.TMSVR && es.TransactionID_Int >= 0 && es.TransactionID_Int <= 9)
+            {
+                if (CaptureData)
+                    outputFile.WriteLine(Regex.Replace(message, @"^[$]TMSVR,\w*,[0-9],[0-2],", "").Replace("\r\n", ","));
+
+                if (DataReceiveStopWatch.ElapsedMilliseconds > 42)
+                {
+                    DataReceiveStopWatch.Restart();
+                    UpdatePendant(es);
+                    ESMessage = message;
+                }
+            }
+            else
+            {
+                if (es.Message.EndsWith("\r\n"))
+                    ESCommandResponse += es.Message;
+                else
+                    ESCommandResponse += es.Message + "\r\n";
+            }
+            es = null;
+        }
+
+        private void Socket_ExceptionEvent(object sender, EventArgs e)
+        {
+            ConnectMessage = ((Exception)sender).Message;
+        }
+
+        private void Socket_ConnectEvent(object sender, EventArgs e)
+        {
+            ConnectionState = true;
+            ConnectButtonText = "Close";
+
+            Socket.StartReceiveMessages("\r\n");
+
+            DataReceiveStopWatch.Restart();
+        }
+
+        private void Socket_CloseEvent(object sender, EventArgs e)
+        {
+            ConnectionState = false;
+            ConnectButtonText = "Connect";
+
+            Pendant.Reset();
+        }
+
         public void ViewClosing()
         {
-            Socket.StopReceiveAsync();
+            //Socket.StopReceiveAsync();
             Socket.Close();
         }
 
@@ -123,7 +180,6 @@ namespace TM_Comms_WPF.WindowViewModels
         {
             if (Socket.IsConnected)
             {
-                Socket.StopReceiveAsync();
                 Socket.Close();
             }
             else
@@ -134,30 +190,12 @@ namespace TM_Comms_WPF.WindowViewModels
                 {
                     ConnectButtonText = "Trying";
 
-                    if (!Socket.Connect())
-                        ConnectMessage = Socket.IsException ? Socket.Exception.Message : "Unable to connect!";
+                    if (!Socket.Connect(App.Settings.RobotIP, 5891))
+                        ConnectMessage = "Unable to connect!";
                 });
             }
         }
-        private void Socket_ConnectState(object sender, bool state)
-        {
-            ConnectionState = state;
 
-            if (state)
-            {
-                ConnectButtonText = "Close";
-
-                Socket.StartReceiveMessages(@"[$]", @"[*][A-Z0-9][A-Z0-9]");
-
-                DataReceiveStopWatch.Restart();
-            }
-            else
-            {
-                ConnectButtonText = "Connect";
-                
-                Pendant.Reset();
-            }
-        }
         private void Socket_MessageReceived(object sender, string message, string pattern)
         {
             EthernetSlave es = new EthernetSlave();
@@ -188,24 +226,24 @@ namespace TM_Comms_WPF.WindowViewModels
             }
         }
 
-        private void SendCommandAction(object parameter) => Socket?.Write(GetESNode().Message);
+        private void SendCommandAction(object parameter) => Socket?.Send(GetESNode().Message);
 
-        private void SendBadChecksumAction(object parameter) => Socket?.Write($"$TMSVR,19,diag,2,Stick_Stop=1,*7C\r\n");
-        private void SendBadHeaderAction(object parameter) => Socket?.Write($"$TMSVr,20,local,2,Stick_Stop=1,*32\r\n");
-        private void SendBadPacketAction(object parameter) => Socket?.Write($"$TMSVR,19,-100,2,Stick_Stop=1,*69\r\n");
-        private void SendBadPacketDataAction(object parameter) => Socket?.Write($"$TMSVR,20,local,2,Stick_,*12\r\n");
+        private void SendBadChecksumAction(object parameter) => Socket?.Send($"$TMSVR,19,diag,2,Stick_Stop=1,*7C\r\n");
+        private void SendBadHeaderAction(object parameter) => Socket?.Send($"$TMSVr,20,local,2,Stick_Stop=1,*32\r\n");
+        private void SendBadPacketAction(object parameter) => Socket?.Send($"$TMSVR,19,-100,2,Stick_Stop=1,*69\r\n");
+        private void SendBadPacketDataAction(object parameter) => Socket?.Send($"$TMSVR,20,local,2,Stick_,*12\r\n");
 
-        private void SendNotSupportedAction(object parameter) => Socket?.Write("$TMSVR,20,diag,99,Stick_Stop=1,*46\r\n");
-        private void SendInvalidDataAction(object parameter) => Socket?.Write("$TMSVR,11,diag,1,[{}],*58\r\n");
-        private void SendNotExistAction(object parameter) => Socket?.Write("$TMSVR,18,diag,2,Ctrl_DO16=1,*24\r\n");
-        private void SendReadOnlyAction(object parameter) => Socket?.Write("$TMSVR,19,diag,2,Robot_Link=1,*64\r\n");
-        private void SendValueErrorAction(object parameter) => Socket?.Write("$TMSVR,24,diag,2,Stick_Plus=\"diag\",*48\r\n");
+        private void SendNotSupportedAction(object parameter) => Socket?.Send("$TMSVR,20,diag,99,Stick_Stop=1,*46\r\n");
+        private void SendInvalidDataAction(object parameter) => Socket?.Send("$TMSVR,11,diag,1,[{}],*58\r\n");
+        private void SendNotExistAction(object parameter) => Socket?.Send("$TMSVR,18,diag,2,Ctrl_DO16=1,*24\r\n");
+        private void SendReadOnlyAction(object parameter) => Socket?.Send("$TMSVR,19,diag,2,Robot_Link=1,*64\r\n");
+        private void SendValueErrorAction(object parameter) => Socket?.Send("$TMSVR,24,diag,2,Stick_Plus=\"diag\",*48\r\n");
 
 
-        private void Pendant_StopEvent() => Socket?.Write($"$TMSVR,20,local,2,Stick_Stop=1,*12\r\n");
-        private void Pendant_PlayPauseEvent() => Socket?.Write($"$TMSVR,25,local,2,Stick_PlayPause=1,*59\r\n");
-        private void Pendant_PlusEvent() => Socket?.Write($"$TMSVR,20,local,2,Stick_Plus=1,*10\r\n");
-        private void Pendant_MinusEvent() => Socket?.Write($"$TMSVR,21,local,2,Stick_Minus=1,*67\r\n");
+        private void Pendant_StopEvent() => Socket?.Send($"$TMSVR,20,local,2,Stick_Stop=1,*12\r\n");
+        private void Pendant_PlayPauseEvent() => Socket?.Send($"$TMSVR,25,local,2,Stick_PlayPause=1,*59\r\n");
+        private void Pendant_PlusEvent() => Socket?.Send($"$TMSVR,20,local,2,Stick_Plus=1,*10\r\n");
+        private void Pendant_MinusEvent() => Socket?.Send($"$TMSVR,21,local,2,Stick_Minus=1,*67\r\n");
 
         private bool CaptureData { get; set; }
 

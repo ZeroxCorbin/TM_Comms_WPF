@@ -29,7 +29,6 @@ namespace TM_Comms_WPF.WindowViewModels
         //public double Height { get => App.Settings.ListenNodeWindow.Height; set { App.Settings.ListenNodeWindow.Height = value; OnPropertyChanged(); } }
         //public WindowState WindowState { get => App.Settings.ListenNodeWindow.WindowState; set { App.Settings.ListenNodeWindow.WindowState = value; OnPropertyChanged(); } }
 
-        public string ConnectionString { get => $"{App.Settings.RobotIP}:5890"; }
         public string ConnectButtonText { get => connectButtonText; set => SetProperty(ref connectButtonText, value); }
         private string connectButtonText = "Connect";
         public bool ConnectionState { get => connectionState; set => SetProperty(ref connectionState, value); }
@@ -66,7 +65,7 @@ namespace TM_Comms_WPF.WindowViewModels
 
         public void ViewClosing()
         {
-            Socket.StopReceiveAsync();
+            //Socket.StopReceiveAsync();
             Socket.Close();
 
             AutoReconnect = false;
@@ -89,73 +88,25 @@ namespace TM_Comms_WPF.WindowViewModels
             GenerateMotionScript = new RelayCommand(GenerateMotionScriptAction, c => true);
             SendMotionScript = new RelayCommand(SendMotionScriptAction, c => true);
 
-            Socket = new SocketManager(ConnectionString);
-            Socket.ConnectState += Socket_ConnectState;
-            Socket.MessageReceived += Socket_MessageReceived;
+            Socket = new AsyncSocket.ASocketManager();
+            Socket.ConnectEvent += Socket_ConnectEvent;
+            Socket.CloseEvent += Socket_CloseEvent;
+            Socket.ExceptionEvent += Socket_ExceptionEvent;
+            Socket.MessageEvent += Socket_MessageEvent;
 
             LoadCommandTreeView();
         }
 
-
-        private SocketManager Socket { get; set; }
-        private void ConnectAction(object parameter)
+        private void Socket_MessageEvent(object sender, EventArgs e)
         {
-            if (Socket.IsConnected)
-            {
-                Socket.StopReceiveAsync();
-                Socket.Close();
+            string message = ((string)sender);
 
-                AutoReconnect = false;
-            }
-            else
-            {
-                ConnectMessage = string.Empty;
-
-                Task.Run(() =>
-                  {
-                      ConnectButtonText = "Trying";
-
-                      if (!Socket.Connect())
-                          ConnectMessage = Socket.IsException ? Socket.Exception.Message : "Unable to connect!";
-                      else
-                          ConnectMessage = "Connected";
-                  });
-            }
-        }
-        private void Socket_ConnectState(object sender, bool state)
-        {
-            ConnectionState = state;
-
-            if (state)
-            {
-                ConnectButtonText = "Close";
-
-                Socket.StartReceiveMessages(@"[$]", @"[*][A-Z0-9][A-Z0-9]");
-            }
-            else
-            {
-                ConnectButtonText = "Connect";
-
-                if (AutoReconnect)
-                    Task.Run(() =>
-                    {
-                        ConnectButtonText = "Trying";
-
-                        if (!Socket.Connect())
-                            ConnectMessage = Socket.IsException ? Socket.Exception.Message : "Unable to connect!";
-                        else
-                            ConnectMessage = "Connected";
-                    });
-            }
-        }
-        private void Socket_MessageReceived(object sender, string message, string pattern)
-        {
             ListenNode ln = new ListenNode();
 
             if (!ln.ParseMessage(message))
                 return;
 
-            LNCommandResponse += message + "\r\n";
+            LNCommandResponse += message;
 
             if (PositionRequest != null)
             {
@@ -171,14 +122,61 @@ namespace TM_Comms_WPF.WindowViewModels
             }
         }
 
+        private void Socket_ExceptionEvent(object sender, EventArgs e)
+        {
+            ConnectMessage = ((Exception)sender).Message;
+        }
 
-        private void SendBadChecksumAction(object parameter) => Socket?.Write($"$TMSCT,25,1,ChangeBase(\"RobotBase\"),*09\r\n");
-        private void SendBadHeaderAction(object parameter) => Socket?.Write($"$TMsct,25,1,ChangeBase(\"RobotBase\"),*28\r\n");
-        private void SendBadPacketAction(object parameter) => Socket?.Write($"$TMSCT,-100,1,ChangeBase(\"RobotBase\"),*13\r\n");
-        private void SendBadPacketDataAction(object parameter) => Socket?.Write($"$TMSTA,4,XXXX,*47\r\n");
+        private void Socket_CloseEvent(object sender, EventArgs e)
+        {
+            ConnectionState = false;
+            ConnectButtonText = "Connect";
 
-        private void SendScriptExit(object parameter) => Socket?.Write($"$TMSCT,17,diag,ScriptExit(),*5E\r\n");
-        private void SendBadCode(object parameter) => Socket?.Write("$TMSCT,21,diag,int i=0\r\nint i=0,*52\r\n");
+            if (AutoReconnect)
+                ConnectAction(new object());
+        }
+
+        private void Socket_ConnectEvent(object sender, EventArgs e)
+        {
+            ConnectionState = true;
+            ConnectButtonText = "Close";
+
+            Socket.StartReceiveMessages("\r\n");
+        }
+
+        private AsyncSocket.ASocketManager Socket { get; set; }
+        private void ConnectAction(object parameter)
+        {
+            if (Socket.IsConnected)
+            {
+                Socket.Close();
+
+                AutoReconnect = false;
+            }
+            else
+            {
+                ConnectMessage = string.Empty;
+
+                Task.Run(() =>
+                  {
+                      ConnectButtonText = "Trying";
+
+                      if (!Socket.Connect(App.Settings.RobotIP, 5890))
+                          ConnectMessage = "Unable to connect!";
+                      else
+                          ConnectMessage = "Connected";
+                  });
+            }
+        }
+
+
+        private void SendBadChecksumAction(object parameter) => Socket?.Send($"$TMSCT,25,1,ChangeBase(\"RobotBase\"),*09\r\n");
+        private void SendBadHeaderAction(object parameter) => Socket?.Send($"$TMsct,25,1,ChangeBase(\"RobotBase\"),*28\r\n");
+        private void SendBadPacketAction(object parameter) => Socket?.Send($"$TMSCT,-100,1,ChangeBase(\"RobotBase\"),*13\r\n");
+        private void SendBadPacketDataAction(object parameter) => Socket?.Send($"$TMSTA,4,XXXX,*47\r\n");
+
+        private void SendScriptExit(object parameter) => Socket?.Send($"$TMSCT,17,diag,ScriptExit(),*5E\r\n");
+        private void SendBadCode(object parameter) => Socket?.Send("$TMSCT,21,diag,int i=0\r\nint i=0,*52\r\n");
 
 
         //public ListViewItem CommandItem { get => commandItem; set { _ = SetProperty(ref commandItem, value); UpdateScript(); } }
@@ -271,7 +269,7 @@ namespace TM_Comms_WPF.WindowViewModels
 
             return node;
         }
-        private void SendCommandAction(object parameter) => Socket?.Write(GetLNNode().Message);
+        private void SendCommandAction(object parameter) => Socket?.Send(GetLNNode().Message);
 
         public ObservableCollection<ListBoxItem> PositionControlList { get; } = new ObservableCollection<ListBoxItem>();
         public bool AddScriptExit { get => addScriptExit; set => SetProperty(ref addScriptExit, value); }
@@ -290,13 +288,13 @@ namespace TM_Comms_WPF.WindowViewModels
             {
                 ListenNode ln = new ListenNode("ListenSend(90, GetString(Robot[1].CoordRobot, 10, 3))");
                 PositionRequest = ln.ScriptID.ToString();
-                Socket?.Write(ln.Message);
+                Socket?.Send(ln.Message);
             }
             else
             {
                 ListenNode ln = new ListenNode("ListenSend(90, GetString(Robot[1].Joint, 10, 3))");
                 PositionRequest = ln.ScriptID.ToString();
-                Socket?.Write(ln.Message);
+                Socket?.Send(ln.Message);
             }
         }
 
@@ -426,6 +424,6 @@ namespace TM_Comms_WPF.WindowViewModels
 
             MotionScript = ln.Message;
         }
-        private void SendMotionScriptAction(object p) => Socket.Write(MotionScript);
+        private void SendMotionScriptAction(object p) => Socket?.Send(MotionScript);
     }
 }
