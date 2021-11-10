@@ -10,8 +10,9 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using TM_Comms;
-using TM_Comms_WPF.Commands;
+using TM_Comms_WPF.Core;
 using TM_Comms_WPF.ControlViewModels;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace TM_Comms_WPF.WindowViewModels
 {
@@ -57,9 +58,12 @@ namespace TM_Comms_WPF.WindowViewModels
         public ObservableCollection<ModbusItemViewModel> Items { get; } = new ObservableCollection<ModbusItemViewModel>();
         public ObservableCollection<ModbusItemViewModel> UserItems { get; } = new ObservableCollection<ModbusItemViewModel>();
 
+        private IDialogCoordinator _DialogCoordinator;
 
-        public ModbusViewModel()
+        public ModbusViewModel(IDialogCoordinator diag)
         {
+            _DialogCoordinator = diag;
+
             ConnectCommand = new RelayCommand(ConnectAction, c => true);
 
             Pendant.StopEvent += Pendant_StopEvent;
@@ -101,11 +105,11 @@ namespace TM_Comms_WPF.WindowViewModels
             UserItems.Clear();
 
             foreach (var kv in ModbusDictionary.ModbusData[App.Settings.Version])
-                Items.Add(new ModbusItemViewModel(kv.Key, kv.Value, ModbusTCP));
+                Items.Add(new ModbusItemViewModel(kv.Key, kv.Value, ModbusTCP, _DialogCoordinator));
 
             for (int i = 9000; i < 9041; i += 4)
             {
-                UserItems.Add(new ModbusItemViewModel(i.ToString(), new ModbusDictionary.MobusValue() { Access = ModbusDictionary.MobusValue.AccessTypes.RW, Addr = i, Type = ModbusDictionary.MobusValue.DataTypes.Float }, ModbusTCP));
+                UserItems.Add(new ModbusItemViewModel(i.ToString(), new ModbusDictionary.MobusValue() { Access = ModbusDictionary.MobusValue.AccessTypes.RW, Addr = i, Type = ModbusDictionary.MobusValue.DataTypes.Float }, ModbusTCP, _DialogCoordinator));
             }
         }
 
@@ -116,16 +120,19 @@ namespace TM_Comms_WPF.WindowViewModels
 
         private void Socket_CloseEvent(object sender, EventArgs e)
         {
+            
             Cancel = true;
             while (isRunning)
                 Thread.Sleep(1);
 
+            ConnectionState = false;
             ConnectButtonText = "Connect";
             Heartbeat = false;
         }
 
         private void Socket_ConnectEvent(object sender, EventArgs e)
         {
+            ConnectionState = true;
             ConnectButtonText = "Close";
             
             if (!IsRunning)

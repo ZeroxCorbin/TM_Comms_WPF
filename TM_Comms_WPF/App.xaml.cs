@@ -1,5 +1,4 @@
-﻿using ApplicationSettingsNS;
-using ControlzEx.Theming;
+﻿using ControlzEx.Theming;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
+using TM_Comms_WPF.Core;
 
 namespace TM_Comms_WPF
 {

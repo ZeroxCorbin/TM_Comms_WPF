@@ -1,7 +1,6 @@
 ﻿<Application x:Class="TM_Comms_WPF.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:dialogs="clr-namespace:TM_Comms_WPF.Dialogs" 
              xmlns:local="clr-namespace:TM_Comms_WPF"
              StartupUri="WindowViews/MainWindow.xaml">
     <Application.Resources>
@@ -12,7 +11,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.FlatButton.xaml" />
                 <!--<ResourceDictionary Source="/PresentationFramework.Aero2;component/themes/aero2.normalcolor.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
-            <DataTemplate DataType="{x:Type dialogs:DialogYesNoViewModel}">
+            <!--<DataTemplate DataType="{x:Type dialogs:DialogYesNoViewModel}">
                 <dialogs:DialogYesNoView></dialogs:DialogYesNoView>
             </DataTemplate>
             <DataTemplate DataType="{x:Type dialogs:DialogEditValueViewModel}">
@@ -20,7 +19,7 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type dialogs:DialogOkViewModel}">
                 <dialogs:DialogOkView></dialogs:DialogOkView>
-            </DataTemplate>
+            </DataTemplate>-->
         </ResourceDictionary>
 
     </Application.Resources>

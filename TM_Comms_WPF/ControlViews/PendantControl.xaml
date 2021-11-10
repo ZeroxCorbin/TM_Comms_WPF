@@ -33,7 +33,7 @@
 
         <Grid Height="105" Width="308"  Margin="5">
             <Grid.Background>
-                <ImageBrush Stretch="UniformToFill" ImageSource="/Support/TMControllerImage.png"/>
+                <ImageBrush Stretch="UniformToFill" ImageSource="/Assets/TMControllerImage.png"/>
             </Grid.Background>
             <Ellipse Fill="{Binding Auto, Mode=OneWay}" HorizontalAlignment="Left" Height="12" Margin="211,12,0,0" Stroke="Black" VerticalAlignment="Top" Width="12"/>
             <Ellipse Fill="{Binding Power, Mode=OneWay}" HorizontalAlignment="Left" Height="12" Margin="113,12,0,0" Stroke="Black" VerticalAlignment="Top" Width="12"/>

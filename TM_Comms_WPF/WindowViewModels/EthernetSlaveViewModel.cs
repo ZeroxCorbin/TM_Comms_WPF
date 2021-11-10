@@ -15,7 +15,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using TM_Comms;
-using TM_Comms_WPF.Commands;
+using TM_Comms_WPF.Core;
 using TM_Comms_WPF.ControlViewModels;
 
 namespace TM_Comms_WPF.WindowViewModels

@@ -7,15 +7,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+           xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+            Dialog:DialogParticipation.Register="{Binding}"
         d:DataContext="{d:DesignInstance Type=WindowViewModels:ModbusViewModel}"
         mc:Ignorable="d">
     <mah:MetroContentControl.Resources>
-        
+
         <LinearGradientBrush x:Key="Header" EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="{DynamicResource MahApps.Colors.AccentBase}" Offset="0"/>
             <GradientStop Color="{DynamicResource MahApps.Colors.ThemeBackground}" Offset="0.3"/>
         </LinearGradientBrush>
-        
+
     </mah:MetroContentControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -61,16 +63,17 @@
                        Background="{StaticResource Header}" FontSize="18" HorizontalContentAlignment="Center"/>
                 <DataGrid Grid.Row="1" ItemsSource="{Binding Items}"  AutoGenerateColumns="False" >
                     <DataGrid.Columns>
-                            <DataGridTextColumn Header="Address"  Binding="{Binding Addr}"/>
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                        <DataGridTextColumn Header="Address"  Binding="{Binding Addr}"/>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
                         <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Grid.Column="4" Grid.Row="0"
+                                <DataTemplate >
+                                    <Button Grid.Column="4" Grid.Row="0" Dialog:DialogParticipation.Register="{Binding}"
                                         Command="{Binding EditItemCommand}"
                                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                                         Visibility="{Binding IsWritable}"
+                                            IsEnabled="{Binding RelativeSource={RelativeSource AncestorType={x:Type mah:MetroContentControl}}, Path=DataContext.ConnectionState}"
                                         Content="Edit"
                                         BorderBrush="{x:Null}" />
                                 </DataTemplate>
@@ -100,7 +103,9 @@
                                 <Label Grid.Column="1" Grid.Row="0" Content="{Binding Name}" />
                                 <Label Grid.Column="2" Grid.Row="0" Content="{Binding Value}" Visibility="{Binding ShowText}"/>
                                 <Label Grid.Column="3" Grid.Row="0" Content="{Binding Type}"/>
-                                --><!--<Button Grid.Column="3" Grid.Row="0" Command="{Binding WriteItemCommand}" Visibility="{Binding IsWritableBool}" Content="Set" />--><!--
+                                -->
+                <!--<Button Grid.Column="3" Grid.Row="0" Command="{Binding WriteItemCommand}" Visibility="{Binding IsWritableBool}" Content="Set" />-->
+                <!--
                                 <Button Grid.Column="4" Grid.Row="0"
                                         Command="{Binding EditItemCommand}"
                                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
@@ -138,6 +143,7 @@
                                         Command="{Binding EditItemCommand}"
                                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                                         Visibility="{Binding IsWritable}"
+                                            IsEnabled="{Binding RelativeSource={RelativeSource AncestorType={x:Type mah:MetroContentControl}}, Path=DataContext.ConnectionState}"
                                         Content="Edit"
                                         BorderBrush="{x:Null}" />
                                 </DataTemplate>
@@ -169,7 +175,9 @@
                                 <Label Grid.Column="3" Grid.Row="0" Content="{Binding Value, Mode=OneWay}"  Background="LightCyan" MinWidth="60"/>
 
 
-                                --><!--<Button Grid.Column="3" Grid.Row="0" Command="{Binding WriteItemCommand}" Visibility="{Binding IsWritableBool}" Content="Set" />--><!--
+                                -->
+                <!--<Button Grid.Column="3" Grid.Row="0" Command="{Binding WriteItemCommand}" Visibility="{Binding IsWritableBool}" Content="Set" />-->
+                <!--
                                 <Button Grid.Column="4" Grid.Row="0" Command="{Binding EditItemCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Visibility="{Binding IsWritable}" Content="Edit" Width="40" BorderBrush="{x:Null}"/>
                             </Grid>
 

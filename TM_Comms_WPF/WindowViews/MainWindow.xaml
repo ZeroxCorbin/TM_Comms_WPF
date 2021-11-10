@@ -13,7 +13,8 @@
         mc:Ignorable="d"
         Title="{Binding Title, Mode=OneWay}"
         Left="{Binding Left, Mode=TwoWay}"
-        Top="{Binding Top, Mode=TwoWay}">
+        Top="{Binding Top, Mode=TwoWay}"
+                 Icon="/Assets/favicon.ico">
 
     <mah:MetroWindow.Resources>
 

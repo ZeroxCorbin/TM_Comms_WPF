@@ -7,7 +7,7 @@ using System.Windows;
 using System.Xml.Serialization;
 using TM_Comms;
 
-namespace ApplicationSettingsNS
+namespace TM_Comms_WPF.Core
 {
     public class ApplicationSettings_Serializer
     {

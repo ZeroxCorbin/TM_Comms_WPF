@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using TM_Comms;
-using TM_Comms_WPF.Commands;
+using TM_Comms_WPF.Core;
 
 namespace TM_Comms_WPF.ControlViewModels
 {

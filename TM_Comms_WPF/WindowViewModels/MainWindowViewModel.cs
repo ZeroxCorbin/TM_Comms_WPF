@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using TM_Comms;
-using TM_Comms_WPF.Commands;
+using TM_Comms_WPF.Core;
 
 namespace TM_Comms_WPF.WindowViewModels
 {
@@ -26,7 +26,7 @@ namespace TM_Comms_WPF.WindowViewModels
         private bool _HasExternalVision;
 
         public EthernetSlaveViewModel EthernetSlave { get; set; } = new EthernetSlaveViewModel();
-        public ModbusViewModel Modbus { get; set; } = new ModbusViewModel();
+        public ModbusViewModel Modbus { get; set; }
         public ListenNodeViewModel ListenNode { get; set; } = new ListenNodeViewModel();
 
         public int SelectedTabIndex 
@@ -41,6 +41,8 @@ namespace TM_Comms_WPF.WindowViewModels
 
         public MainWindowViewModel()
         {
+            Modbus = new ModbusViewModel(MahApps.Metro.Controls.Dialogs.DialogCoordinator.Instance);
+
             ClosingCommand = new RelayCommand(ClosingCallback, c => true);
 
             VersionChange();

@@ -43,7 +43,7 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <ApplicationIcon>Support\favicon.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\favicon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -223,30 +223,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Core\RelayCommand.cs" />
     <Compile Include="ControlViewModels\PositionControlViewModel.cs" />
     <Compile Include="ControlViews\PositionControl.xaml.cs">
       <DependentUpon>PositionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\DialogService\DialogParameters.cs" />
-    <Compile Include="Dialogs\Dialogs\DialogEditValueView.xaml.cs">
-      <DependentUpon>DialogEditValueView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\Dialogs\DialogEditValueViewModel.cs" />
-    <Compile Include="Dialogs\DialogService\DialogResult.cs" />
-    <Compile Include="Dialogs\DialogService\DialogService.cs" />
-    <Compile Include="Dialogs\DialogService\DialogViewModelBase.cs" />
-    <Compile Include="Dialogs\DialogService\DialogWindow.xaml.cs">
-      <DependentUpon>DialogWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\Dialogs\DialogOkView.xaml.cs">
-      <DependentUpon>DialogOkView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\Dialogs\DialogYesNoView.xaml.cs">
-      <DependentUpon>DialogYesNoView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\Dialogs\DialogOkViewModel.cs" />
-    <Compile Include="Dialogs\Dialogs\DialogYesNoViewModel.cs" />
     <Compile Include="NIC_Adapter\AdapterConfigurationManager.cs" />
     <Compile Include="NIC_Adapter\AdapterConfigurationWrapper.cs" />
     <Compile Include="NIC_Adapter\AdapterConfigurationXMLFile.cs" />
@@ -272,24 +253,8 @@
     <Compile Include="WindowViews\Robot3DViewer.xaml.cs">
       <DependentUpon>Robot3DViewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Support\ApplicationSettings_Serializer.cs" />
+    <Compile Include="Core\ApplicationSettings_Serializer.cs" />
     <Page Include="ControlViews\PositionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\Dialogs\DialogEditValueView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\DialogService\DialogWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\Dialogs\DialogOkView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\Dialogs\DialogYesNoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -357,7 +322,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Resource Include="Support\IntroText.txt" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -382,12 +346,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Support\TMControllerImage.png">
+    <Content Include="Assets\TMControllerImage.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Support\favicon.ico">
+    <Content Include="Assets\favicon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
