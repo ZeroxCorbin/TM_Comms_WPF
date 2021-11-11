@@ -59,10 +59,10 @@ namespace TM_Comms_WPF.Core
 
             public class WindowSettings : INotifyPropertyChanged
             {
-                private double _left = double.NaN;
-                private double _top = double.NaN;
-                private double _width = double.NaN;
-                private double _height = double.NaN;
+                private double _left = 0;
+                private double _top = 0;
+                private double _width = 1024;
+                private double _height = 768;
                 private WindowState windowState = WindowState.Normal;
 
                 public double Left

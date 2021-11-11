@@ -14,7 +14,7 @@
         Title="{Binding Title, Mode=OneWay}"
         Left="{Binding Left, Mode=TwoWay}"
         Top="{Binding Top, Mode=TwoWay}"
-                 Icon="/Assets/favicon.ico" Closing="MetroWindow_Closing">
+                  Closing="MetroWindow_Closing" Icon="/favicon.ico">
 
     <mah:MetroWindow.Resources>
 
