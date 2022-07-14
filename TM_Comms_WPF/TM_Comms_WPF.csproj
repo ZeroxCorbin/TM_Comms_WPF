@@ -379,10 +379,6 @@
       <Project>{0ddfaf2b-426e-4c19-a547-18e266f5dfdf}</Project>
       <Name>SimpleModbus</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\SocketManager\SocketManager.csproj">
-      <Project>{4bfb50f6-69eb-4e78-a557-a314c0de371f}</Project>
-      <Name>SocketManager</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\TM_Comms\TM_Comms\TM_Comms.csproj">
       <Project>{cbc5fe71-44cd-42e8-a1ce-198967599c1b}</Project>
       <Name>TM_Comms</Name>
