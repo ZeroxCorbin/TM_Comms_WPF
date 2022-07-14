@@ -112,6 +112,8 @@ namespace TM_Comms_WPF.WindowViewModels
             }
         }
 
+
+
         private void Socket_MessageEvent(object sender, EventArgs e)
         {
             string message = (string)sender;
@@ -131,9 +133,11 @@ namespace TM_Comms_WPF.WindowViewModels
                 if (DataReceiveStopWatch.ElapsedMilliseconds > 42)
                 {
                     DataReceiveStopWatch.Restart();
-                    UpdatePendant(es);
+                    Pendant.UpdatePendant(es);
                     ESMessage = message;
                 }
+
+
             }
             else
             {
@@ -194,35 +198,35 @@ namespace TM_Comms_WPF.WindowViewModels
             }
         }
 
-        private void Socket_MessageReceived(object sender, string message, string pattern)
-        {
-            EthernetSlave es = new EthernetSlave();
+        //private void Socket_MessageReceived(object sender, string message, string pattern)
+        //{
+        //    EthernetSlave es = new EthernetSlave();
 
-            if (!es.ParseMessage(message))
-            {
-                ESCommandResponse += message;
-                return;
-            }
-            if (es.Header == EthernetSlave.Headers.TMSVR && es.TransactionID_Int >= 0 && es.TransactionID_Int <= 9)
-            {
-                if (CaptureData)
-                    outputFile.WriteLine(Regex.Replace(message, @"^[$]TMSVR,\w*,[0-9],[0-2],", "").Replace("\r\n", ","));
+        //    if (!es.ParseMessage(message))
+        //    {
+        //        ESCommandResponse += message;
+        //        return;
+        //    }
+        //    if (es.Header == EthernetSlave.Headers.TMSVR && es.TransactionID_Int >= 0 && es.TransactionID_Int <= 9)
+        //    {
+        //        if (CaptureData)
+        //            outputFile.WriteLine(Regex.Replace(message, @"^[$]TMSVR,\w*,[0-9],[0-2],", "").Replace("\r\n", ","));
 
-                if (DataReceiveStopWatch.ElapsedMilliseconds > 42)
-                {
-                    DataReceiveStopWatch.Restart();
-                    UpdatePendant(es);
-                    ESMessage = message;
-                }
-            }
-            else
-            {
-                if(es.Message.EndsWith("\r\n"))
-                    ESCommandResponse += es.Message;
-                else
-                    ESCommandResponse += es.Message + "\r\n";
-            }
-        }
+        //        if (DataReceiveStopWatch.ElapsedMilliseconds > 42)
+        //        {
+        //            DataReceiveStopWatch.Restart();
+        //            UpdatePendant(es);
+        //            ESMessage = message;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if(es.Message.EndsWith("\r\n"))
+        //            ESCommandResponse += es.Message;
+        //        else
+        //            ESCommandResponse += es.Message + "\r\n";
+        //    }
+        //}
 
         private void SendCommandAction(object parameter) => Socket?.Send(GetESNode().Message);
 
@@ -268,90 +272,6 @@ namespace TM_Comms_WPF.WindowViewModels
         }
 
         private Stopwatch DataReceiveStopWatch { get; set; } = new Stopwatch();
-
-
-        private void UpdatePendant(EthernetSlave es)
-        {
-            Pendant.Power = Pendant.Good;
-
-            if (es.GetValue("MA_Mode") == "1")
-            {
-                Pendant.Auto = Pendant.Good;
-                Pendant.Manual = Pendant.Disabled;
-            }
-            else
-            {
-                Pendant.Auto = Pendant.Disabled;
-                Pendant.Manual = Pendant.Good;
-            }
-
-            if (es.GetValue("ESTOP") == "true")
-                Pendant.Estop = Pendant.Bad;
-            else
-                Pendant.Estop = Pendant.Disabled;
-
-            if (App.Settings.Version > TMflowVersions.V1_80_xxxx)
-            {
-                if (es.GetValue("Get_Control") == "true")
-                    Pendant.GetControl = Pendant.Good;
-                else
-                    Pendant.GetControl = Pendant.Bad;
-
-                if (es.GetValue("Auto_Remote_Active") == "true")
-                    Pendant.AutoActive = Pendant.Good;
-                else
-                    Pendant.AutoActive = Pendant.Bad;
-
-                if (es.GetValue("Auto_Remote_Enable") == "true")
-                    Pendant.AutoEnable = Pendant.Good;
-                else
-                    Pendant.AutoEnable = Pendant.Bad;
-            }
-
-            if (es.GetValue("Project_Run") == "true")
-            {
-                Pendant.Play = Pendant.GoodRadial;
-                Pendant.Stop = Pendant.Transparent;
-            }
-            else if (es.GetValue("Project_Pause") == "true")
-            {
-                Pendant.Play = Pendant.MehRadial;
-                Pendant.Stop = Pendant.Transparent;
-            }
-            else if (es.GetValue("Project_Edit") == "true")
-            {
-                Pendant.Play = Pendant.Transparent;
-                Pendant.Stop = Pendant.MehRadial;
-            }
-            else
-            {
-                Pendant.Play = Pendant.Transparent;
-                Pendant.Stop = Pendant.BadRadial;
-            }
-
-            if (es.GetValue("Robot_Error") == "true")
-                Pendant.Error = Pendant.Bad;
-            else
-                Pendant.Error = Pendant.Disabled;
-
-
-            uint code = uint.Parse(es.GetValue("Error_Code"));
-            if (code != 0)
-            {
-                string dat = $"{es.GetValue("Error_Time")}";
-                if (DateTime.TryParse(dat, out DateTime date))
-                    Pendant.ErrorDate = date.ToString();
-            }
-            else
-                Pendant.ErrorDate = "";
-
-            Pendant.ErrorCode = code.ToString("X");
-
-            if (ErrorCodes.Codes.TryGetValue(code, out string val))
-                Pendant.ErrorDescription = val;
-            else
-                Pendant.ErrorDescription = "CAN NOT FIND ERROR IN TABLE.";
-        }
 
         public ObservableCollection<ListViewItem> CommandList { get; } = new ObservableCollection<ListViewItem>();
         public ListViewItem CommandItem { get => commandItem; set { _ = SetProperty(ref commandItem, value); UpdateScript(); } }

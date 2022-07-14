@@ -122,12 +122,10 @@ namespace TM_Comms_WPF.WindowViewModels
                 }
             }
         }
-
         private void Socket_ExceptionEvent(object sender, EventArgs e)
         {
             ConnectMessage = ((Exception)sender).Message;
         }
-
         private void Socket_CloseEvent(object sender, EventArgs e)
         {
             ConnectionState = false;
@@ -136,7 +134,6 @@ namespace TM_Comms_WPF.WindowViewModels
             if (AutoReconnect)
                 ConnectAction(new object());
         }
-
         private void Socket_ConnectEvent(object sender, EventArgs e)
         {
             ConnectionState = true;

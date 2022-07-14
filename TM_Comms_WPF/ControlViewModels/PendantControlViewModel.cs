@@ -99,7 +99,88 @@ namespace TM_Comms_WPF.ControlViewModels
 
         }
 
+        public void UpdatePendant(EthernetSlave es)
+        {
+            Power = Good;
 
+            if (es.GetValue("MA_Mode") == "1")
+            {
+                Auto = Good;
+                Manual = Disabled;
+            }
+            else
+            {
+                Auto = Disabled;
+                Manual = Good;
+            }
+
+            if (es.GetValue("ESTOP") == "true")
+                Estop = Bad;
+            else
+                Estop = Disabled;
+
+            if (App.Settings.Version > TMflowVersions.V1_80_xxxx)
+            {
+                if (es.GetValue("Get_Control") == "true")
+                    GetControl = Good;
+                else
+                    GetControl = Bad;
+
+                if (es.GetValue("Auto_Remote_Active") == "true")
+                    AutoActive = Good;
+                else
+                    AutoActive = Bad;
+
+                if (es.GetValue("Auto_Remote_Enable") == "true")
+                    AutoEnable = Good;
+                else
+                    AutoEnable = Bad;
+            }
+
+            if (es.GetValue("Project_Run") == "true")
+            {
+                Play = GoodRadial;
+                Stop = Transparent;
+            }
+            else if (es.GetValue("Project_Pause") == "true")
+            {
+                Play = MehRadial;
+                Stop = Transparent;
+            }
+            else if (es.GetValue("Project_Edit") == "true")
+            {
+                Play = Transparent;
+                Stop = MehRadial;
+            }
+            else
+            {
+                Play = Transparent;
+                Stop = BadRadial;
+            }
+
+            if (es.GetValue("Robot_Error") == "true")
+                Error = Bad;
+            else
+                Error = Disabled;
+
+
+            uint code = uint.Parse(es.GetValue("Error_Code"));
+            if (code != 0)
+            {
+                string dat = $"{es.GetValue("Error_Time")}";
+                if (DateTime.TryParse(dat, out DateTime date))
+                    ErrorDate = date.ToString();
+            }
+            else
+                ErrorDate = "";
+
+            ErrorCode = code.ToString("X");
+
+            if (ErrorCodes.Codes.TryGetValue(code, out string val))
+                ErrorDescription = val;
+            else
+                ErrorDescription = "CAN NOT FIND ERROR IN TABLE.";
+        }
 
         public void Reset()
         {
