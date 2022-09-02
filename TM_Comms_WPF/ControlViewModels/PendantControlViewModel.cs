@@ -164,22 +164,34 @@ namespace TM_Comms_WPF.ControlViewModels
                 Error = Disabled;
 
 
-            uint code = uint.Parse(es.GetValue("Error_Code"));
-            if (code != 0)
+            if (es.GetValue("Robot_Error") == "true")
             {
-                string dat = $"{es.GetValue("Error_Time")}";
-                if (DateTime.TryParse(dat, out DateTime date))
-                    ErrorDate = date.ToString();
+                Error = Bad;
+
+                uint code = uint.Parse(es.GetValue("Error_Code"));
+                if (code != 0)
+                {
+                    string dat = $"{es.GetValue("Error_Time")}";
+                    if (DateTime.TryParse(dat, out DateTime date))
+                        ErrorDate = date.ToString();
+                }
+                else
+                    ErrorDate = "";
+
+                ErrorCode = code.ToString("X");
+
+                if (ErrorCodes.Codes.TryGetValue(code, out string val))
+                    ErrorDescription = val;
+                else
+                    ErrorDescription = "CAN NOT FIND ERROR IN TABLE.";
             }
             else
+            {
+                Error = Disabled;
                 ErrorDate = "";
-
-            ErrorCode = code.ToString("X");
-
-            if (ErrorCodes.Codes.TryGetValue(code, out string val))
-                ErrorDescription = val;
-            else
-                ErrorDescription = "CAN NOT FIND ERROR IN TABLE.";
+                ErrorCode = "";
+                ErrorDescription = "";
+            }
         }
 
         public void Reset()

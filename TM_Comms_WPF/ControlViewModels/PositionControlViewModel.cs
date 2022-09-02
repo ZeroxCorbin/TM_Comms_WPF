@@ -175,12 +175,42 @@ namespace TM_Comms_WPF.ControlViewModels
             string[] posVals = pos.Split(',');
             if (posVals.Length == 6)
             {
-                PValue1 = Regex.Match(posVals[0], @"-?\w*.\d{0,3}").Value;
-                PValue2 = Regex.Match(posVals[1], @"-?\w*.\d{0,3}").Value;
-                PValue3 = Regex.Match(posVals[2], @"-?\w*.\d{0,3}").Value;
-                PValue4 = Regex.Match(posVals[3], @"-?\w*.\d{0,3}").Value;
-                PValue5 = Regex.Match(posVals[4], @"-?\w*.\d{0,3}").Value;
-                PValue6 = Regex.Match(posVals[5], @"-?\w*.\d{0,3}").Value;
+                {
+                    if (double.TryParse(posVals[0], out double test))
+                        PValue1 = Math.Round(test, 3).ToString("0.0##");
+                    else
+                        PValue1 = "0.0";
+                }
+                {
+                    if (double.TryParse(posVals[1], out double test))
+                        PValue2 = Math.Round(test, 3).ToString("0.0##");
+                    else
+                        PValue2 = "0.0";
+                }
+                {
+                    if (double.TryParse(posVals[2], out double test))
+                        PValue3 = Math.Round(test, 3).ToString("0.0##");
+                    else
+                        PValue3 = "0.0";
+                }
+                {
+                    if (double.TryParse(posVals[3], out double test))
+                        PValue4 = Math.Round(test, 3).ToString("0.0##");
+                    else
+                        PValue4 = "0.0";
+                }
+                {
+                    if (double.TryParse(posVals[4], out double test))
+                        PValue5 = Math.Round(test, 3).ToString("0.0##");
+                    else
+                        PValue5 = "0.0";
+                }
+                {
+                    if (double.TryParse(posVals[5], out double test))
+                        PValue6 = Math.Round(test, 3).ToString("0.0##");
+                    else
+                        PValue6 = "0.0";
+                }
             }
 
         }

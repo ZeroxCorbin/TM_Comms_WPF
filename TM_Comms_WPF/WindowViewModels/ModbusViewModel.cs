@@ -36,12 +36,12 @@ namespace TM_Comms_WPF.WindowViewModels
         public string ConnectionString { get => App.Settings.RobotIP; set { App.Settings.RobotIP = value; OnPropertyChanged(); } }
         public string ConnectButtonText { get => connectButtonText; set => SetProperty(ref connectButtonText, value); }
         private string connectButtonText = "Connect";
-        public bool ConnectionState { get => connectionState; set => SetProperty(ref connectionState, value); } 
+        public bool ConnectionState { get => connectionState; set => SetProperty(ref connectionState, value); }
         private bool connectionState;
         public string ConnectMessage { get => connectMessage; set { _ = SetProperty(ref connectMessage, value); OnPropertyChanged("IsMessage"); } }
         private string connectMessage;
 
-        public string Message { get => message; set { _ = SetProperty(ref message, value); OnPropertyChanged("IsMessage"); } } 
+        public string Message { get => message; set { _ = SetProperty(ref message, value); OnPropertyChanged("IsMessage"); } }
         private string message;
         public bool IsMessage { get => !string.IsNullOrEmpty(message); }
         public bool IsRunning { get => isRunning; private set => SetProperty(ref isRunning, value); }
@@ -88,7 +88,7 @@ namespace TM_Comms_WPF.WindowViewModels
 
         public void Reload()
         {
-            if(Socket == null)
+            if (Socket == null)
             {
                 Socket = new AsyncSocket.ASocket();
                 ModbusTCP = new SimpleModbusTCP(Socket);
@@ -120,7 +120,7 @@ namespace TM_Comms_WPF.WindowViewModels
 
         private void Socket_CloseEvent(object sender, EventArgs e)
         {
-            
+
             Cancel = true;
             while (isRunning)
                 Thread.Sleep(1);
@@ -134,7 +134,7 @@ namespace TM_Comms_WPF.WindowViewModels
         {
             ConnectionState = true;
             ConnectButtonText = "Close";
-            
+
             if (!IsRunning)
                 ThreadPool.QueueUserWorkItem(new WaitCallback(AsyncRecieveThread_DoWork));
         }
@@ -283,32 +283,43 @@ namespace TM_Comms_WPF.WindowViewModels
             }
 
             if (ModbusTCP.ReadDiscreteInput(ModbusDictionary.ModbusData[App.Settings.Version]["Error"].Addr))
-                Pendant.Error = Pendant.Bad;
-            else
-                Pendant.Error = Pendant.Disabled;
-
-
-            uint code = (uint)ModbusTCP.GetInt32(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Code"].Addr);
-            if (code != 0)
             {
-                string dat = $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Month"].Addr)}/" +
-                                $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Date"].Addr)}/" +
-                                $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Year"].Addr)} " +
-                                $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Hour"].Addr)}:" +
-                                $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Minute"].Addr)}:" +
-                                $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Second"].Addr)} ";
-                if (DateTime.TryParse(dat, out DateTime date))
-                    Pendant.ErrorDate = date.ToString();
+                Pendant.Error = Pendant.Bad;
+
+                uint code = (uint)ModbusTCP.GetInt32(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Code"].Addr);
+                if (code != 0)
+                {
+                    string dat = $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Month"].Addr)}/" +
+                                    $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Date"].Addr)}/" +
+                                    $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Year"].Addr)} " +
+                                    $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Hour"].Addr)}:" +
+                                    $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Minute"].Addr)}:" +
+                                    $"{ModbusTCP.GetInt16(ModbusDictionary.ModbusData[App.Settings.Version]["Last Error Time Second"].Addr)} ";
+                    if (DateTime.TryParse(dat, out DateTime date))
+                        Pendant.ErrorDate = date.ToString();
+                }
+                else
+                    Pendant.ErrorDate = "";
+
+                Pendant.ErrorCode = code.ToString("X");
+
+                if (ErrorCodes.Codes.TryGetValue(code, out string val))
+                    Pendant.ErrorDescription = val;
+                else
+                    Pendant.ErrorDescription = "CAN NOT FIND ERROR IN TABLE.";
             }
+
             else
+            {
+                Pendant.Error = Pendant.Disabled;
                 Pendant.ErrorDate = "";
+                Pendant.ErrorCode = "";
+                Pendant.ErrorDescription = "";
+            }
 
-            Pendant.ErrorCode = code.ToString("X");
 
-            if (ErrorCodes.Codes.TryGetValue(code, out string val))
-                Pendant.ErrorDescription = val;
-            else
-                Pendant.ErrorDescription = "CAN NOT FIND ERROR IN TABLE.";
+
+
         }
 
 

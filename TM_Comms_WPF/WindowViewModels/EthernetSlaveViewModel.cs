@@ -159,7 +159,7 @@ namespace TM_Comms_WPF.WindowViewModels
             ConnectionState = true;
             ConnectButtonText = "Close";
 
-            Socket.StartReceiveMessages("\r\n");
+            Socket.StartReceiveMessages(@"[$]", @"[*][A-Z0-9][A-Z0-9]");
 
             DataReceiveStopWatch.Restart();
         }
@@ -182,11 +182,16 @@ namespace TM_Comms_WPF.WindowViewModels
         {
             if (Socket.IsConnected)
             {
+                Socket.MessageEvent -= Socket_MessageEvent;
+
                 Socket.Close();
             }
             else
             {
                 ConnectMessage = string.Empty;
+
+                Socket.MessageEvent -= Socket_MessageEvent;
+                Socket.MessageEvent += Socket_MessageEvent;
 
                 Task.Run(() =>
                 {

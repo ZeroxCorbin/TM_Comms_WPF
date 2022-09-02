@@ -289,7 +289,7 @@ namespace TM_Comms_WPF.WindowViewModels
             char[] type = PositionControl.DataFormat.ToCharArray();
             if (type[0] == 'C')
             {
-                ListenNode ln = new ListenNode("ListenSend(90, GetString(Robot[1].CoordRobot, 10, 3))");
+                ListenNode ln = new ListenNode("ListenSend(90, GetString(Robot[1].CoordBase, 10, 3))");
                 PositionRequest = ln.ScriptID.ToString();
                 Socket?.Send(ln.Message);
             }
@@ -423,8 +423,9 @@ namespace TM_Comms_WPF.WindowViewModels
             {
                 msb.Moves.Add(((PositionControlViewModel)((PositionControl)lbi.Content).DataContext).MoveStep);
             }
-            ListenNode ln = msb.BuildScriptData(AddScriptExit, InitializeVariables);
+            ListenNode ln = msb.BuildMotionScript(AddScriptExit, InitializeVariables);
 
+            ln.ScriptID = "motion";
             MotionScript = ln.Message;
         }
         private void SendMotionScriptAction(object p) => Socket?.Send(MotionScript);
