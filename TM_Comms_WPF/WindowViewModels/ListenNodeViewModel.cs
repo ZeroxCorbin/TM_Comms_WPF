@@ -126,7 +126,7 @@ namespace TM_Comms_WPF.WindowViewModels
         {
             ConnectMessage = ((Exception)sender).Message;
         }
-        private void Socket_CloseEvent(object sender, EventArgs e)
+        private void Socket_CloseEvent()
         {
             ConnectionState = false;
             ConnectButtonText = "Connect";
@@ -134,7 +134,7 @@ namespace TM_Comms_WPF.WindowViewModels
             if (AutoReconnect)
                 ConnectAction(new object());
         }
-        private void Socket_ConnectEvent(object sender, EventArgs e)
+        private void Socket_ConnectEvent()
         {
             ConnectionState = true;
             ConnectButtonText = "Close";

@@ -53,7 +53,7 @@ namespace TM_Comms_WPF.ControlViewModels
 
         public MotionScriptBuilder.MoveStep MoveStep
         {
-            get => new MotionScriptBuilder.MoveStep(MoveType, DataFormat, new MotionScriptBuilder.Position(Position), Velocity, Accel, Blend);
+            get => new MotionScriptBuilder.MoveStep(MoveType, DataFormat, new MotionScriptBuilder.Position(Position), Velocity, Accel, Blend, "");
             set
             {
                 int i = 0;

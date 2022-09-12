@@ -118,7 +118,7 @@ namespace TM_Comms_WPF.WindowViewModels
             ConnectMessage = ((Exception)sender).Message;
         }
 
-        private void Socket_CloseEvent(object sender, EventArgs e)
+        private void Socket_CloseEvent()
         {
 
             Cancel = true;
@@ -130,7 +130,7 @@ namespace TM_Comms_WPF.WindowViewModels
             Heartbeat = false;
         }
 
-        private void Socket_ConnectEvent(object sender, EventArgs e)
+        private void Socket_ConnectEvent()
         {
             ConnectionState = true;
             ConnectButtonText = "Close";
