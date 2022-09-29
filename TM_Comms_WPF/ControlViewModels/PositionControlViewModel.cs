@@ -96,18 +96,18 @@ namespace TM_Comms_WPF.ControlViewModels
 
         public string VelocityLabel { get => velocityLabel; set => SetProperty(ref velocityLabel, value); }
         private string velocityLabel;
-        public string Velocity { get => velocity; set { SetProperty(ref velocity, value); } }
-        private string velocity = "100";
+        public int Velocity { get => velocity; set { SetProperty(ref velocity, value); } }
+        private int velocity = 100;
 
         public string AccelLabel { get => accelLabel; set => SetProperty(ref accelLabel, value); }
         private string accelLabel;
-        public string Accel { get => accel; set { SetProperty(ref accel, value); } }
-        private string accel = "0";
+        public int Accel { get => accel; set { SetProperty(ref accel, value); } }
+        private int accel = 0;
 
         public string BlendLabel { get => blendLabel; set => SetProperty(ref blendLabel, value); }
         private string blendLabel;
-        public string Blend { get => blend; set { SetProperty(ref blend, value); } }
-        private string blend = "0";
+        public int Blend { get => blend; set { SetProperty(ref blend, value); } }
+        private int blend = 0;
 
         public bool Precision { get => precision; set { SetProperty(ref precision, value); } }
         private bool precision = false;
@@ -239,23 +239,23 @@ namespace TM_Comms_WPF.ControlViewModels
             if (type[1] == 'P')
             {
                 VelocityLabel = "V(%)";
-                Velocity = "100";
+                Velocity = 100;
             }
             else
             {
                 VelocityLabel = "V(mm/sec)";
-                Velocity = "10";
+                Velocity = 10;
             }
 
             if (type[2] == 'P')
             {
                 BlendLabel = "B(%)";
-                Blend = "0";
+                Blend = 0;
             }
             else
             {
                 BlendLabel = "B(rad:mm)";
-                Blend = "3";
+                Blend = 3;
             }
         }
 
