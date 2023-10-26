@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -6,25 +7,24 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using TM_Comms;
 
 namespace TM_Comms_WPF.ControlViewModels
 {
-    public class PositionControlViewModel : INotifyPropertyChanged
+    public class PositionControlViewModel : Core.BaseViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        private bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
-        {
-            if (Object.Equals(storage, value))
-                return false;
-
-            storage = value;
-            OnPropertyChanged(propertyName);
-            return true;
-        }
+        //public EthernetSlaveController EthernetSlaveController
+        //{
+        //    get => _EthernetSlaveController;
+        //    set
+        //    {
+        //        _EthernetSlaveController = value;
+        //        ViewRead = true;
+        //        ReadPosition = new Core.RelayCommand(ReadPositionAction, c => true);
+        //    }
+        //}
+        //private EthernetSlaveController _EthernetSlaveController;
 
         public delegate void DragDrop(object parent, bool drop);
         public event DragDrop DragDropEvent;
@@ -37,29 +37,46 @@ namespace TM_Comms_WPF.ControlViewModels
             DragDropEvent.Invoke(parent, true);
         }
 
-        public Visibility Labels { get => labels; set { SetProperty(ref labels, value); } }
-        private Visibility labels = Visibility.Visible;
 
-        public Visibility DragDropTarget { get => dragDropTarget; set { SetProperty(ref dragDropTarget, value); } }
-        private Visibility dragDropTarget = Visibility.Hidden;
+        [JsonProperty]
+        public bool ViewLabels { get => viewLabels; set { SetProperty(ref viewLabels, value); } }
+        private bool viewLabels = true;
+        [JsonProperty]
+        public bool ViewDragDropTarget { get => viewDragDropTarget; set { SetProperty(ref viewDragDropTarget, value); } }
+        private bool viewDragDropTarget = false;
+        [JsonProperty]
+        public bool ViewSimple { get => viewSimple; set { SetProperty(ref viewSimple, value); } }
+        private bool viewSimple = false;
+        public bool ViewRead { get => viewRead; set { SetProperty(ref viewRead, value); } }
+        private bool viewRead = false;
 
-        public ObservableCollection<ComboBoxItem> MoveTypes { get; } = new ObservableCollection<ComboBoxItem>();
+        [JsonProperty]
+        public bool IsReadOnly { get => isReadOnly; set { SetProperty(ref isReadOnly, value); } }
+        private bool isReadOnly = false;
+        [JsonProperty]
+        public bool IsEnabled { get => isEnabled; set { SetProperty(ref isEnabled, value); } }
+        private bool isEnabled = true;
+
+
+        public ObservableCollection<MotionScriptBuilder.MoveTypes> MoveTypes { get; } = new ObservableCollection<MotionScriptBuilder.MoveTypes>();
+        [JsonProperty]
         public int MoveTypesSelectedIndex { get => moveTypesSelectedIndex; set { SetProperty(ref moveTypesSelectedIndex, value); LoadDataFormats(); } }
         private int moveTypesSelectedIndex;
 
-        public ObservableCollection<ComboBoxItem> DataFormats { get; } = new ObservableCollection<ComboBoxItem>();
+        public ObservableCollection<MotionScriptBuilder.DataFormats> DataFormats { get; } = new ObservableCollection<MotionScriptBuilder.DataFormats>();
+        [JsonProperty]
         public int DataFormatsSelectedIndex { get => dataFormatsSelectedIndex; set { SetProperty(ref dataFormatsSelectedIndex, value); SetPositionType(); } }
         private int dataFormatsSelectedIndex;
 
         public MotionScriptBuilder.MoveStep MoveStep
         {
-            get => new MotionScriptBuilder.MoveStep(MoveType, DataFormat, new MotionScriptBuilder.Position(Position), Velocity, Accel, Blend, "");
+            get => new MotionScriptBuilder.MoveStep(MoveType, DataFormat, new MotionScriptBuilder.Position(Position), BaseName, Velocity, Accel, Blend);
             set
             {
                 int i = 0;
-                foreach (ComboBoxItem cmb in MoveTypes)
+                foreach (var cmb in MoveTypes)
                 {
-                    if ((MotionScriptBuilder.MoveTypes)cmb.Content == value.MoveType)
+                    if (cmb == value.MoveType)
                     {
                         MoveTypesSelectedIndex = i;
                         break;
@@ -67,9 +84,9 @@ namespace TM_Comms_WPF.ControlViewModels
                     i++;
                 }
 
-                foreach (ComboBoxItem cmb in DataFormats)
+                foreach (var cmb in DataFormats)
                 {
-                    if ((MotionScriptBuilder.DataFormats)cmb.Content == value.DataFormat)
+                    if (cmb == value.DataFormat)
                     {
                         DataFormatsSelectedIndex = i;
                         break;
@@ -82,16 +99,18 @@ namespace TM_Comms_WPF.ControlViewModels
                 Accel = value.Accel;
                 Blend = value.Blend;
                 Precision = value.Precision;
+                BaseName = value.BaseName;
             }
         }
 
-        public string MoveType => MoveTypes.Count > 0 ? ((MotionScriptBuilder.DataFormats)MoveTypes[MoveTypesSelectedIndex].Content).ToString() : "PTP";
-        public string DataFormat => DataFormats.Count > 0 ? ((MotionScriptBuilder.DataFormats)DataFormats[DataFormatsSelectedIndex].Content).ToString() : "CPP";
+        public string MoveType => MoveTypes.Count > 0 ? MoveTypes[MoveTypesSelectedIndex].ToString() : "PTP";
+        public string DataFormat => DataFormats.Count > 0 ? DataFormats[DataFormatsSelectedIndex].ToString() : "CPP";
 
+        [JsonProperty]
         public string Position
         {
             get { return $"{PValue1},{PValue2},{PValue3},{PValue4},{PValue5},{PValue6}"; }
-            set { ParsePosition(value); }
+            set { ParsePosition(value); OnPropertyChanged("Position"); }
         }
 
         public string VelocityLabel { get => velocityLabel; set => SetProperty(ref velocityLabel, value); }
@@ -111,6 +130,10 @@ namespace TM_Comms_WPF.ControlViewModels
 
         public bool Precision { get => precision; set { SetProperty(ref precision, value); } }
         private bool precision = false;
+
+        [JsonProperty]
+        public string BaseName { get => baseName; set { SetProperty(ref baseName, value); } }
+        private string baseName = "";
 
         public string PValue1Label { get => pValue1Label; set => SetProperty(ref pValue1Label, value); }
         private string pValue1Label;
@@ -138,20 +161,55 @@ namespace TM_Comms_WPF.ControlViewModels
         public string PValue6 { get => pValue6; set => SetProperty(ref pValue6, value); }
         private string pValue6;
 
+        public ICommand ReadPosition { get; set; }
+
         public PositionControlViewModel()
         {
+            ViewRead = false;
+
             SetupMoveTypes();
+
+            //if (App.RobotController.EthernetSlaveController != null)
+            //{
+            //    ViewRead = true;
+            //    ReadPosition = new Core.RelayCommand(ReadPositionAction, c => true);
+            //}
         }
+
+        //public void ReadPositionAction(object parameter)
+        //{
+        //    App.RobotController.EthernetSlaveController.EsStateEvent -= EthernetSlaveController_EsStateEvent;
+
+        //    if (App.RobotController.EthernetSlaveController.IsConnected)
+        //        App.RobotController.EthernetSlaveController.EsStateEvent += EthernetSlaveController_EsStateEvent;
+
+        //}
+
+        //private void EthernetSlaveController_EsStateEvent(EthernetSlaveController.EsStates state, string message, EthernetSlave ethernetSlave)
+        //{
+        //    if (state == EthernetSlaveController.EsStates.Normal)
+        //    {
+        //        App.RobotController.EthernetSlaveController.EsStateEvent -= EthernetSlaveController_EsStateEvent;
+
+        //        if (DataFormatsSelectedIndex == 0)
+        //        {
+        //            BaseName = ethernetSlave.GetValue("Base_Name").Trim('\"');
+        //            Position = ethernetSlave.GetValue("Coord_Base_Tool");
+        //        }
+        //        else
+        //            Position = ethernetSlave.GetValue("Joint_Angle");
+        //    }
+        //}
 
         private void SetupMoveTypes()
         {
             foreach (KeyValuePair<MotionScriptBuilder.MoveTypes, List<MotionScriptBuilder.DataFormats>> kv in MotionScriptBuilder.MoveTypes_DataFormats)
             {
-                ComboBoxItem cmb = new ComboBoxItem()
-                {
-                    Content = kv.Key
-                };
-                MoveTypes.Add(cmb);
+                //ComboBoxItem cmb = new ComboBoxItem()
+                //{
+                //    Content = kv.Key
+                //};
+                MoveTypes.Add(kv.Key);
             }
             MoveTypesSelectedIndex = 0;
         }
@@ -160,13 +218,13 @@ namespace TM_Comms_WPF.ControlViewModels
         {
             DataFormats.Clear();
 
-            foreach (MotionScriptBuilder.DataFormats df in MotionScriptBuilder.MoveTypes_DataFormats[(MotionScriptBuilder.MoveTypes)MoveTypes[MoveTypesSelectedIndex].Content])
+            foreach (MotionScriptBuilder.DataFormats df in MotionScriptBuilder.MoveTypes_DataFormats[MoveTypes[MoveTypesSelectedIndex]])
             {
-                ComboBoxItem cmb = new ComboBoxItem()
-                {
-                    Content = df
-                };
-                DataFormats.Add(cmb);
+                //ComboBoxItem cmb = new ComboBoxItem()
+                //{
+                //    Content = df
+                //};
+                DataFormats.Add(df);
             }
             DataFormatsSelectedIndex = 0;
         }
@@ -211,6 +269,13 @@ namespace TM_Comms_WPF.ControlViewModels
                     else
                         PValue6 = "0.0";
                 }
+                //PValue2 = double.Parse(posVals[1]).ToString();
+                ////PValue1 = Regex.Match(posVals[0], @"-?\w*.\d{0,3}").Value;
+                //PValue2 = Regex.Match(posVals[1], @"-?\w*.\d{0,3}").Value;
+                //PValue3 = Regex.Match(posVals[2], @"-?\w*.\d{0,3}").Value;
+                //PValue4 = Regex.Match(posVals[3], @"-?\w*.\d{0,3}").Value;
+                //PValue5 = Regex.Match(posVals[4], @"-?\w*.\d{0,3}").Value;
+                //PValue6 = Regex.Match(posVals[5], @"-?\w*.\d{0,3}").Value;
             }
 
         }
@@ -219,7 +284,7 @@ namespace TM_Comms_WPF.ControlViewModels
         {
             if (DataFormats.Count == 0) return;
 
-            char[] type = (((MotionScriptBuilder.DataFormats)DataFormats[DataFormatsSelectedIndex].Content).ToString()).ToCharArray();
+            char[] type = DataFormats[DataFormatsSelectedIndex].ToString().ToCharArray();
 
             if (type[0] == 'C')
             {
@@ -255,7 +320,7 @@ namespace TM_Comms_WPF.ControlViewModels
             else
             {
                 BlendLabel = "B(rad:mm)";
-                Blend = 3;
+                Blend = 0;
             }
         }
 

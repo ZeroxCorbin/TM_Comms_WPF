@@ -15,73 +15,130 @@
         <IconPacks:RadixIcons Kind="DragHandleHorizontal" x:Key="DragHandle" x:Shared="False"/>
     </UserControl.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal">
 
-        <Grid Grid.Column="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="46" Width="auto"/>
-                <ColumnDefinition MinWidth="46" Width="auto"/>
-                <ColumnDefinition MinWidth="46" Width="auto"/>
-                <ColumnDefinition MinWidth="46" Width="auto"/>
-                <ColumnDefinition MinWidth="46" Width="auto"/>
-                <ColumnDefinition MinWidth="46" Width="auto"/>
-                <ColumnDefinition MinWidth="46" Width="auto"/>
-                <ColumnDefinition MinWidth="46" Width="auto"/>
-                <ColumnDefinition MinWidth="46" Width="auto"/>
-                <ColumnDefinition MinWidth="46" Width="auto"/>
-                <ColumnDefinition MinWidth="46" Width="auto"/>
-                <ColumnDefinition MinWidth="46" Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
+            <StackPanel>
+                <Label Content=" " Visibility="{Binding ViewLabels, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <Button Visibility="{Binding ViewRead, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding ReadPosition}" CommandParameter="{Binding DataFormatsSelectedIndex}" Style="{StaticResource MahApps.Styles.Button}">
+                    <IconPacks:PackIconRPGAwesome Kind="RobotArm" Width="20" Height="20"/>
+                </Button>
+            </StackPanel>
+            <StackPanel>
+                <StackPanel.Style>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ViewSimple}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <Label Content="Move Type" Visibility="{Binding ViewLabels, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <ComboBox ItemsSource="{Binding MoveTypes}" SelectedIndex="{Binding MoveTypesSelectedIndex}" IsEnabled="{Binding IsEnabled}" IsReadOnly="True"/>
+            </StackPanel>
+            <StackPanel>
+                <StackPanel.Style>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ViewSimple}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <Label Content="Format" Visibility="{Binding ViewLabels, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <ComboBox ItemsSource="{Binding DataFormats}" SelectedIndex="{Binding DataFormatsSelectedIndex}" IsEnabled="{Binding IsEnabled}" IsReadOnly="True"/>
+            </StackPanel>
+            <StackPanel>
+                <Label Content="{Binding PValue1Label}" Visibility="{Binding ViewLabels, Converter={StaticResource BooleanToVisibilityConverter}}" d:Content="X"/>
+                <TextBox Text="{Binding PValue1}" IsReadOnly="{Binding IsReadOnly}" Background="#19FFFF00" AllowDrop="False" MinWidth="60" Margin="3,3,0,0" TextAlignment="Center"/>
+            </StackPanel>
+            <StackPanel>
+                <Label Content="{Binding PValue2Label}" Visibility="{Binding ViewLabels, Converter={StaticResource BooleanToVisibilityConverter}}" d:Content="X"/>
+                <TextBox Text="{Binding PValue2}" IsReadOnly="{Binding IsReadOnly}" Background="#19FFFF00" AllowDrop="False" MinWidth="60" Margin="0,3" TextAlignment="Center"/>
+            </StackPanel>
+            <StackPanel>
+                <Label Content="{Binding PValue3Label}" Visibility="{Binding ViewLabels, Converter={StaticResource BooleanToVisibilityConverter}}" d:Content="X"/>
+                <TextBox Text="{Binding PValue3}" IsReadOnly="{Binding IsReadOnly}" Background="#19FFFF00" AllowDrop="False" MinWidth="60" Margin="0,3" TextAlignment="Center"/>
+            </StackPanel>
+            <StackPanel>
+                <Label Content="{Binding PValue4Label}" Visibility="{Binding ViewLabels, Converter={StaticResource BooleanToVisibilityConverter}}" d:Content="X"/>
+                <TextBox Text="{Binding PValue4}" IsReadOnly="{Binding IsReadOnly}" Background="#19FFFF00" AllowDrop="False" MinWidth="60" Margin="0,3" TextAlignment="Center"/>
+            </StackPanel>
+            <StackPanel>
+                <Label Content="{Binding PValue5Label}" Visibility="{Binding ViewLabels, Converter={StaticResource BooleanToVisibilityConverter}}" d:Content="X"/>
+                <TextBox Text="{Binding PValue5}" IsReadOnly="{Binding IsReadOnly}" Background="#19FFFF00" AllowDrop="False" MinWidth="60" Margin="0,3" TextAlignment="Center"/>
+            </StackPanel>
+            <StackPanel>
+                <Label Content="{Binding PValue6Label}" Visibility="{Binding ViewLabels, Converter={StaticResource BooleanToVisibilityConverter}}" d:Content="X"/>
+                <TextBox Text="{Binding PValue6}" IsReadOnly="{Binding IsReadOnly}" Background="#19FFFF00" AllowDrop="False" MinWidth="60" Margin="0,3" TextAlignment="Center"/>
+            </StackPanel>
+            <StackPanel>
+                <StackPanel.Style>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ViewSimple}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <Label Content="{Binding VelocityLabel}" Visibility="{Binding ViewLabels, Converter={StaticResource BooleanToVisibilityConverter}}" d:Content="X"/>
+                <TextBox Text="{Binding Velocity}" IsReadOnly="{Binding IsReadOnly}" Background="#19FFFF00" AllowDrop="False" MinWidth="46" Margin="0,3" TextAlignment="Center"/>
+            </StackPanel>
+            <StackPanel>
+                <StackPanel.Style>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ViewSimple}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <Label Content="A(ms)" Visibility="{Binding ViewLabels, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBox Text="{Binding Accel}" IsReadOnly="{Binding IsReadOnly}" Background="#19FFFF00" AllowDrop="False" MinWidth="46" Margin="0,3" TextAlignment="Center"/>
+            </StackPanel>
+            <StackPanel>
+                <StackPanel.Style>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ViewSimple}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <Label Content="{Binding BlendLabel}" Visibility="{Binding ViewLabels, Converter={StaticResource BooleanToVisibilityConverter}}" d:Content="X"/>
+                <TextBox Text="{Binding Blend}" IsReadOnly="{Binding IsReadOnly}" Background="#19FFFF00" AllowDrop="False" MinWidth="46" Margin="0,3" TextAlignment="Center"/>
+            </StackPanel>
+            <StackPanel>
+                <StackPanel.Style>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ViewSimple}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <Label Content="Prec." Visibility="{Binding ViewLabels, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <CheckBox IsChecked="{Binding Precision}" IsEnabled="{Binding IsEnabled}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel>
+                <Label Content="{DynamicResource DragHandle}"
+                           VerticalAlignment="Center"
+                       x:Name="ImgDragDrop"
+                       PreviewMouseDown="ImgDragDrop_PreviewMouseDown"
+                       Visibility="{Binding ViewDragDropTarget, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            </StackPanel>
 
-            <Label Grid.Column="0" Grid.Row="0" Content="Move Type" Visibility="{Binding Labels}" HorizontalContentAlignment="Center" />
-            <ComboBox Grid.Column="0" Grid.Row="1" ItemsSource="{Binding MoveTypes}" SelectedIndex="{Binding MoveTypesSelectedIndex}" IsReadOnly="True"/>
-
-            <Label Grid.Column="1" Grid.Row="0" Content="Format" Visibility="{Binding Labels}" HorizontalContentAlignment="Center" />
-            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding DataFormats}" SelectedIndex="{Binding DataFormatsSelectedIndex}" IsReadOnly="True"/>
-
-            <Label Grid.Column="2" Content="{Binding PValue1Label}" Visibility="{Binding Labels}" HorizontalContentAlignment="Center"/>
-            <Label Grid.Column="3" Content="{Binding PValue2Label}" Visibility="{Binding Labels}" HorizontalContentAlignment="Center"/>
-            <Label Grid.Column="4" Content="{Binding PValue3Label}" Visibility="{Binding Labels}" HorizontalContentAlignment="Center"/>
-            <Label Grid.Column="5" Content="{Binding PValue4Label}" Visibility="{Binding Labels}" HorizontalContentAlignment="Center"/>
-            <Label Grid.Column="6" Content="{Binding PValue5Label}" Visibility="{Binding Labels}" HorizontalContentAlignment="Center"/>
-            <Label Grid.Column="7" Content="{Binding PValue6Label}" Visibility="{Binding Labels}" HorizontalContentAlignment="Center"/>
-
-            <TextBox Grid.Column="2" Grid.Row="1" Text="{Binding PValue1}" Background="#19FFFF00" VerticalContentAlignment="Center" AllowDrop="False"/>
-            <TextBox Grid.Column="3" Grid.Row="1" Text="{Binding PValue2}" Background="#19FFFF00" VerticalContentAlignment="Center" AllowDrop="False"/>
-            <TextBox Grid.Column="4" Grid.Row="1" Text="{Binding PValue3}" Background="#19FFFF00" VerticalContentAlignment="Center" AllowDrop="False"/>
-            <TextBox Grid.Column="5" Grid.Row="1" Text="{Binding PValue4}" Background="#19FFFF00" VerticalContentAlignment="Center" AllowDrop="False"/>
-            <TextBox Grid.Column="6" Grid.Row="1" Text="{Binding PValue5}" Background="#19FFFF00" VerticalContentAlignment="Center" AllowDrop="False"/>
-            <TextBox Grid.Column="7" Grid.Row="1" Text="{Binding PValue6}" Background="#19FFFF00" VerticalContentAlignment="Center" AllowDrop="False"/>
-
-            <Label Grid.Column="8" Grid.Row="0" Content="{Binding VelocityLabel}" Visibility="{Binding Labels}" HorizontalContentAlignment="Center"/>
-            <TextBox Grid.Column="8" Grid.Row="1" Text="{Binding Velocity}" Background="#19FFFF00" AllowDrop="False"/>
-
-            <Label Grid.Column="9" Grid.Row="0" Content="A(ms)" Visibility="{Binding Labels}" HorizontalContentAlignment="Center"/>
-            <TextBox Grid.Column="9" Grid.Row="1" Text="{Binding Accel}" Background="#19FFFF00" AllowDrop="False"/>
-
-            <Label Grid.Column="10" Grid.Row="0" Content="{Binding BlendLabel}" Visibility="{Binding Labels}" HorizontalContentAlignment="Center"/>
-            <TextBox Grid.Column="10" Grid.Row="1" Text="{Binding Blend}" Background="#19FFFF00" AllowDrop="False"/>
-
-            <Label Grid.Column="11" Grid.Row="0" Content="Prec." Visibility="{Binding Labels}" HorizontalContentAlignment="Center"/>
-            <CheckBox Grid.Column="11" Grid.Row="1" IsChecked="{Binding Precision}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-            <Label Grid.Column="12" Grid.Row="1" 
-                   Content="{DynamicResource DragHandle}"
-                   x:Name="ImgDragDrop"
-                   PreviewMouseDown="ImgDragDrop_PreviewMouseDown"
-                   Visibility="{Binding DragDropTarget}"/>
-        </Grid>
-
-
-
-
+        </StackPanel>
     </Grid>
 </UserControl>

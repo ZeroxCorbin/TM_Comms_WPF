@@ -306,8 +306,8 @@ namespace TM_Comms_WPF.WindowViewModels
             PositionControlViewModel pcvm = new PositionControlViewModel();
             pcvm.MoveStep = PositionControl.MoveStep; 
             pcvm.DragDropEvent += PositionControl_DragDropEvent;
-            pcvm.Labels = Visibility.Collapsed;
-            pcvm.DragDropTarget = Visibility.Visible;
+            pcvm.ViewLabels = false;
+            pcvm.ViewDragDropTarget = false;
 
             ListBoxItem lbi = new ListBoxItem() { Content = new ControlViews.PositionControl() { DataContext = pcvm } };
 
